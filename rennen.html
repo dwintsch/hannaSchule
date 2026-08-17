@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <title>Das Rennen</title>
+
+    <!-- grund.css gilt auf allen Seiten, rennen.css nur hier. -->
+    <link rel="stylesheet" href="css/grund.css">
+    <link rel="stylesheet" href="css/rennen.css">
+  </head>
+<body>
+
+  <p class="zurueck-zur-startseite"><a href="index.html">&#8592; Zur Startseite</a></p>
+
+  <h1>Das Rennen</h1>
+
+  <p class="anleitung">
+    Fahr um die Hindernisse &#128679; herum. Ein Stern &#11088; gibt dir einen
+    <strong>Schutzschild</strong> &#128737; &ndash; damit übersteht du ein
+    Hindernis.<br>
+    Steuern mit den <strong>Pfeiltasten</strong> oder den Knöpfen unten.
+  </p>
+
+  <p id="anzeige"></p>
+
+  <!-- Das Spielfeld. Auto und Hindernisse setzt das JavaScript. -->
+  <div id="rennen">
+    <div id="strasse"></div>
+    <div id="auto">&#128663;</div>
+
+    <!-- Liegt über dem Spielfeld: Start- und Schlussmeldung -->
+    <div id="tafel"></div>
+  </div>
+
+  <!-- Steuerung zum Anklicken, für Laptop ohne Tastatur -->
+  <div id="steuerung">
+    <button class="steuerknopf" onclick="nachLinks()">&#9664;</button>
+    <button class="steuerknopf" onclick="nachRechts()">&#9654;</button>
+  </div>
+
+  <script src="js/punkte.js"></script>
+  <script src="js/rennen.js"></script>
+</body>
+</html>

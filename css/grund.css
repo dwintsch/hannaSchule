@@ -1,0 +1,136 @@
+/* ============================================
+   Grund-Aussehen
+   Gilt auf ALLEN Seiten: Startseite, Quiz, Memory ...
+   Hier stehen nur Sachen, die überall gleich sind.
+   ============================================ */
+
+body {
+  background-color: #ffffff;
+  font-family: Arial;
+  text-align: center;
+  padding: 40px;
+}
+
+h1 {
+  color: #2a9d8f;
+}
+
+button {
+  background-color: #2a9d8f;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 15px 25px;
+  font-size: 16px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+/* Der helle Knopf zum Neustarten.
+   Braucht jedes Spiel, darum steht er hier. */
+.neustart {
+  background-color: #ffffff;
+  color: #2a9d8f;
+  border: 2px solid #2a9d8f;
+  font-size: 15px;
+  padding: 10px 20px;
+}
+
+/* --- Die Spielerleiste ganz oben ---
+   Wird von js/punkte.js hergestellt und steht auf jeder Seite. */
+
+#spielerleiste {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;      /* auf schmalen Bildschirmen umbrechen */
+  gap: 10px;
+
+  max-width: 560px;
+  margin: 0 auto 28px;
+  padding: 10px 16px;
+
+  background-color: #f4f7f8;
+  border: 1px solid #e3e9eb;
+  border-radius: 14px;
+  font-size: 15px;
+  color: #16323d;
+}
+
+#namensfeld {
+  border: 1px solid #cdd8dc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 15px;
+  font-family: Arial;
+  width: 150px;
+}
+
+.leiste-knopf {
+  background-color: #ffffff;
+  color: #2a9d8f;
+  border: 2px solid #2a9d8f;
+  font-size: 14px;
+  padding: 7px 14px;
+  margin: 0;
+}
+
+/* Das Schildchen mit dem Stern */
+.punkte-marke {
+  background-color: #fff3d6;
+  color: #8a6318;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-weight: bold;
+}
+
+/* --- Konfetti ---
+   Ein Schnipsel ist ein winziges buntes Rechteck.
+   Farbe, Startpunkt und Tempo setzt das JavaScript.
+   Steht hier, weil mehrere Spiele Konfetti brauchen. */
+
+.konfetti {
+  position: fixed;   /* klebt am Fenster, nicht an der Seite */
+  top: -20px;        /* startet knapp oberhalb des Bildschirms */
+  width: 9px;
+  height: 15px;
+  border-radius: 2px;
+  z-index: 50;       /* liegt über allem anderen */
+
+  /* Damit man durch das Konfetti hindurchklicken kann */
+  pointer-events: none;
+
+  /* forwards heisst: am Schluss unten liegen bleiben,
+     nicht wieder nach oben springen. */
+  animation: fallen linear forwards;
+}
+
+/* Von oben nach unten fallen und sich dabei drehen.
+   105vh ist etwas mehr als die Fensterhöhe - so ist
+   der Schnipsel am Schluss sicher aus dem Bild. */
+@keyframes fallen {
+  from {
+    transform: translateY(0) rotate(0deg);
+  }
+  to {
+    transform: translateY(105vh) rotate(720deg);
+  }
+}
+
+/* Der Link «Zur Startseite» oben links.
+   Steht hier, weil ihn jedes Spiel braucht. */
+.zurueck-zur-startseite {
+  text-align: left;
+  max-width: 540px;
+  margin: 0 auto 10px;
+}
+
+.zurueck-zur-startseite a {
+  color: #2a9d8f;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.zurueck-zur-startseite a:hover {
+  text-decoration: underline;
+}

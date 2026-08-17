@@ -1,0 +1,240 @@
+/* ============================================
+   Aussehen NUR für die Startseite (index.html)
+   ============================================ */
+
+/* --- Der farbige Kopfbereich --- */
+
+/* linear-gradient heisst «Farbverlauf»: die Farbe geht
+   weich von der einen in die andere über.
+   135deg ist die Richtung: von links oben nach rechts unten.
+
+   rgba statt #rrggbb: die vierte Zahl ist die Deckkraft.
+   0 wäre unsichtbar, 1 wäre voll deckend - 0.5 ist halb
+   durchsichtig. Darum wirken die Pastellfarben noch zarter. */
+.kopf {
+  background: linear-gradient(135deg,
+                              rgba(158, 222, 211, 0.5),
+                              rgba(190, 222, 240, 0.5));
+  border: 1px solid rgba(42, 157, 143, 0.18);
+  border-radius: 20px;
+  max-width: 560px;
+  margin: 0 auto 35px;
+  padding: 35px 30px 40px;
+}
+
+/* Das kleine Wort ganz oben */
+.kopf-oben {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 2px;       /* Buchstaben weiter auseinander */
+  text-transform: uppercase; /* macht alles zu GROSSBUCHSTABEN */
+  color: #2a9d8f;
+}
+
+/* Die Schrift ist dunkel, weil der Hintergrund jetzt
+   hell ist. Weiss wäre nicht mehr lesbar. */
+.kopf h1 {
+  color: #16323d;
+  margin: 0 0 15px;
+  font-size: 30px;
+  line-height: 1.25;
+}
+
+.einleitung {
+  max-width: 430px;
+  margin: 0 auto;
+  line-height: 1.6;
+  font-size: 16px;
+  color: #3c5158;
+}
+
+.waehle {
+  font-weight: bold;
+  color: #16323d;
+  margin-bottom: 18px;
+}
+
+/* --- Der Bereich mit allen Spielen --- */
+
+.spiele {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* --- Eine einzelne Spiel-Kachel --- */
+
+.spiel {
+  display: flex;              /* Symbol, Text und Pfeil nebeneinander */
+  align-items: center;        /* alle drei auf gleicher Höhe */
+  gap: 18px;                  /* Abstand zwischen ihnen */
+  text-align: left;
+  text-decoration: none;      /* kein Unterstrich beim Link */
+  color: #16323d;
+
+  background-color: #ffffff;
+  border: 2px solid #e3e9eb;
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+
+  /* transition heisst: Änderungen weich ablaufen lassen
+     statt plötzlich. Hier in 0,2 Sekunden. */
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+/* --- Die Teile in der Kachel --- */
+
+/* Das Symbol sitzt in einem runden farbigen Kreis. */
+.symbol {
+  flex-shrink: 0;      /* darf nicht schmaler gedrückt werden */
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;  /* 50% macht aus dem Quadrat einen Kreis */
+  font-size: 27px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Nimmt den ganzen freien Platz ein und schiebt so
+   den Pfeil an den rechten Rand. */
+.spiel-text {
+  flex-grow: 1;
+}
+
+.spiel-titel {
+  display: block;
+  font-size: 19px;
+  font-weight: bold;
+}
+
+.spiel-info {
+  display: block;
+  font-size: 14px;
+  color: #5a6b72;
+  margin-top: 2px;
+}
+
+/* Das kleine Schildchen mit der Anzahl */
+.marke {
+  display: inline-block;
+  margin-top: 7px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.spiel-pfeil {
+  flex-shrink: 0;
+  font-size: 22px;
+  transition: transform 0.2s;
+}
+
+/* --- Jedes Spiel hat seine eigene Farbe ---
+   Sie passt jeweils zum Spiel selbst:
+   Quiz türkis, Memory rosa wie die Karten, Hangman orange. */
+
+.quiz .symbol      { background-color: #d9f0ec; }
+.quiz .spiel-titel { color: #2a9d8f; }
+.quiz .spiel-pfeil { color: #2a9d8f; }
+.quiz .marke       { background-color: #d9f0ec; color: #1d7d72; }
+.quiz:hover        { border-color: #2a9d8f; }
+
+.memory .symbol      { background-color: #fbe2ea; }
+.memory .spiel-titel { color: #c2557a; }
+.memory .spiel-pfeil { color: #c2557a; }
+.memory .marke       { background-color: #fbe2ea; color: #a63f62; }
+.memory:hover        { border-color: #e79ab5; }
+
+.hangman .symbol      { background-color: #fde8d7; }
+.hangman .spiel-titel { color: #d2691e; }
+.hangman .spiel-pfeil { color: #d2691e; }
+.hangman .marke       { background-color: #fde8d7; color: #a8501a; }
+.hangman:hover        { border-color: #e8964f; }
+
+/* Die Belohnungsspiele in Pastell-Lila - so sieht man sofort,
+   dass sie zu einer anderen Gruppe gehören. */
+.rennen .symbol      { background-color: #ece3f7; }
+.rennen .spiel-titel { color: #7b5aa6; }
+.rennen .spiel-pfeil { color: #7b5aa6; }
+.rennen .marke       { background-color: #ece3f7; color: #5b3f87; }
+.rennen:hover        { border-color: #b79ddb; }
+
+/* Die Überschrift über den Belohnungsspielen */
+.belohnung-titel {
+  margin-top: 38px;
+  color: #7b5aa6;
+}
+
+/* --- Wenn die Maus über einer Kachel ist --- */
+
+/* Die Kachel hebt sich leicht an und bekommt einen Schatten,
+   der Pfeil rutscht ein Stück nach rechts. */
+.spiel:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(22, 50, 61, 0.13);
+}
+
+.spiel:hover .spiel-pfeil {
+  transform: translateX(5px);
+}
+
+/* --- Beim Laden hereinrutschen ---
+   Jede Kachel kommt ein bisschen später als die vorherige.
+   Das nennt man Staffelung. */
+
+@keyframes hereinrutschen {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.kopf {
+  animation: hereinrutschen 0.5s;
+}
+
+/* backwards heisst: schon vor dem Start unsichtbar sein.
+   Sonst würde die Kachel kurz aufblitzen. */
+.spiel {
+  animation: hereinrutschen 0.5s backwards;
+}
+
+.spiel:nth-child(1) { animation-delay: 0.10s; }
+.spiel:nth-child(2) { animation-delay: 0.20s; }
+.spiel:nth-child(3) { animation-delay: 0.30s; }
+
+/* --- Spiele, die noch nicht fertig sind ---
+   Im Moment nicht gebraucht - alle drei sind fertig.
+   Bleibt hier für ein viertes Spiel. */
+
+.bald {
+  border-color: #e3e9eb;
+  background-color: #f6f8f9;
+}
+
+.bald:hover {
+  transform: none;
+  box-shadow: none;
+  cursor: default;
+}
+
+.bald .symbol      { background-color: #eef2f3; opacity: 0.5; }
+.bald .spiel-titel { color: #9aa7ad; }
+.bald .spiel-info  { color: #9aa7ad; }
+.bald .spiel-pfeil { font-size: 13px; color: #9aa7ad; }
+
+/* --- Zeile ganz unten --- */
+
+.fusszeile {
+  margin-top: 45px;
+  font-size: 14px;
+  color: #9aa7ad;
+}

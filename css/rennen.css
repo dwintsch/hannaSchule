@@ -1,0 +1,172 @@
+/* ============================================
+   Aussehen NUR für das Rennen (rennen.html)
+
+   Farbe: Pastell-Lila. Absichtlich anders als die drei
+   Lernspiele (türkis, rosa, orange) - so sieht man sofort,
+   dass das Rennen zu einer anderen Gruppe gehört.
+   ============================================ */
+
+/* --- Text oben --- */
+
+h1 {
+  color: #7b5aa6;   /* dunkles Lila - Schrift braucht Kontrast */
+}
+
+.anleitung {
+  max-width: 480px;
+  margin: 0 auto 15px;
+  line-height: 1.5;
+  color: #16323d;
+}
+
+#anzeige {
+  font-size: 18px;
+  font-weight: bold;
+  color: #7b5aa6;
+  min-height: 24px;
+}
+
+/* --- Das Spielfeld --- */
+
+/* position: relative macht es zum Bezugspunkt für alles darin.
+   overflow: hidden schneidet ab, was hinausragt - so
+   verschwinden die Hindernisse sauber am Rand. */
+#rennen {
+  position: relative;
+  width: 300px;
+  height: 420px;
+  margin: 0 auto 15px;
+  border: 3px solid #b79ddb;
+  border-radius: 14px;
+  overflow: hidden;
+  background-color: #ddd2ee;   /* pastell-lila Strasse */
+}
+
+/* --- Die Strasse mit den zwei Spurtrennern ---
+   repeating-linear-gradient malt ein Muster, das sich
+   wiederholt: 30 Pixel weiss, 30 Pixel nichts.
+   Das JavaScript verschiebt es nach unten - dadurch
+   sieht es aus, als würde man vorwärts fahren. */
+
+#strasse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background-image:
+    repeating-linear-gradient(to bottom, #ffffff 0 30px, transparent 30px 60px),
+    repeating-linear-gradient(to bottom, #ffffff 0 30px, transparent 30px 60px);
+  background-size: 6px 60px, 6px 60px;
+  background-position: 97px 0, 197px 0;
+  background-repeat: repeat-y;
+}
+
+/* --- Das Auto --- */
+
+/* Es ist 100 Pixel breit - genau eine Spur.
+   transition lässt es weich zur Seite gleiten. */
+#auto {
+  position: absolute;
+  bottom: 20px;
+  left: 100px;
+  width: 100px;
+  text-align: center;
+  font-size: 40px;
+  transition: left 0.12s;
+}
+
+/* Mit Schutzschild leuchtet das Auto golden.
+   drop-shadow legt einen Schein um die Form des Autos -
+   nicht um den ganzen Kasten, wie box-shadow das täte. */
+#auto.geschuetzt {
+  animation: leuchten 0.6s alternate infinite;
+}
+
+/* alternate infinite heisst: immer wieder hin und zurück -
+   dadurch pulsiert der Schein. */
+@keyframes leuchten {
+  from {
+    filter: drop-shadow(0 0 3px #f0b429);
+  }
+  to {
+    filter: drop-shadow(0 0 11px #f0b429);
+  }
+}
+
+/* --- Hindernisse und Sterne --- */
+
+.ding {
+  position: absolute;
+  width: 100px;
+  text-align: center;
+  font-size: 34px;
+}
+
+/* --- Die Tafel über dem Spielfeld --- */
+
+/* Sie liegt über allem und zeigt Start- oder Schlussmeldung.
+   rgba mit 0.9 heisst: fast deckend, man sieht die
+   Strasse noch schwach durch. */
+#tafel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 25px;
+
+  display: flex;
+  flex-direction: column;   /* alles untereinander */
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #16323d;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Beim Spielen ist die Tafel weg. */
+#tafel.weg {
+  display: none;
+}
+
+#tafel strong {
+  font-size: 20px;
+  color: #7b5aa6;
+}
+
+.tafelknopf {
+  background-color: #ddd2ee;
+  color: #5b3f87;
+  font-size: 16px;
+  padding: 12px 22px;
+  margin: 4px 0 0;
+}
+
+.tafelknopf:disabled {
+  background-color: #eceff0;
+  color: #9aa7ad;
+  cursor: default;
+}
+
+/* --- Die Steuerknöpfe unten --- */
+
+#steuerung {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 15px;
+}
+
+.steuerknopf {
+  width: 80px;
+  font-size: 22px;
+  padding: 14px 0;
+  background-color: #ece3f7;
+  color: #5b3f87;
+}

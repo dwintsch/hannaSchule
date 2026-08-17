@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <title>Hangman</title>
+
+    <!-- grund.css gilt auf allen Seiten, galgen.css nur hier. -->
+    <link rel="stylesheet" href="css/grund.css">
+    <link rel="stylesheet" href="css/galgen.css">
+  </head>
+<body>
+
+  <p class="zurueck-zur-startseite"><a href="index.html">&#8592; Zur Startseite</a></p>
+
+  <h1>Hangman</h1>
+
+  <p class="anleitung">
+    Errate das Fachwort! Klick auf die Buchstaben.
+    Du darfst 9 Fehler machen.
+  </p>
+
+  <p id="fehler"></p>
+
+  <!-- Die Zeichnung. Der Galgen ist immer da,
+       die neun Teile blendet das JavaScript ein. -->
+  <div id="galgen">
+    <svg viewBox="0 0 170 190">
+
+      <!-- Der Galgen -->
+      <g class="gestell">
+        <line x1="10"  y1="180" x2="115" y2="180" />
+        <line x1="45"  y1="180" x2="45"  y2="15"  />
+        <line x1="45"  y1="15"  x2="115" y2="15"  />
+        <line x1="115" y1="15"  x2="115" y2="35"  />
+      </g>
+
+      <!-- Das Männchen: neun Teile, für jeden Fehler eines.
+           Zuerst der Körper (1-6), dann das Gesicht (7-9).
+           Die Reihenfolge im Code ist auch die Reihenfolge
+           beim Übereinanderzeichnen - darum kommt das Gesicht
+           nach dem Kopf und liegt oben drauf. -->
+      <g class="maennchen">
+
+        <circle id="teil1" cx="115" cy="48"  r="13" />
+        <line   id="teil2" x1="115" y1="61"  x2="115" y2="112" />
+        <line   id="teil3" x1="115" y1="74"  x2="92"  y2="97"  />
+        <line   id="teil4" x1="115" y1="74"  x2="138" y2="97"  />
+        <line   id="teil5" x1="115" y1="112" x2="95"  y2="145" />
+        <line   id="teil6" x1="115" y1="112" x2="135" y2="145" />
+
+        <!-- Die zwei Augen -->
+        <g id="teil7" class="gesicht">
+          <circle cx="110" cy="43" r="1.9" />
+          <circle cx="120" cy="43" r="1.9" />
+        </g>
+
+        <!-- Die Nase -->
+        <g id="teil8" class="gesicht">
+          <line x1="115" y1="46" x2="115" y2="51" />
+        </g>
+
+        <!-- Der Mund - nach unten gebogen, also traurig -->
+        <g id="teil9" class="gesicht">
+          <path d="M110 57 Q115 52 120 57" />
+        </g>
+
+      </g>
+
+    </svg>
+  </div>
+
+  <p id="wort"></p>
+
+  <div id="buchstaben"></div>
+
+  <p id="ende"></p>
+
+  <button class="neustart" onclick="location.reload()">Neues Wort</button>
+
+  <!-- punkte.js und konfetti.js zuerst: galgen.js braucht Befehle daraus. -->
+  <script src="js/punkte.js"></script>
+  <script src="js/konfetti.js"></script>
+  <script src="js/galgen.js"></script>
+</body>
+</html>
