@@ -1,0 +1,177 @@
+/* ============================================
+   Aussehen NUR für das Quiz (quiz.html)
+   ============================================ */
+
+/* --- Die Frage-Kästen --- */
+
+fieldset {
+  border: 2px solid #2a9d8f;
+  border-radius: 15px;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+/* Alle Fragen sind zuerst versteckt.
+   Das JavaScript blendet immer nur eine ein.
+   position: relative macht den Kasten zum Bezugspunkt -
+   der Smiley kann sich dann in seine Ecke setzen. */
+.frage {
+  display: none;
+  position: relative;
+}
+
+/* --- Der Smiley oben rechts in der Frage --- */
+
+/* Negative Werte bei top und right schieben den Smiley
+   nach aussen - so guckt er über den Rand vom Fragekasten,
+   wie ein aufgeklebter Sticker. */
+.smiley {
+  position: absolute;
+  top: -18px;
+  right: -14px;
+  width: 52px;
+  height: 52px;
+
+  /* 35 Grad im Uhrzeigersinn gekippt */
+  transform: rotate(35deg);
+
+  /* Zuerst unsichtbar - der Smiley kommt erst, wenn man
+     die Frage beantwortet hat. Die Farbe setzen die
+     Regeln weiter unten.
+     transition lässt ihn weich erscheinen statt plötzlich. */
+  opacity: 0;
+  transition: opacity 0.3s, color 0.25s;
+}
+
+/* Sobald geklickt wurde, wird er sichtbar. */
+.frage.verpatzt .smiley,
+.frage.erledigt .smiley {
+  opacity: 1;
+}
+
+.smiley svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* currentColor heisst: «nimm die Farbe von color».
+   So muss ich nur eine Farbe ändern und Kopf, Augen
+   und Mund färben sich alle mit. */
+.kopf,
+.mund {
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+/* Der Kopf ist weiss ausgemalt. Sonst würde der Rahmen
+   vom Fragekasten mitten durch den Smiley hindurchscheinen. */
+.kopf {
+  fill: #ffffff;
+}
+
+.mund {
+  fill: none;
+}
+
+.auge {
+  fill: currentColor;
+}
+
+/* Zuerst ist nur der fröhliche Mund da. */
+.mund.traurig {
+  display: none;
+}
+
+/* Falsch geklickt: rot und trauriger Mund. */
+.frage.verpatzt .smiley        { color: #c65a4b; }
+.frage.verpatzt .mund.froh     { display: none; }
+.frage.verpatzt .mund.traurig  { display: block; }
+
+/* Richtig beantwortet: grün und fröhlicher Mund.
+   Diese Regeln stehen NACH den roten - darum gewinnen sie,
+   wenn beides zutrifft (erst falsch, dann richtig). */
+.frage.erledigt .smiley        { color: #3f9c6d; }
+.frage.erledigt .mund.froh     { display: block; }
+.frage.erledigt .mund.traurig  { display: none; }
+
+/* --- Die Antwort-Knöpfe --- */
+
+/* Alle Knöpfe in einer Frage AUSSER den Pfeilen */
+.frage button:not(.pfeil) {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  background-color: #bcdcea;
+  color: #16323d;
+}
+
+/* Die Fläche ist pastellgrün, darum muss die Schrift
+   dunkel sein - weiss wäre darauf nicht mehr lesbar. */
+.frage button.richtig {
+  background-color: #bfe6cd;
+  color: #1e5b3a;
+}
+
+/* Auch pastell - und darum ebenfalls mit dunkler Schrift. */
+.frage button.falsch {
+  background-color: #f7cfc9;
+  color: #8c3125;
+}
+
+/* --- Rückmeldung («Richtig!» / «Leider falsch») --- */
+
+/* min-height reserviert den Platz, damit die Seite
+   nicht springt, wenn der Text erscheint. */
+.rueckmeldung {
+  font-weight: bold;
+  min-height: 24px;
+}
+
+/* --- Die Pfeile unten --- */
+
+.pfeilzeile {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+/* visibility statt display: so bleibt der Platz
+   reserviert und das Layout springt nicht. */
+.pfeil {
+  visibility: hidden;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 17px;
+  margin: 0;
+
+  /* Genau dasselbe Hellblau wie die Antwort-Knöpfe. */
+  background-color: #bcdcea;
+  color: #16323d;
+}
+
+/* --- Punktestand und Ergebnis --- */
+
+/* Etwas kräftiger als das Pastellgrün der Knöpfe.
+   Reines Pastell wäre auf dem weissen Hintergrund
+   kaum zu lesen - Schrift braucht mehr Kontrast als Flächen. */
+#punktestand {
+  font-size: 18px;
+  font-weight: bold;
+  color: #4c9d76;
+}
+
+/* Diese Klasse kommt erst am Schluss dazu.
+   Sonst stünde die ganze Zeit ein leerer Kasten da. */
+.ergebnis-karte {
+  border: 2px solid #bfe6cd;
+  border-radius: 15px;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 25px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #16323d;
+  line-height: 1.5;
+}

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Mein FaGe-Quiz</title>
+
+    <!-- grund.css gilt auf allen Seiten, quiz.css nur hier. -->
+    <link rel="stylesheet" href="css/grund.css">
+    <link rel="stylesheet" href="css/quiz.css">
+  </head>
+<body>
+
+  <p class="zurueck-zur-startseite"><a href="index.html">&#8592; Zur Startseite</a></p>
+
+  <h1>Mein FaGe-Quiz</h1>
+  <p>Gemacht von Hanna!</p>
+  <p id="punktestand"></p>
+
+  <fieldset id="frage1" class="frage">
+    <p>Wie viele Kammern hat das menschliche Herz?</p>
+    <button onclick="pruefe(this, false)">Zwei</button>
+    <button onclick="pruefe(this, true)">Vier</button>
+    <button onclick="pruefe(this, false)">Sechs</button>
+    <p class="rueckmeldung" id="antwort1"></p>
+    <div class="pfeilzeile">
+      <button class="pfeil" id="zurueck1" onclick="zurueck()">&#8592; Zurück</button>
+      <button class="pfeil" id="pfeil1" onclick="weiter()">Weiter &#8594;</button>
+    </div>
+  </fieldset>
+
+  <fieldset id="frage2" class="frage">
+    <p>Was ist die erste Aufgabe einer Pflegekraft in der Frühschicht nach der Übergabe?</p>
+    <button onclick="pruefe(this, true)">Vitalzeichen messen</button>
+    <button onclick="pruefe(this, false)">Znünipause machen</button>
+    <button onclick="pruefe(this, false)">Zimmer putzen</button>
+    <p class="rueckmeldung" id="antwort2"></p>
+    <div class="pfeilzeile">
+      <button class="pfeil" id="zurueck2" onclick="zurueck()">&#8592; Zurück</button>
+      <button class="pfeil" id="pfeil2" onclick="weiter()">Weiter &#8594;</button>
+    </div>
+  </fieldset>
+
+  <fieldset id="frage3" class="frage">
+    <p>Was macht der Aussendienst NICHT?</p>
+    <button onclick="pruefe(this, true)">Körperpflege</button>
+    <button onclick="pruefe(this, false)">Essen austeilen</button>
+    <button onclick="pruefe(this, false)">Schränke auffüllen</button>
+    <p class="rueckmeldung" id="antwort3"></p>
+    <div class="pfeilzeile">
+      <button class="pfeil" id="zurueck3" onclick="zurueck()">&#8592; Zurück</button>
+      <button class="pfeil" id="pfeil3" onclick="weiter()">Weiter &#8594;</button>
+    </div>
+  </fieldset>
+
+  <fieldset id="frage4" class="frage">
+    <p>Wenn man auf der kardiologischen Station ist, hat man ...?</p>
+    <button onclick="pruefe(this, false)">eine Geburt hinter sich</button>
+    <button onclick="pruefe(this, false)">Krebs</button>
+    <button onclick="pruefe(this, true)">Herzprobleme</button>
+    <p class="rueckmeldung" id="antwort4"></p>
+    <div class="pfeilzeile">
+      <button class="pfeil" id="zurueck4" onclick="zurueck()">&#8592; Zurück</button>
+      <button class="pfeil" id="pfeil4" onclick="weiter()">Weiter &#8594;</button>
+    </div>
+  </fieldset>
+
+  <fieldset id="frage5" class="frage">
+    <p>Was bedeutet steril?</p>
+    <button onclick="pruefe(this, false)">Nur einmal verwendbar</button>
+    <button onclick="pruefe(this, true)">Frei von allen Keimen</button>
+    <button onclick="pruefe(this, false)">Sauber gewaschen</button>
+    <p class="rueckmeldung" id="antwort5"></p>
+    <div class="pfeilzeile">
+      <button class="pfeil" id="zurueck5" onclick="zurueck()">&#8592; Zurück</button>
+      <button class="pfeil" id="pfeil5" onclick="weiter()">Weiter &#8594;</button>
+    </div>
+  </fieldset>
+
+  <fieldset id="frage6" class="frage">
+    <p>Was bedeutet die Abkürzung «OPS»?</p>
+    <button onclick="pruefe(this, false)">Operationspatient</button>
+    <button onclick="pruefe(this, false)">Obligatorische Untersuchung</button>
+    <button onclick="pruefe(this, true)">Operationssaal</button>
+    <p class="rueckmeldung" id="antwort6"></p>
+    <div class="pfeilzeile">
+      <button class="pfeil" id="zurueck6" onclick="zurueck()">&#8592; Zurück</button>
+      <button class="pfeil" id="pfeil6" onclick="weiter()">Weiter &#8594;</button>
+    </div>
+  </fieldset>
+
+  <fieldset id="frage7" class="frage">
+    <p>Was sind die Arbeitszeiten im Frühdienst im KSSG?</p>
+    <button onclick="pruefe(this, true)">07.00 Uhr bis ca. 16.00 Uhr</button>
+    <button onclick="pruefe(this, false)">06.30 Uhr bis ca. 15.30 Uhr</button>
+    <button onclick="pruefe(this, false)">06.00 Uhr bis ca. 15.00 Uhr</button>
+    <p class="rueckmeldung" id="antwort7"></p>
+    <div class="pfeilzeile">
+      <button class="pfeil" id="zurueck7" onclick="zurueck()">&#8592; Zurück</button>
+      <button class="pfeil" id="pfeil7" onclick="weiter()">Weiter &#8594;</button>
+    </div>
+  </fieldset>
+
+  <fieldset id="frage8" class="frage">
+    <p>Wie lange sollte man die Hände desinfizieren?</p>
+    <button onclick="pruefe(this, false)">5 Sekunden</button>
+    <button onclick="pruefe(this, true)">30 Sekunden</button>
+    <button onclick="pruefe(this, false)">3 Minuten</button>
+    <p class="rueckmeldung" id="antwort8"></p>
+    <div class="pfeilzeile">
+      <button class="pfeil" id="zurueck8" onclick="zurueck()">&#8592; Zurück</button>
+      <button class="pfeil" id="pfeil8" onclick="weiter()">Weiter &#8594;</button>
+    </div>
+  </fieldset>
+
+  <fieldset id="frage9" class="frage">
+    <p>Was gehört NICHT zu den 6-R-Regeln beim Medikamente richten?</p>
+    <button onclick="pruefe(this, false)">Die richtige Dosierung</button>
+    <button onclick="pruefe(this, false)">Der richtige Zeitpunkt</button>
+    <button onclick="pruefe(this, true)">Die richtige Diagnose</button>
+    <p class="rueckmeldung" id="antwort9"></p>
+    <div class="pfeilzeile">
+      <button class="pfeil" id="zurueck9" onclick="zurueck()">&#8592; Zurück</button>
+      <button class="pfeil" id="pfeil9" onclick="weiter()">Weiter &#8594;</button>
+    </div>
+  </fieldset>
+
+  <fieldset id="frage10" class="frage">
+    <p>Wie hoch ist der durchschnittliche Ruhepuls bei Erwachsenen?</p>
+    <button onclick="pruefe(this, false)">30 bis 50 Schläge pro Minute</button>
+    <button onclick="pruefe(this, true)">60 bis 100 Schläge pro Minute</button>
+    <button onclick="pruefe(this, false)">120 bis 140 Schläge pro Minute</button>
+    <p class="rueckmeldung" id="antwort10"></p>
+    <div class="pfeilzeile">
+      <button class="pfeil" id="zurueck10" onclick="zurueck()">&#8592; Zurück</button>
+      <button class="pfeil" id="pfeil10" onclick="weiter()">Weiter &#8594;</button>
+    </div>
+  </fieldset>
+
+  <p id="ergebnis"></p>
+
+  <button class="neustart" onclick="location.reload()">Quiz neu laden</button>
+
+  <!-- Holt die Befehle aus der Datei js/quiz.js.
+       Muss ganz unten stehen: erst wenn alle Fragen da sind,
+       darf das JavaScript sie suchen. -->
+  <!-- punkte.js und konfetti.js zuerst: quiz.js braucht Befehle daraus. -->
+  <script src="js/punkte.js"></script>
+  <script src="js/konfetti.js"></script>
+  <script src="js/quiz.js"></script>
+</body>
+</html>

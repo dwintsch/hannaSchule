@@ -1,0 +1,180 @@
+/* ============================================
+   Aussehen NUR für das Memory (memory.html)
+   ============================================ */
+
+/* --- Text oben --- */
+
+/* Dasselbe Rosa wie die Memory-Kachel auf der Startseite,
+   statt dem Türkis aus grund.css. */
+h1 {
+  color: #c2557a;
+}
+
+.anleitung {
+  max-width: 480px;
+  margin: 0 auto 20px;
+  line-height: 1.5;
+  color: #16323d;
+}
+
+#versuche {
+  font-size: 18px;
+  font-weight: bold;
+  color: #c2557a;
+}
+
+/* --- Der Landeplatz für ein gefundenes Paar ---
+   Der Kasten bleibt immer leer! Die zwei Karten fliegen
+   aus dem Spielfeld hierher und legen sich nebeneinander.
+   min-height hält den Platz frei, damit nichts springt. */
+
+#paar-anzeige {
+  min-height: 125px;
+  margin-bottom: 10px;
+}
+
+/* --- Das Spielfeld: 4 Karten pro Reihe --- */
+
+#spielfeld {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);  /* 4 gleich breite Spalten */
+  gap: 12px;                              /* Abstand zwischen den Karten */
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* --- Eine Karte --- */
+
+.karte {
+  /* Höhe = Breite. So ist die Karte immer quadratisch,
+     egal wie breit das Fenster ist. */
+  aspect-ratio: 1 / 1;
+
+  /* Die Karte selbst ist nur der Rahmen - unsichtbar.
+     Sichtbar ist der drehbare Teil darin. */
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+
+  /* perspective lässt das Umdrehen räumlich wirken,
+     wie bei einer echten Karte. */
+  perspective: 700px;
+}
+
+/* Der drehbare Teil. Wenn die Karte offen ist,
+   dreht sich dieser um 180 Grad. */
+.karte-innen {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s, opacity 0.4s;
+  transform-style: preserve-3d;
+}
+
+.karte.offen .karte-innen {
+  transform: rotateY(180deg);
+}
+
+/* --- Vorder- und Rückseite --- */
+
+/* Beide liegen genau übereinander. */
+.rueckseite,
+.vorderseite {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border-radius: 12px;
+
+  /* Text mittig, waagrecht und senkrecht */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+
+  /* Versteckt die Seite, die gerade nach hinten zeigt.
+     Ohne das sähe man beide gleichzeitig. */
+  backface-visibility: hidden;
+}
+
+/* Die zugedeckte Seite: rosa */
+.rueckseite {
+  background-color: #f7d9e3;
+  border: 2px solid #eec2d1;
+}
+
+/* Die umgedrehte Seite: weiss mit schwarzer Schrift.
+   Sie ist von Anfang an gedreht und darum zuerst
+   nach hinten gerichtet. */
+.vorderseite {
+  background-color: #ffffff;
+  border: 2px solid #d8d8d8;
+  color: #000000;
+  font-size: 14px;
+  line-height: 1.25;
+  hyphens: auto;
+  transform: rotateY(180deg);
+}
+
+/* --- Gefundenes Paar --- */
+
+.karte.geloest {
+  pointer-events: none;   /* nicht mehr anklickbar */
+}
+
+/* «fliegt» hebt die Karte über alle anderen.
+   Bewegt wird sie mit transform - das verschiebt nur das Bild,
+   nicht den Platz. Darum bleibt ihr Feld im Spielfeld leer
+   stehen und das Raster verrutscht nicht. */
+.karte.fliegt {
+  z-index: 20;
+}
+
+.karte.fliegt .karte-innen {
+  transition: transform 0.6s, opacity 0.5s;
+}
+
+/* Das gefundene Paar ist grün umrandet, damit man sieht:
+   die zwei gehören zusammen. */
+.karte.fliegt .vorderseite {
+  border-color: #2e8b32;
+  border-width: 3px;
+}
+
+/* Am Schluss verblasst das Paar. */
+.karte-innen.verblasst {
+  opacity: 0;
+}
+
+/* --- Der Knopf «Neues Spiel» ---
+   In grund.css ist er türkis. Hier wird er rosa
+   überschrieben - memory.css wird später geladen und gewinnt. */
+
+.neustart {
+  background-color: #fbe2ea;
+  color: #a63f62;
+  border-color: #e79ab5;
+}
+
+/* --- Schluss-Meldung --- */
+
+#gewonnen {
+  max-width: 480px;
+  margin: 25px auto;
+  font-size: 20px;
+  font-weight: bold;
+  color: #16323d;
+  line-height: 1.5;
+}
+
+/* Der Rahmen kommt erst dazu, wenn man gewonnen hat.
+   Sonst stünde die ganze Zeit ein leerer Kasten da. */
+#gewonnen.gewonnen-karte {
+  border: 2px solid #2e8b32;
+  border-radius: 15px;
+  padding: 25px;
+}

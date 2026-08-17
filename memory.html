@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <title>Memory</title>
+
+    <!-- grund.css gilt auf allen Seiten, memory.css nur hier. -->
+    <link rel="stylesheet" href="css/grund.css">
+    <link rel="stylesheet" href="css/memory.css">
+  </head>
+<body>
+
+  <p class="zurueck-zur-startseite"><a href="index.html">&#8592; Zur Startseite</a></p>
+
+  <h1>Memory</h1>
+
+  <p class="anleitung">
+    Jede Abkürzung gehört zu einem ausgeschriebenen Wort.
+    Dreh zwei Karten um und finde die Paare!
+  </p>
+
+  <p id="versuche"></p>
+
+  <!-- Der Landeplatz. Bleibt leer - hierher fliegen die zwei
+       Karten, wenn man ein Paar gefunden hat. -->
+  <div id="paar-anzeige"></div>
+
+  <!-- Hier hinein legt das JavaScript die Karten.
+       Darum ist der Kasten jetzt noch leer. -->
+  <div id="spielfeld"></div>
+
+  <p id="gewonnen"></p>
+
+  <button class="neustart" onclick="location.reload()">Neues Spiel</button>
+
+  <!-- punkte.js und konfetti.js zuerst: memory.js braucht Befehle daraus. -->
+  <script src="js/punkte.js"></script>
+  <script src="js/konfetti.js"></script>
+  <script src="js/memory.js"></script>
+</body>
+</html>

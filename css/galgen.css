@@ -1,0 +1,183 @@
+/* ============================================
+   Aussehen NUR für das Galgenmännchen (galgen.html)
+   ============================================ */
+
+/* --- Text oben --- */
+
+/* Dasselbe Orange wie die Hangman-Kachel auf der Startseite,
+   statt dem Türkis aus grund.css. */
+h1 {
+  color: #d2691e;
+}
+
+.anleitung {
+  max-width: 480px;
+  margin: 0 auto 15px;
+  line-height: 1.5;
+  color: #16323d;
+}
+
+#fehler {
+  font-size: 18px;
+  font-weight: bold;
+  color: #d2691e;
+}
+
+/* --- Die Zeichnung --- */
+
+#galgen svg {
+  width: 170px;
+  height: 190px;
+}
+
+/* Striche statt Flächen: fill none heisst «nicht ausmalen»,
+   stroke ist die Strichfarbe.
+   Wichtig: hier KEIN #galgen davorschreiben. Eine Regel mit
+   einer id ist stärker als eine mit einer Klasse - dann würde
+   dieses fill: none die Farben der Kleider überstimmen. */
+.gestell line,
+.maennchen line,
+.maennchen circle,
+.maennchen path {
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;    /* runde Strichenden */
+  stroke-linejoin: round;   /* runde Ecken */
+}
+
+/* Der Galgen ist im helleren Orange, das Männchen im
+   dunkleren - so sieht man die zwei gut auseinander. */
+.gestell line {
+  stroke: #e8a76b;
+}
+
+/* Das Männchen selber ist schwarz - Körper und Umrisse
+   der Kleider. */
+.maennchen line,
+.maennchen circle,
+.maennchen path {
+  stroke: #000000;
+}
+
+/* Das Gesicht: dünnere Striche als der Körper,
+   sonst wäre es viel zu klobig für den kleinen Kopf. */
+.gesicht line,
+.gesicht path {
+  stroke-width: 2.5;
+}
+
+/* Die Augen sind ausgemalte Punkte, keine Ringe.
+   Darum fill schwarz und gar keine Umrisslinie. */
+.gesicht circle {
+  fill: #000000;
+  stroke: none;
+}
+
+/* Alle neun Teile sind zuerst versteckt.
+   Das JavaScript blendet pro Fehler eines ein.
+   Das Sternchen heisst «alles, was direkt darin steckt». */
+.maennchen > * {
+  display: none;
+}
+
+/* --- Das gesuchte Wort --- */
+
+#wort {
+  margin: 15px auto 25px;
+}
+
+.platz {
+  display: inline-block;
+  width: 26px;
+  margin: 0 3px;
+  font-size: 26px;
+  font-weight: bold;
+  color: #d2691e;
+  border-bottom: 3px solid #e8a76b;
+}
+
+/* Das Wort am Schluss, wenn man verloren hat */
+.platz.verpasst {
+  color: #c0554a;
+  border-bottom-color: #f7cfc9;
+}
+
+/* --- Die Buchstaben-Knöpfe --- */
+
+#buchstaben {
+  max-width: 430px;
+  margin: 0 auto 20px;
+
+  display: flex;
+  flex-wrap: wrap;        /* neue Zeile, wenn es nicht mehr passt */
+  justify-content: center;
+  gap: 6px;
+}
+
+/* Noch nicht gebraucht: pastellorange.
+   Alle Flächen sind pastell, darum überall dunkle Schrift. */
+.buchstabe {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  margin: 0;
+  font-size: 17px;
+  font-weight: bold;
+  border-radius: 8px;
+  background-color: #fde8d7;
+  color: #a8501a;
+}
+
+/* Buchstabe war im Wort - Pastellgrün wie im Quiz */
+.buchstabe.richtig {
+  background-color: #bfe6cd;
+  color: #1e5b3a;
+}
+
+/* Buchstabe war nicht im Wort - Pastellrot wie im Quiz */
+.buchstabe.falsch {
+  background-color: #f7cfc9;
+  color: #8c3125;
+}
+
+/* Schon gebraucht - nicht mehr anklickbar.
+   Nur ein leichtes Verblassen: bei Pastellfarben würde
+   ein starkes Verblassen den Knopf unlesbar machen. */
+.buchstabe:disabled {
+  cursor: default;
+  opacity: 0.8;
+}
+
+/* --- Der Knopf «Neues Wort» ---
+   In grund.css ist er türkis. Hier wird er pastellorange
+   überschrieben - galgen.css wird später geladen und gewinnt. */
+
+.neustart {
+  background-color: #fde8d7;
+  color: #a8501a;
+  border-color: #e8a76b;
+}
+
+/* --- Schluss-Meldung --- */
+
+#ende {
+  max-width: 480px;
+  margin: 20px auto;
+  font-size: 20px;
+  font-weight: bold;
+  color: #16323d;
+  line-height: 1.5;
+}
+
+/* Der Rahmen kommt erst dazu, wenn das Spiel vorbei ist. */
+#ende.gewonnen {
+  border: 3px solid #bfe6cd;
+  border-radius: 15px;
+  padding: 25px;
+}
+
+#ende.verloren {
+  border: 3px solid #f7cfc9;
+  border-radius: 15px;
+  padding: 25px;
+}
