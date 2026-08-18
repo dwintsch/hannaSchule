@@ -36,8 +36,11 @@ h1 {
   display: grid;
   gap: 2px;
 
-  width: 372px;
-  max-width: 100%;
+  /* min() nimmt den kleineren der beiden Werte: auf dem
+     Computer die 372px, auf dem Handy die volle Breite.
+     Die Kaestchen sind mit aspect-ratio quadratisch und
+     schrumpfen einfach mit. */
+  width: min(372px, 100%);
   margin: 0 auto 18px;
 }
 

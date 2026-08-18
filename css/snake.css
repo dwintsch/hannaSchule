@@ -43,10 +43,17 @@ h1 {
 
 #feld {
   position: relative;
-  width: 330px;
-  height: 330px;
   box-sizing: border-box;
   margin: 0 auto 15px;
+
+  /* min() nimmt den kleineren der beiden Werte: auf dem
+     Computer die 330px, auf dem Handy die volle Breite.
+     aspect-ratio haelt es dabei quadratisch - und nur weil
+     es quadratisch bleibt, bleiben auch die Kaestchen
+     quadratisch. */
+  width: min(330px, 100%);
+  height: auto;
+  aspect-ratio: 1 / 1;
 
   background-color: #fdfafc;
   border: 3px solid #dcbcd6;

@@ -33,9 +33,17 @@ const zielVorlauf = 100;
 // Wie viele Gratis-Runden es fürs Ziel gibt.
 const zielBelohnung = 1;
 
-// Die Grösse des Spielfelds. Muss zu dach.css passen!
-const feldBreite = 440;
+// Die Höhe des Spielfelds. Muss zu dach.css passen!
 const feldHoehe = 320;
+
+/* Die BREITE fragen wir beim Element nach, statt sie fest
+   hinzuschreiben. Auf dem Computer sind es 440 Pixel, auf dem
+   Handy weniger - dort ist das Feld nur so breit wie der
+   Bildschirm. Stünde hier eine feste Zahl, würden auf dem Handy
+   Häuser ausserhalb des Bildes gebaut.
+
+   Steht weiter unten, gleich nachdem wir das Element geholt haben -
+   vorher gibt es ja noch nichts zu fragen. */
 
 // Die Figur bleibt immer an derselben Stelle von links.
 // Bewegt wird die Welt, nicht die Figur - so wie beim Rennen
@@ -73,6 +81,7 @@ let zielBand = null;      // das Zielband, solange es im Bild ist
 let faktor = 1;
 
 const feld = document.getElementById("dachfeld");
+const feldBreite = feld.clientWidth;
 const figur = document.getElementById("figur");
 const tafel = document.getElementById("tafel");
 

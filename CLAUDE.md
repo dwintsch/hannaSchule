@@ -443,9 +443,11 @@ Nichtangemeldete eine Liste, in der man selber nicht vorkommen konnte.
 - `.rang-zeile` hat von Anfang an einen **durchsichtigen** Rahmen. Sonst
   würde die eigene Zeile beim Einfärben plötzlich 2px höher und die Liste
   würde zucken.
-- **Unter 1250px Fensterbreite wird sie ausgeblendet** (`@media` in
-  `grund.css`). Sonst fiele sie über den Inhalt. Das Spiel in der Mitte ist
-  wichtiger als die Liste am Rand.
+- **Unter 1250px Fensterbreite wandert sie ans Seitenende** (`@media` in
+  `grund.css`): `position: static` hebt das `fixed` auf, dann läuft sie
+  ganz normal mit. Am Rand kleben ginge dort nicht — sie fiele über den
+  Inhalt. Bis 18.08.2026 wurde sie stattdessen **ausgeblendet**; Daniel
+  wollte sie auch auf dem Handy sehen.
 - `z-index: 40` — weniger als die 50 vom Konfetti, damit es davor regnet.
 - Sie ist **280px breit** und in grösserer Schrift gehalten (von Daniel so
   gewünscht). Beim Verbreitern muss die `@media`-Grenze mitwachsen, sonst
@@ -879,6 +881,43 @@ gewünscht. Die Dateien heissen entsprechend `snake.*`.
   Rennen. Vier Steuerknöpfe im Kreuz fürs Vorführen ohne Tastatur.
 - Rekord über `rekordSpeichern("snake", schlange.length)`.
 - Gibt **keine** Münzen — die bleiben bei der Dachheldin.
+
+### Auf dem Handy spielen
+
+Von Daniel am 18.08.2026 gewünscht. Vier Dinge waren nötig:
+
+1. **Die `viewport`-Zeile in allen neun HTML-Dateien.** Das ist mit
+   Abstand das Wichtigste. Ohne sie tut ein Handy so, als wäre sein
+   Bildschirm 980px breit, und zoomt die ganze Seite winzig heraus.
+   `<meta name="viewport" content="width=device-width, initial-scale=1">`
+   **Neue Seiten brauchen sie ebenfalls** — ein Test prüft das.
+2. **Die Rangliste** wandert unter 1250px ans Seitenende, statt weg zu
+   sein. Siehe «Die Rangliste».
+3. **Ein `@media (max-width: 560px)`-Block** in `grund.css`: das Polster
+   am Body schrumpft von 40px auf 10px (auf einem 360px-Bildschirm frisst
+   40px links und rechts fast ein Viertel der Breite), die Überschrift
+   wird kleiner, und das Code-Feld klebt nicht mehr fix in der Ecke —
+   sonst würde es die Rangliste zudecken, die dort ja jetzt steht.
+4. **Die Spielfelder** benutzen `min(…px, 100%)` statt fester Breiten:
+   Snake 330, Dachheldin 440, Kreuzworträtsel 372. Rennen (300px) passt
+   auch so. Bei Snake hält zusätzlich `aspect-ratio: 1 / 1` das Feld
+   quadratisch — nur so bleiben auch die Kästchen quadratisch.
+
+**Die eine Stelle, wo das JavaScript mitmusste:** `dach.js` hatte
+`const feldBreite = 440` fest eingetragen und baut damit Häuser voraus
+(`while (rechteKante() < feldBreite + 80)`). Auf einem schmaleren Feld
+würden so Häuser ausserhalb des Bildes entstehen. Jetzt steht dort
+`feld.clientWidth` — direkt nach dem `getElementById`, vorher gibt es ja
+noch nichts zu fragen. Die **Höhe** bleibt fest bei 320, sie steht im
+JavaScript und im CSS.
+
+**Ehrlich dazusagen:** Gemessen wurde die Breite **einmal beim Laden**.
+Dreht man das Handy mitten im Spiel, stimmt sie bis zum nächsten
+Neuladen nicht mehr. Für dieses Projekt in Ordnung.
+
+Alle Spiele sind mit Fingertippen bedienbar: Quiz, Memory, Hangman,
+Blitzrunde und Kreuzworträtsel sowieso, Rennen und Snake über ihre
+Steuerknöpfe, die Dachheldin über den Sprungknopf.
 
 ### Startseite (index.html)
 

@@ -45,7 +45,11 @@ h1 {
   position: relative;   /* Bezugsrahmen für alles darin */
   overflow: hidden;     /* was hinausrutscht, wird abgeschnitten */
 
-  width: 440px;
+  /* Auf dem Handy so breit wie der Bildschirm, sonst 440px.
+     js/dach.js fragt die echte Breite beim Element nach -
+     darum darf sie sich hier aendern. Die HOEHE bleibt fest,
+     die steht als feldHoehe auch im JavaScript. */
+  width: min(440px, 100%);
   height: 320px;
   margin: 15px auto;
 

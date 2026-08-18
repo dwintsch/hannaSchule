@@ -236,17 +236,70 @@ button {
   color: #6b7d84;
 }
 
-/* Auf schmalen Bildschirmen wuerde die Rangliste ueber den
-   Inhalt fallen. Dort wird sie ausgeblendet - das Spiel in
-   der Mitte ist wichtiger als die Liste am Rand.
+/* --- Schmale Bildschirme: Handy und kleiner Laptop ---
 
-   1250px, weil der Kasten jetzt 280px breit ist: links 280
-   plus die Seite in der Mitte (max. 560) plus rechts nochmal
-   so viel Luft, damit es mittig bleibt. */
+   Am Rand kleben kann die Rangliste hier nicht - sie wuerde
+   ueber das Spiel fallen. Frueher wurde sie darum einfach
+   ausgeblendet. Jetzt wandert sie stattdessen ans ENDE der
+   Seite und laeuft dort ganz normal mit.
+
+   position: static hebt das "fixed" wieder auf - das Element
+   steht dann da, wo es im HTML steht. Und weil rangliste.js
+   den Kasten unten an den Body haengt, ist das ganz unten.
+
+   1250px, weil der Kasten 280px breit ist: links 280 plus die
+   Seite in der Mitte (max. 560) plus rechts nochmal so viel
+   Luft, damit es mittig bleibt. */
 
 @media (max-width: 1250px) {
+
   #rangliste {
-    display: none;
+    position: static;
+    width: auto;
+    max-width: 500px;
+    max-height: none;
+    margin: 30px auto 0;
+  }
+}
+
+/* --- Nur noch Handy-Breite ---
+
+   Das dicke Polster von 40px am Body frisst auf einem 360px
+   breiten Bildschirm fast ein Viertel der Breite weg. Hier
+   wird es klein.
+
+   Das Code-Feld klebt sonst unten in der Ecke und wuerde die
+   Rangliste zudecken, die jetzt ja am Seitenende steht. Also
+   laeuft es hier ebenfalls einfach mit. */
+
+@media (max-width: 560px) {
+
+  body {
+    padding: 14px 10px 30px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  #spielerleiste {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  /* Name und Passwort teilen sich eine Zeile. */
+  #namensfeld,
+  #passwortfeld {
+    width: 45%;
+    min-width: 0;
+  }
+
+  #geheimfeld {
+    position: static;
+    max-width: 100%;
+    margin: 24px auto 0;
+    justify-content: center;
+    opacity: 1;
   }
 }
 
