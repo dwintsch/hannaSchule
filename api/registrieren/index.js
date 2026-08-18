@@ -16,8 +16,10 @@ function zahlOrdnen(wert) {
   if (isNaN(zahl) || zahl < 0) {
     return 0;
   }
-  if (zahl > 100000) {
-    return 100000;
+  // So hoch wie der Deckel in «aendern» - sonst gingen die
+  // Punkte aus dem Code-Feld beim Registrieren verloren.
+  if (zahl > 1000000) {
+    return 1000000;
   }
   return zahl;
 }

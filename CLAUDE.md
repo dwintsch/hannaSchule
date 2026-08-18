@@ -572,7 +572,23 @@ gleichnamigen Befehl in `memory.js`.
 ### Das Code-Feld (index.html unten rechts, `#geheimfeld`)
 
 Ein kleines Feld unten in der Ecke der Startseite. Wer den PIN kennt,
-bekommt **fünf Gratis-Runden** für die Belohnungsspiele.
+bekommt **fünf Gratis-Runden** für die Belohnungsspiele **und
+1'000'000 Punkte** (`PUNKTE_PRO_CODE`). Beides zusammen, jedes Mal wieder.
+Von Daniel am 18.08.2026 so gewünscht.
+
+**Die Falle dabei:** `api/aendern` deckelte jede Veränderung auf **500**.
+Die Million wäre also im Browser kurz erschienen und beim nächsten
+Seitenaufruf wieder verschwunden, weil `kontoAuffrischen()` den Stand vom
+Server holt. Darum steht der Deckel jetzt bei `HOECHSTE_VERAENDERUNG`
+(= 1'000'000), und `registrieren` deckelt gleich hoch. **Wer
+`PUNKTE_PRO_CODE` erhöht, muss den Deckel mit erhöhen** — sonst kommt
+stillschweigend nur der Deckel an.
+
+**Zwei Nebenwirkungen, die man wissen muss:**
+
+1. Wer den Code eingibt, steht **dauerhaft auf Platz 1** der Rangliste.
+2. Die Punkte liegen auf dem Server, gelten also auf **allen** Geräten.
+   Nur die Gratis-Runden bleiben am Browser.
 
 - `PIN` und `GRATIS_PRO_CODE` stehen zuoberst in `js/punkte.js`.
   Aktuell `"8590"` und `5`. Nur dort ändern.
@@ -587,9 +603,10 @@ bekommt **fünf Gratis-Runden** für die Belohnungsspiele.
 - Das Feld ist mit `opacity: 0.6` blass und wird bei `:hover` /
   `:focus-within` deutlich. Vorher stand 0.3 — da hat Hanna es nicht
   gefunden. Nicht wieder blasser machen.
-- Wünsche von Hanna in dieser Reihenfolge: erst Enter-Cheat, dann Feld
-  statt Enter, dann «Code» statt «Geheimcode», dann PIN 8590, dann Ziffern
-  verstecken, dann fünf Runden statt einer. Der Verlauf zeigt: sie
+- Wünsche in dieser Reihenfolge: erst Enter-Cheat, dann Feld statt Enter,
+  dann «Code» statt «Geheimcode», dann PIN 8590, dann Ziffern verstecken,
+  dann fünf Runden statt einer (alles Hanna), dann eine Million Punkte
+  dazu (Daniel). Der Verlauf zeigt: sie
   präzisiert gerne schrittweise — kleine Schritte anbieten, nicht alles
   auf einmal fertig bauen wollen.
 

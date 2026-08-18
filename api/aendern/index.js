@@ -14,19 +14,33 @@
 
 const g = require("../gemeinsam");
 
-/* Eine Veränderung darf nicht beliebig gross sein -
-   sonst könnte man sich mit einem Befehl 1000 Punkte geben. */
+/* Eine Veränderung darf nicht beliebig gross sein - sonst
+   könnte jemand eine unsinnige Zahl schicken und die Tabelle
+   damit unbrauchbar machen.
+
+   Der Deckel lag zuerst bei 500. Seit das Code-Feld eine
+   Million Punkte auf einmal vergibt, muss er so hoch sein -
+   sonst käme beim Server nur 500 an, und die Million wäre
+   beim nächsten Seitenaufruf wieder weg.
+
+   Ehrlich dazu: Das ist keine Sicherung gegen Schummeln. Wer
+   will, kann dem Server sowieso schicken was er mag - der
+   Browser gehört ja ihm. Es ist nur eine Notbremse gegen
+   kaputte Zahlen. */
+
+const HOECHSTE_VERAENDERUNG = 1000000;
+
 function veraenderungOrdnen(wert) {
   const zahl = Math.floor(Number(wert));
 
   if (isNaN(zahl)) {
     return 0;
   }
-  if (zahl > 500) {
-    return 500;
+  if (zahl > HOECHSTE_VERAENDERUNG) {
+    return HOECHSTE_VERAENDERUNG;
   }
-  if (zahl < -500) {
-    return -500;
+  if (zahl < -HOECHSTE_VERAENDERUNG) {
+    return -HOECHSTE_VERAENDERUNG;
   }
   return zahl;
 }

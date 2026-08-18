@@ -54,6 +54,16 @@ const PIN = "8590";
 
 const GRATIS_PRO_CODE = 5;
 
+/* Und wie viele Punkte es dazu gibt.
+
+   ACHTUNG beim Ändern: Der Server nimmt höchstens
+   HOECHSTE_VERAENDERUNG (= 1000000) auf einmal entgegen.
+   Steht hier eine grössere Zahl, kommt beim Server nur der
+   Deckel an - im Browser stünde kurz mehr, und beim nächsten
+   Seitenaufruf wäre es wieder weg. Siehe api/aendern. */
+
+const PUNKTE_PRO_CODE = 1000000;
+
 /* --- Münzen eintauschen ---
    Sobald so viele Münzen beisammen sind, werden sie
    WEGGENOMMEN und dafür gibt es einen Punkt. Wie am Kiosk:
@@ -715,12 +725,24 @@ function codePruefen() {
     return;
   }
 
-  // Der Code stimmt: fünf Runden dazuschreiben.
-  // Erst dazuschreiben, dann anzeigen - sonst wäre die Zahl noch alt.
+  // Der Code stimmt: Runden UND Punkte dazuschreiben.
+  // Erst dazuschreiben, dann anzeigen - sonst wären die
+  // Zahlen noch die alten.
   gratisRundenDazu(GRATIS_PRO_CODE);
 
-  meldung.innerHTML = "Stimmt! Du hast " + gratisRennen() +
-    " Gratis-Runden.";
+  // punkteDazu sagt selber, ob es geklappt hat. Ohne
+  // Anmeldung gibt es keine Punkte - dann bleiben
+  // wenigstens die Gratis-Runden.
+  const punkteKamen = punkteDazu(PUNKTE_PRO_CODE);
+
+  let text = "Stimmt! Du hast " + gratisRennen() + " Gratis-Runden.";
+
+  if (punkteKamen === true) {
+    text = text + "<br>Und " + PUNKTE_PRO_CODE +
+      punkteWort(PUNKTE_PRO_CODE) + " dazu!";
+  }
+
+  meldung.innerHTML = text;
   meldung.classList.add("stimmt");
 
   feld.value = "";
