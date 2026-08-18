@@ -54,6 +54,18 @@ const PIN = "8590";
 
 const GRATIS_PRO_CODE = 5;
 
+/* --- Was die Leiste gerade anzeigt ---
+   "anmelden"     = du hast schon ein Konto
+   "registrieren" = du legst dir gerade eines an
+
+   Das ist ein Merkzettel, genau wie «erledigt» und
+   «verpatzt» beim Quiz. Er merkt sich, in welchem
+   Zustand die Leiste gerade ist.
+
+   let statt const, weil er sich ändern darf. */
+
+let leistenModus = "anmelden";
+
 /* ============================================
    Mit dem Server reden
    ============================================ */
@@ -296,6 +308,54 @@ function eingabeHolen() {
   return { name: name, passwort: passwort };
 }
 
+/* --- Zwischen «Anmelden» und «Registrieren» umschalten ---
+   Der Knopf «Neu hier?» legt NICHT sofort ein Konto an. Er
+   schaltet nur um: aus «Anmelden» wird «Registrieren».
+   Erst dieser Knopf legt dann wirklich an.
+
+   Warum so? Weil Anlegen kein Versehen sein soll. Man drückt
+   erst um - und sieht dann schwarz auf weiss, was passiert. */
+
+function modusWechseln() {
+
+  if (leistenModus === "anmelden") {
+    leistenModus = "registrieren";
+  } else {
+    leistenModus = "anmelden";
+  }
+
+  // Neu zeichnen löscht alles, was schon getippt wurde.
+  // Darum vorher merken und nachher zurückschreiben.
+  const name = document.getElementById("namensfeld").value;
+  const passwort = document.getElementById("passwortfeld").value;
+
+  leisteZeichnen();
+
+  document.getElementById("namensfeld").value = name;
+  document.getElementById("passwortfeld").value = passwort;
+
+  if (leistenModus === "registrieren") {
+    meldungZeigen("Denk dir ein Passwort aus - mindestens 4 Zeichen. " +
+      "Merk es dir gut, es gibt kein Zurücksetzen!", "");
+  } else {
+    meldungZeigen("", "");
+  }
+}
+
+/* --- Der grosse Knopf ---
+   Je nach Merkzettel meldet er an oder legt an. Auch die
+   Enter-Taste ruft ihn - so macht Enter immer dasselbe wie
+   der Knopf, der gerade dasteht. */
+
+function hauptknopfDruecken() {
+
+  if (leistenModus === "registrieren") {
+    registrieren();
+  } else {
+    anmelden();
+  }
+}
+
 /* Während wir auf den Server warten, sollen die Knöpfe
    nicht nochmal gedrückt werden können. */
 
@@ -360,6 +420,11 @@ async function registrieren() {
     });
 
     kontoUebernehmen(daten);
+
+    // Zurück auf «Anmelden», damit beim nächsten Abmelden
+    // wieder der normale Knopf dasteht.
+    leistenModus = "anmelden";
+
     leisteZeichnen();
     meldungZeigen("Konto angelegt. Merk dir das Passwort gut!", "stimmt");
 
@@ -380,6 +445,11 @@ function abmelden() {
 
   localStorage.removeItem(SCHLUESSEL_TOKEN);
   localStorage.removeItem(SCHLUESSEL_SPIELER);
+
+  // Wer sich abmeldet, will sich normalerweise wieder
+  // anmelden - nicht ein zweites Konto anlegen.
+  leistenModus = "anmelden";
+
   leisteZeichnen();
 }
 
@@ -627,22 +697,39 @@ function leisteZeichnen() {
   if (name === null) {
 
     // Niemand angemeldet: Name und Passwort zeigen.
+    // Die Beschriftung hängt am Merkzettel leistenModus.
+    let frage = "Wer spielt?";
+    let grosserKnopf = "Anmelden";
+    let kleinerKnopf = "Neu hier?";
+    let passwortArt = "current-password";
+
+    if (leistenModus === "registrieren") {
+      frage = "Neues Konto";
+      grosserKnopf = "Registrieren";
+      kleinerKnopf = "Zurück";
+
+      // new-password sagt dem Browser: hier wird eines
+      // ausgedacht, nicht ein altes eingesetzt.
+      passwortArt = "new-password";
+    }
+
     leiste.innerHTML =
-      '<span class="leiste-text">Wer spielt?</span>' +
+      '<span class="leiste-text">' + frage + '</span>' +
       '<input id="namensfeld" type="text" placeholder="Dein Name" ' +
       'maxlength="20" autocomplete="username">' +
       '<input id="passwortfeld" type="password" placeholder="Passwort" ' +
-      'maxlength="40" autocomplete="current-password">' +
-      '<button class="leiste-knopf" onclick="anmelden()">Anmelden</button>' +
-      '<button class="leiste-knopf leiste-zweit" onclick="registrieren()">' +
-      'Neu hier?</button>' +
+      'maxlength="40" autocomplete="' + passwortArt + '">' +
+      '<button class="leiste-knopf" onclick="hauptknopfDruecken()">' +
+      grosserKnopf + '</button>' +
+      '<button class="leiste-knopf leiste-zweit" onclick="modusWechseln()">' +
+      kleinerKnopf + '</button>' +
       freiMarke +
       '<p class="leiste-meldung" id="leistenmeldung"></p>';
 
-    // Auch die Enter-Taste soll anmelden - in beiden Feldern.
+    // Die Enter-Taste macht dasselbe wie der grosse Knopf.
     const enterHorcher = function (taste) {
       if (taste.key === "Enter") {
-        anmelden();
+        hauptknopfDruecken();
       }
     };
 

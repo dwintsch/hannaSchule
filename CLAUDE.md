@@ -178,9 +178,29 @@ Hintergrund dem Server Bescheid geben.
   man trotzdem normal spielen.
 - Der eingegebene Name wird von `<` und `>` befreit, sonst würde er als
   HTML gelesen.
-- Die Leiste hat jetzt **zwei** Knöpfe: «Anmelden» und «Neu hier?»
-  (= Konto erstellen). Dazu eine Meldungszeile `.leiste-meldung`, die über
-  die ganze Breite geht (`flex-basis: 100%`).
+- Die Leiste hat **zwei** Knöpfe und **zwei Zustände**, gemerkt in
+  `leistenModus` (`"anmelden"` / `"registrieren"`) — ein Merkzettel wie
+  `erledigt`/`verpatzt` beim Quiz:
+
+  | Modus | links | grosser Knopf | kleiner Knopf |
+  |---|---|---|---|
+  | `anmelden` | «Wer spielt?» | **Anmelden** | Neu hier? |
+  | `registrieren` | «Neues Konto» | **Registrieren** | Zurück |
+
+  «Neu hier?» legt also **nichts** an, es schaltet nur um. Erst
+  «Registrieren» legt an. So von Daniel gewünscht, und es ist auch besser:
+  ein Konto anlegen soll kein Versehen sein.
+- `modusWechseln()` muss Name und Passwort **vor** dem Neuzeichnen merken
+  und danach zurückschreiben — `leisteZeichnen()` baut die Leiste über
+  `innerHTML` neu auf, sonst wäre das Getippte weg.
+- `hauptknopfDruecken()` entscheidet nach `leistenModus`. Die Enter-Taste
+  ruft denselben Befehl, damit Enter immer das tut, was der Knopf sagt,
+  der gerade dasteht.
+- Nach erfolgreichem Registrieren und beim Abmelden geht `leistenModus`
+  auf `"anmelden"` zurück.
+- Dazu eine Meldungszeile `.leiste-meldung`, die über die ganze Breite geht
+  (`flex-basis: 100%`) und mit `:empty { display: none }` verschwindet,
+  solange nichts dasteht.
 - Beim **Konto erstellen** werden die Punkte mitgenommen, die auf diesem
   Computer schon unter demselben Namen herumliegen. Sonst wäre alles
   Gesammelte auf einen Schlag weg.
