@@ -464,14 +464,47 @@ geladen ist.
 Belohnungsspiel im Stil von Subway Surfers, **kostet 2 Punkte pro Runde**
 (`kosten` in `rennen.js`).
 
-- Gespielt wird mit einem **Auto** 🚗 (`#auto`), nicht mit einer Figur.
+- Gespielt wird mit einem **Spitalbett** (`#bett`), von oben gesehen, mit
+  einer Patientin darauf. Es ist ein **`<svg>` direkt in `rennen.html`**,
+  kein Emoji — dieselbe Begründung wie bei der Dachheldin: ein Emoji liesse
+  sich nicht umfärben, und ein Bett mit Patientin gibt es als Emoji gar nicht.
+  Teile mit eigener Klasse: `.bett-rahmen` `.bett-kopfteil` `.bett-rad`
+  `.bett-kissen` `.bett-decke` `.bett-falte` `.bett-haut` `.bett-haare`
+  `.bett-auge` `.bett-mund`. Die Farben stehen gebündelt unter
+  «HIER RICHTEST DU DAS BETT EIN» in `rennen.css`.
+- Beim Zusammenstoss wird die Zeichnung nur **versteckt**
+  (`bett.classList.add("zusammenstoss")`, CSS blendet `.knall` 💥 ein).
+  Vorher stand dort `bett.innerHTML = "…"` — das hätte das SVG zerstört.
+  Genau dieselbe Falle wie bei der Dachheldin.
+- Das Bett ist **64px hoch** und steht bei `bottom: 20px`, belegt also
+  y 336–400. Die Trefferprüfung nimmt aber weiterhin `bettOben = 350`
+  bis `bettUnten = 400`. Die obersten 14px (Kissen und Kopf) sind damit
+  **absichtlich unverwundbar**: so bleibt das Spielgefühl genau wie mit
+  dem alten Auto, und ein knapper Treffer wirkt nie unfair.
+- Hiess bis 18.08.2026 `#auto` und war ein 🚗. Beim Umbau **umbenannt** —
+  ein Name, der lügt, ist schlimmer als eine grosse Umbenennung. Achtung
+  beim Suchen-und-Ersetzen: `margin: 0 auto` steht auch im CSS.
 - 3 Spuren à 100px in einem 300×420px-Feld, Steuerung mit Pfeiltasten
   **und** zwei Knöpfen (wichtig fürs Vorführen ohne Tastatur).
+- **Die Leertaste startet** das Rennen. `preventDefault()` ist dabei
+  Pflicht: sonst scrollt die Seite *und* der Startknopf, der ja den Fokus
+  hat, feuert nochmal.
+- `tipptGerade()` fängt ab, dass die Tastatur ins Spiel greift, während
+  jemand oben in der Leiste Name oder Passwort eintippt. Ohne das würde
+  die Leertaste im Passwortfeld ein Rennen starten statt einen Leerschlag
+  zu machen. Gilt auch für die Pfeiltasten — dort war es schon vorher
+  falsch, nur ist es niemandem aufgefallen.
 - `setInterval(takt, 20)` ist das Herz: 50 Takte pro Sekunde, jeder rückt
   alles ein Stück. Tempo steigt mit `strecke / 300`.
-- Hindernis 🚧 = verloren. Stern ⭐ = **Schutzschild** 🛡 (`schutz`), damit
-  übersteht man genau ein Hindernis; das Auto pulsiert dann golden
-  (`#auto.geschuetzt`). Hat man schon einen Schild, gibt der Stern
+- Hindernisse sind **Spital-Sachen**: Spritze 💉, Tablette 💊, Pflaster 🩹.
+  Sie stehen **nur** in der Liste `hindernisse` zuoberst in `rennen.js`,
+  jedes mit `bild` und `name`. Der Name steht schon im **vierten Fall**
+  da («eine Spritze», «ein Pflaster») — dann braucht die Schlussmeldung
+  «Du bist in … gefahren» keine Grammatik im Code. Neue dürfen frei dazu.
+  Vorher war es eine einzelne Baustelle 🚧.
+- Hindernis berührt = verloren. Stern ⭐ = **Schutzschild** 🛡 (`schutz`), damit
+  übersteht man genau ein Hindernis; das Bett pulsiert dann golden
+  (`#bett.geschuetzt`). Hat man schon einen Schild, gibt der Stern
   stattdessen +50 Strecke — so ist er nie umsonst.
 - Sterne: 25 % Zufall **plus Garantie** — nach 4 Hindernissen ohne Stern
   kommt sicher einer (`dingeOhneStern >= 4`). Ohne Garantie kam beim

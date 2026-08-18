@@ -10,9 +10,22 @@ const spurBreite = 100;    // eine Spur ist 100 Pixel breit
 const startTempo = 4;      // Pixel pro Takt am Anfang
 const taktLaenge = 20;     // Millisekunden pro Takt
 
-// Wo das Auto steht (von oben gemessen)
-const autoOben = 350;
-const autoUnten = 400;
+// Wo das Bett steht (von oben gemessen)
+const bettOben = 350;
+const bettUnten = 400;
+
+/* --- Die Hindernisse ---
+   Lauter Sachen aus dem Spital. Neue duerfen frei dazu:
+   ein Zeichen (bild) und wie es in der Schlussmeldung heisst
+   (name). Der Name steht schon im vierten Fall da -
+   «Du bist in EINE Spritze gefahren», aber «in EIN Pflaster».
+   So braucht es keine Grammatik im Code. */
+
+const hindernisse = [
+  { bild: "&#128137;", name: "eine Spritze" },
+  { bild: "&#128138;", name: "eine Tablette" },
+  { bild: "&#129657;", name: "ein Pflaster" }
+];
 
 /* --- Die Schubladen --- */
 
@@ -29,7 +42,7 @@ let dingeOhneStern = 0;  // wie viele Hindernisse ohne Stern kamen
 
 const feld = document.getElementById("rennen");
 const strasse = document.getElementById("strasse");
-const auto = document.getElementById("auto");
+const bett = document.getElementById("bett");
 const tafel = document.getElementById("tafel");
 
 /* --- Anzeige oben --- */
@@ -84,10 +97,12 @@ function zeigeStarttafel() {
 
   tafel.innerHTML =
     "<div><strong>Bereit?</strong></div>" +
-    "<div>Fahr um die Hindernisse &#128679; herum." +
+    "<div>Fahr um die Spitalsachen herum: Spritzen &#128137;, " +
+    "Tabletten &#128138; und Pflaster &#129657;." +
     "<br>Ein Stern &#11088; gibt dir einen Schutzschild." +
     "<br>" + preis + "</div>" +
-    '<button class="tafelknopf" onclick="starten()">Rennen starten</button>';
+    '<button class="tafelknopf" onclick="starten()">Rennen starten</button>' +
+    '<div class="tastenhinweis">oder einfach die Leertaste drücken</div>';
 }
 
 /* --- Losrennen --- */
@@ -129,9 +144,9 @@ function starten() {
   seitLetztem = 0;
   dingeOhneStern = 0;
 
-  auto.style.left = spur * spurBreite + "px";
-  auto.innerHTML = "&#128663;";      // Auto
-  auto.classList.remove("geschuetzt");
+  bett.style.left = spur * spurBreite + "px";
+  bett.classList.remove("zusammenstoss");   // den Knall wieder wegnehmen
+  bett.classList.remove("geschuetzt");
   tafel.classList.add("weg");
 
   zeigeAnzeige();
@@ -177,9 +192,9 @@ function hindernisseBewegen() {
     ding.y = ding.y + tempo;
     ding.element.style.top = ding.y + "px";
 
-    // Berühren sich Auto und Ding?
+    // Berühren sich Bett und Ding?
     const trifftSpur = ding.spur === spur;
-    const trifftHoehe = ding.y + 44 > autoOben && ding.y < autoUnten;
+    const trifftHoehe = ding.y + 44 > bettOben && ding.y < bettUnten;
 
     if (trifftSpur === true && trifftHoehe === true) {
 
@@ -190,7 +205,7 @@ function hindernisseBewegen() {
         // so ist der Stern nie umsonst.
         if (schutz === false) {
           schutz = true;
-          auto.classList.add("geschuetzt");
+          bett.classList.add("geschuetzt");
         } else {
           strecke = strecke + 50;
         }
@@ -203,11 +218,11 @@ function hindernisseBewegen() {
 
           // Der Schild wird verbraucht: einmal durchfahren.
           schutz = false;
-          auto.classList.remove("geschuetzt");
+          bett.classList.remove("geschuetzt");
           wegnehmen(i);
 
         } else {
-          verloren();
+          verloren(ding.name);
           return;
         }
       }
@@ -254,13 +269,23 @@ function vielleichtNeuesHindernis() {
   // ein ganzes Rennen ohne Stern fahren - und genau das ist
   // beim Testen passiert.
   let art = "hindernis";
-  let bild = "&#128679;";          // Baustelle
+  let bild = "";
+  let name = "";
 
   if (Math.random() < 0.25 || dingeOhneStern >= 4) {
     art = "stern";
     bild = "&#11088;";             // Stern
     dingeOhneStern = 0;
   } else {
+
+    // Eines aus der Liste ganz oben, zufaellig ausgesucht.
+    // Math.random gibt eine Kommazahl zwischen 0 und 1.
+    // Mal der Laenge und abgerundet ergibt das eine
+    // gueltige Platznummer in der Liste.
+    const welches = hindernisse[Math.floor(Math.random() * hindernisse.length)];
+
+    bild = welches.bild;
+    name = welches.name;
     dingeOhneStern = dingeOhneStern + 1;
   }
 
@@ -273,7 +298,8 @@ function vielleichtNeuesHindernis() {
   element.style.top = "-50px";
   feld.appendChild(element);
 
-  dinger.push({ element: element, spur: neueSpur, y: -50, art: art });
+  dinger.push({ element: element, spur: neueSpur, y: -50, art: art,
+    name: name });
 }
 
 /* --- Steuern --- */
@@ -284,7 +310,7 @@ function nachLinks() {
   }
   if (spur > 0) {
     spur = spur - 1;
-    auto.style.left = spur * spurBreite + "px";
+    bett.style.left = spur * spurBreite + "px";
   }
 }
 
@@ -294,12 +320,28 @@ function nachRechts() {
   }
   if (spur < 2) {
     spur = spur + 1;
-    auto.style.left = spur * spurBreite + "px";
+    bett.style.left = spur * spurBreite + "px";
   }
 }
 
-// Die Pfeiltasten auf der Tastatur
+/* --- Die Tastatur ---
+
+   Zuerst eine Frage: Tippt gerade jemand in ein Feld?
+   Oben in der Leiste stehen Name und Passwort. Ohne diese
+   Pruefung wuerde die Leertaste im Passwortfeld das Rennen
+   starten, statt einen Leerschlag zu machen - und die
+   Pfeiltasten koennte man dort nicht mehr brauchen. */
+
+function tipptGerade() {
+  const wo = document.activeElement;
+  return wo !== null && wo.tagName === "INPUT";
+}
+
 document.onkeydown = function (taste) {
+
+  if (tipptGerade() === true) {
+    return;
+  }
 
   if (taste.key === "ArrowLeft") {
     taste.preventDefault();   // die Seite soll nicht scrollen
@@ -310,16 +352,34 @@ document.onkeydown = function (taste) {
     taste.preventDefault();
     nachRechts();
   }
+
+  /* Die Leertaste startet das Rennen.
+
+     preventDefault ist hier Pflicht. Ohne es passierten zwei
+     Dinge auf einmal: die Seite wuerde scrollen, UND der
+     Startknopf - der ja gerade den Fokus hat - wuerde nochmal
+     ausgeloest. Denselben Fehler gab es schon bei der
+     Dachheldin mit dem Springen. */
+
+  if (taste.key === " ") {
+    taste.preventDefault();
+
+    if (laeuft === false) {
+      starten();
+    }
+  }
 };
 
 /* --- Verloren --- */
 
-function verloren() {
+function verloren(worein) {
 
   laeuft = false;
   clearInterval(uhr);        // den Takt abstellen
 
-  auto.innerHTML = "&#128165;";      // Zusammenstoss
+  // Nur verstecken, nicht ueberschreiben - sonst waere die
+  // Zeichnung weg und beim naechsten Start nicht mehr da.
+  bett.classList.add("zusammenstoss");
 
   const istRekord = rekordSpeichern("rennen", strecke);
 
@@ -343,8 +403,15 @@ function verloren() {
     }
   }
 
+  // Steht ausnahmsweise nichts da, lassen wir den Satz weg.
+  let hineingefahren = "";
+  if (worein) {
+    hineingefahren = "<div>Du bist in " + worein + " gefahren.</div>";
+  }
+
   tafel.innerHTML =
     "<div><strong>Erwischt!</strong></div>" +
+    hineingefahren +
     "<div>Strecke: " + strecke + zusatz +
     "<br>Rekord: " + rekordVon("rennen") + "</div>" +
     knopf;

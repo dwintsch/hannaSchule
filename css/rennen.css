@@ -63,28 +63,34 @@ h1 {
   background-repeat: repeat-y;
 }
 
-/* --- Das Auto --- */
+/* --- Das Spitalbett --- */
 
-/* Es ist 100 Pixel breit - genau eine Spur.
-   transition lässt es weich zur Seite gleiten. */
-#auto {
+/* Der Kasten ist 100 Pixel breit - genau eine Spur.
+   Die Zeichnung darin ist schmaler und steht mittig.
+   transition laesst das Bett weich zur Seite gleiten. */
+#bett {
   position: absolute;
   bottom: 20px;
   left: 100px;
   width: 100px;
   text-align: center;
-  font-size: 40px;
+  font-size: 40px;      /* gilt nur fuer den Knall beim Zusammenstoss */
   transition: left 0.12s;
 }
 
-/* Mit Schutzschild leuchtet das Auto golden.
-   drop-shadow legt einen Schein um die Form des Autos -
-   nicht um den ganzen Kasten, wie box-shadow das täte. */
-#auto.geschuetzt {
+.bett-bild {
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+/* Mit Schutzschild leuchtet das Bett golden.
+   drop-shadow legt einen Schein um die Form des Bettes -
+   nicht um den ganzen Kasten, wie box-shadow das taete. */
+#bett.geschuetzt {
   animation: leuchten 0.6s alternate infinite;
 }
 
-/* alternate infinite heisst: immer wieder hin und zurück -
+/* alternate infinite heisst: immer wieder hin und zurueck -
    dadurch pulsiert der Schein. */
 @keyframes leuchten {
   from {
@@ -93,6 +99,86 @@ h1 {
   to {
     filter: drop-shadow(0 0 11px #f0b429);
   }
+}
+
+/* --- Beim Zusammenstoss ---
+   Die Zeichnung wird nur VERSTECKT und der Knall eingeblendet.
+   Wuerde das JavaScript stattdessen innerHTML ueberschreiben,
+   waere das ganze SVG weg und beim naechsten Start nicht mehr da. */
+
+.knall {
+  display: none;
+}
+
+#bett.zusammenstoss .bett-bild {
+  display: none;
+}
+
+#bett.zusammenstoss .knall {
+  display: inline;
+}
+
+/* ============================================
+   HIER RICHTEST DU DAS BETT EIN
+
+   Alle Farben der Zeichnung stehen hier beisammen.
+   Aendere einen Wert, druecke Ctrl+S und im Browser F5 -
+   mehr braucht es nicht.
+
+   fill   = die Flaeche ausmalen
+   stroke = die Linie drumherum
+   ============================================ */
+
+.bett-rahmen {
+  fill: #ffffff;
+  stroke: #b79ddb;
+  stroke-width: 2.5;
+}
+
+.bett-kopfteil {
+  fill: #b79ddb;
+}
+
+.bett-rad {
+  fill: #8c7aa8;
+}
+
+.bett-kissen {
+  fill: #f4f1fa;
+  stroke: #ddd2ee;
+  stroke-width: 1;
+}
+
+.bett-decke {
+  fill: #ddd2ee;
+  stroke: #b79ddb;
+  stroke-width: 2;
+}
+
+.bett-falte {
+  fill: none;
+  stroke: #b79ddb;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.bett-haut {
+  fill: #f6d5b8;
+}
+
+.bett-haare {
+  fill: #6b4a32;
+}
+
+.bett-auge {
+  fill: #3a2a1c;
+}
+
+.bett-mund {
+  fill: none;
+  stroke: #b5705a;
+  stroke-width: 1;
+  stroke-linecap: round;
 }
 
 /* --- Hindernisse und Sterne --- */
@@ -169,4 +255,11 @@ h1 {
   padding: 14px 0;
   background-color: #ece3f7;
   color: #5b3f87;
+}
+
+/* Der kleine Hinweis unter dem Startknopf auf der Tafel. */
+.tastenhinweis {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #7b5aa6;
 }
