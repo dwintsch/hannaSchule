@@ -384,7 +384,10 @@ body.nicht-angemeldet #geheimfeld {
   display: none;
 }
 
-/* Angemeldet: die Anmelde-Anleitung ist erledigt. */
+/* Angemeldet: beide Erklaerkaesten sind erledigt.
+   Wer drin ist, weiss ja, wie es geht - dann soll gleich
+   oben das erste Spiel stehen, nicht noch eine Anleitung. */
+body.angemeldet #anleitung,
 body.angemeldet #willkommen {
   display: none;
 }
