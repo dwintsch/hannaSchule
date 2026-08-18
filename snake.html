@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <title>Snake</title>
+
+    <!-- grund.css gilt auf allen Seiten, snake.css nur hier. -->
+    <link rel="stylesheet" href="css/grund.css">
+    <link rel="stylesheet" href="css/snake.css">
+  </head>
+<!-- Die Klasse sagt, ob jemand angemeldet ist. js/punkte.js stellt sie
+     richtig; das CSS blendet danach ein und aus. So ist von Anfang an
+     nichts zu sehen, was man noch nicht sehen darf. -->
+<body class="nicht-angemeldet">
+
+  <p class="zurueck-zur-startseite"><a href="index.html">&#8592; Zur Startseite</a></p>
+
+  <h1>Snake</h1>
+
+  <p class="anleitung">
+    Sammle die Vitamine &#127823; ein. Mit jedem wird die Schlange
+    l&auml;nger &ndash; und schneller.<br>
+    Nicht an die Wand und <strong>nicht in dich selber</strong>!<br>
+    Steuern mit den <strong>Pfeiltasten</strong> oder den Kn&ouml;pfen unten,
+    starten mit der <strong>Leertaste</strong>.
+  </p>
+
+  <p id="anzeige"></p>
+
+  <!-- Das Spielfeld. Die Kästchen stellt das JavaScript her. -->
+  <div id="feld">
+    <div id="gitter"></div>
+
+    <!-- Liegt über dem Spielfeld: Start- und Schlussmeldung -->
+    <div id="tafel"></div>
+  </div>
+
+  <!-- Steuerung zum Anklicken, für Laptop ohne Tastatur -->
+  <div id="steuerung">
+    <button class="steuerknopf" onclick="lenken(0, -1)">&#9650;</button>
+    <div class="steuerzeile">
+      <button class="steuerknopf" onclick="lenken(-1, 0)">&#9664;</button>
+      <button class="steuerknopf" onclick="lenken(0, 1)">&#9660;</button>
+      <button class="steuerknopf" onclick="lenken(1, 0)">&#9654;</button>
+    </div>
+  </div>
+
+  <script src="js/punkte.js"></script>
+
+  <!-- rangliste.js NACH punkte.js: es braucht serverFragen() und token() von dort. -->
+  <script src="js/rangliste.js"></script>
+  <script src="js/snake.js"></script>
+</body>
+</html>

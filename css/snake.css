@@ -1,0 +1,170 @@
+/* ============================================
+   Snake
+   Gilt NUR auf snake.html.
+
+   Die Farbe ist Pflaume. Sie liegt bewusst nah bei
+   Lila (Rennen) und Flieder (Dachheldin) - so sieht
+   man auf einen Blick, dass die drei zusammengehören:
+   es sind die Belohnungsspiele, die Punkte KOSTEN.
+   ============================================ */
+
+h1 {
+  color: #8a4f7d;
+}
+
+.anleitung {
+  max-width: 460px;
+  margin: 0 auto 15px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #16323d;
+}
+
+#anzeige {
+  font-size: 17px;
+  font-weight: bold;
+  color: #8a4f7d;
+  margin-bottom: 12px;
+}
+
+/* --- Das Spielfeld ---
+   position: relative, damit die Tafel darüber sich
+   an diesem Kasten ausrichtet und nicht an der Seite. */
+
+#feld {
+  position: relative;
+  width: 330px;
+  height: 330px;
+  box-sizing: border-box;
+  margin: 0 auto 15px;
+
+  background-color: #faf6f9;
+  border: 3px solid #c9a3c4;
+  border-radius: 14px;
+  padding: 6px;
+}
+
+/* Die Kästchen. Wie viele Spalten es sind, setzt das
+   JavaScript - so muss man «breite» nur an einem Ort ändern. */
+
+#gitter {
+  display: grid;
+  gap: 1px;
+  width: 100%;
+  height: 100%;
+}
+
+.kaestchen {
+  border-radius: 3px;
+}
+
+/* --- Die Schlange --- */
+
+.kaestchen.koerper {
+  background-color: #c9a3c4;
+}
+
+/* Der Kopf ist dunkler, damit man sieht, wo vorne ist. */
+.kaestchen.kopf {
+  background-color: #6b3a60;
+}
+
+/* --- Das Vitamin ---
+   Ein runder Punkt in Grün: die einzige Farbe hier, die
+   nicht zur Schlange gehört. So kann man es nicht
+   verwechseln. */
+
+.kaestchen.futter {
+  background-color: #6cbf84;
+  border-radius: 50%;
+}
+
+/* --- Die Tafel über dem Spielfeld ---
+   Sie liegt über allem und zeigt Start- oder Schlussmeldung.
+   rgba mit 0.92 heisst: fast deckend, man sieht das Feld
+   noch ganz schwach durch. */
+
+#tafel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 25px;
+
+  display: flex;
+  flex-direction: column;   /* alles untereinander */
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  background-color: rgba(255, 255, 255, 0.92);
+  border-radius: 12px;
+  color: #16323d;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Beim Spielen ist die Tafel weg. */
+#tafel.weg {
+  display: none;
+}
+
+#tafel strong {
+  font-size: 20px;
+  color: #8a4f7d;
+}
+
+.tafelknopf {
+  background-color: #e6d3e3;
+  color: #6b3a60;
+  font-size: 16px;
+  padding: 12px 22px;
+  margin: 4px 0 0;
+}
+
+.tafelknopf:disabled {
+  background-color: #eceff0;
+  color: #9aa7ad;
+  cursor: default;
+}
+
+.tastenhinweis {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #8a4f7d;
+}
+
+/* --- Die Steuerknöpfe unten ---
+   Vier Stück im Kreuz: oben einer, darunter drei.
+   Wichtig fürs Vorführen ohne Tastatur. */
+
+#steuerung {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.steuerzeile {
+  display: flex;
+  gap: 8px;
+}
+
+.steuerknopf {
+  width: 70px;
+  font-size: 22px;
+  padding: 12px 0;
+  margin: 0;
+
+  background-color: #f3e6f1;
+  color: #6b3a60;
+  border-radius: 10px;
+}
+
+.neustart {
+  color: #8a4f7d;
+  border-color: #8a4f7d;
+}

@@ -92,7 +92,7 @@ Vor jedem Push nachfragen: es ist die einzige Aktion, die nach aussen geht.
 ## Technisches
 
 Aus dem Quiz ist eine **Lernwelt** geworden: eine Startseite, von der aus
-sieben Spiele erreichbar sind.
+acht Spiele erreichbar sind.
 
 ```
 mein-quiz/
@@ -104,6 +104,7 @@ mein-quiz/
 ├── kreuzwort.html  ← das Kreuzworträtsel (Organe suchen)
 ├── rennen.html     ← Belohnungsspiel, KOSTET Punkte
 ├── dach.html       ← Belohnungsspiel Dachheldin, KOSTET Punkte
+├── snake.html      ← Belohnungsspiel Snake, KOSTET Punkte
 ├── css/
 │   ├── grund.css   ← gilt auf ALLEN Seiten (Farben, Schrift, Knöpfe,
 │   │                  .neustart, .zurueck-zur-startseite,
@@ -116,7 +117,8 @@ mein-quiz/
 │   ├── blitz.css   ← nur Blitzrunde
 │   ├── kreuzwort.css ← nur Kreuzworträtsel
 │   ├── rennen.css  ← nur Rennen
-│   └── dach.css    ← nur Dachheldin
+│   ├── dach.css    ← nur Dachheldin
+│   └── snake.css   ← nur Snake
 ├── staticwebapp.config.json  ← sagt Azure: der Server-Teil ist Node 20
 ├── api/            ← der Server-Teil (Azure Functions)
 │   ├── host.json
@@ -138,7 +140,8 @@ mein-quiz/
     ├── blitz.js    ← die Befehle von der Blitzrunde
     ├── kreuzwort.js ← die Befehle vom Kreuzworträtsel
     ├── rennen.js   ← die Befehle vom Rennen
-    └── dach.js     ← die Befehle von der Dachheldin
+    ├── dach.js     ← die Befehle von der Dachheldin
+    └── snake.js    ← die Befehle von Snake
 ```
 
 Zwei Sorten Spiele — das ist das Konzept (wie bei Anton):
@@ -146,7 +149,7 @@ Zwei Sorten Spiele — das ist das Konzept (wie bei Anton):
 | Sorte | Spiele | Punkte |
 |---|---|---|
 | **Lernspiele** | Quiz, Memory, Hangman, Blitzrunde, Kreuzworträtsel | **verdienen** |
-| **Belohnung** | Rennen, Dachheldin | **kosten** |
+| **Belohnung** | Rennen, Dachheldin, Snake | **kosten** |
 
 **Drei Sorten Zahlen — nicht verwechseln:**
 
@@ -769,6 +772,45 @@ Lila, damit man beide noch als Belohnungsspiele erkennt.
   `dach.js` weiss von alldem nichts — für das Spiel sind es weiterhin
   einfach Dächer mit der Klasse `.dach`.
 
+### Snake (snake.html)
+
+Das dritte Belohnungsspiel, **kostet 2 Punkte**. Von Daniel am 18.08.2026
+aus vier Vorschlägen gewählt. Farbe: **Pflaume** (`#8a4f7d`) — bewusst nah
+bei Lila (Rennen) und Flieder (Dachheldin), damit die drei als Gruppe
+erkennbar bleiben.
+
+Heisst nach aussen **Snake**, nicht «Die Schlange» — so von Daniel
+gewünscht. Die Dateien heissen entsprechend `snake.*`.
+
+- **Die Schlange ist eine Liste von Kästchennummern**, Kopf zuvorderst.
+  Jeder Takt hängt vorne eines an (`unshift`) und nimmt hinten eines weg
+  (`pop`) — das sieht aus wie Kriechen. Beim Fressen lassen wir das hintere
+  einfach stehen, schon ist sie länger. Mehr steckt nicht dahinter.
+- Feld 15×15. Die Kästchen werden **einmal** gebaut und danach nur noch
+  an- und ausgemalt. Alle 225 bei jedem Takt neu einzufärben ist so wenig
+  Arbeit, dass sich Feineres nicht lohnt.
+- **Die feine Regel** (hier bleibt man beim Selberbauen hängen): Der Kopf
+  darf auf das **letzte** Schwanzstück ziehen — das rutscht im selben Takt
+  ja sowieso weg. Nur wenn sie gerade wächst, bleibt es liegen und zählt.
+  Darum prüft `takt()` gegen `schlange.slice(0, -1)`, ausser beim Fressen.
+  Mein erster Test war genau hier falsch, nicht der Code.
+- **Kein 180-Grad-Wende**: `lenken()` vergleicht mit `richtung` (wohin sie
+  wirklich läuft), **nicht** mit `naechsteRichtung`. Sonst könnte man mit
+  zwei schnellen Tastendrücken doch umkehren — hoch, dann links, während
+  sie noch nach rechts läuft. Der Klassiker unter den Snake-Fehlern.
+- Die neue Richtung gilt erst im nächsten Takt. Darum die zwei Schubladen
+  `richtung` und `naechsteRichtung`.
+- Tempo: `startTempo` 200 ms, pro Vitamin 6 ms schneller, Deckel bei
+  `schnellstes` = 90 ms. `setInterval` kann man nicht schneller stellen —
+  `uhrStellen()` stoppt darum die alte Uhr und startet eine neue.
+- `futterHinlegen()` sammelt **alle freien Kästchen** ein und zieht eines.
+  Nicht «würfeln bis es passt»: das dauert immer länger, je voller das
+  Feld wird. Ist kein Kästchen mehr frei, hat man **gewonnen**.
+- Start mit der **Leertaste** oder dem Knopf, dazu `tipptGerade()` wie beim
+  Rennen. Vier Steuerknöpfe im Kreuz fürs Vorführen ohne Tastatur.
+- Rekord über `rekordSpeichern("snake", schlange.length)`.
+- Gibt **keine** Münzen — die bleiben bei der Dachheldin.
+
 ### Startseite (index.html)
 
 Reihenfolge auf der Seite: `.kopf` · `#anleitung` · `#willkommen` ·
@@ -984,6 +1026,7 @@ Kontrast braucht (Überschriften, Zähler), und beim Konfetti.
 | Lila | `#7b5aa6` / `#5b3f87`, pastell `#ece3f7` / `#ddd2ee`, Rahmen `#b79ddb` | Rennen |
 | Flieder | `#5a63b8` / `#414a94`, pastell `#e3e5f7` / `#d4d7f0`, Rahmen `#a8aee0` | Dachheldin |
 | Petrolblau | `#1f6f8b` / `#155268`, pastell `#dceaf1`, Rahmen `#9dc4d6` | Kreuzworträtsel |
+| Pflaume | `#8a4f7d` / `#6b3a60`, pastell `#f3e6f1` / `#e6d3e3`, Rahmen `#c9a3c4` | Snake |
 | Münz-Bronze | `#f7e0cd` + Schrift `#8f5228` | `.muenzen-marke` in der Leiste |
 
 Jedes Spiel hat **eine** eigene Farbe, die es überall durchzieht: Überschrift,
