@@ -310,6 +310,7 @@ die Rangliste sind weg.
 body.nicht-angemeldet #spielbereich { display: none; }
 body.nicht-angemeldet #geheimfeld   { display: none; }
 body.nicht-angemeldet #rangliste    { display: none; }   /* in grund.css */
+body.angemeldet       .kopf         { display: none; }
 body.angemeldet       #anleitung    { display: none; }
 body.angemeldet       #willkommen   { display: none; }
 ```
@@ -331,16 +332,19 @@ body.angemeldet       #willkommen   { display: none; }
 ohne Punkte. Für ein echtes Schloss müsste jede Spielseite beim Server
 nachfragen und sonst zur Startseite zurückschicken.
 
-**Zwei Kästen auf der Startseite — beide nur ausgeloggt:**
+**Was man nur ausgeloggt sieht:**
 
-| Kasten | Inhalt |
+| Teil | Inhalt |
 |---|---|
+| `.kopf` | Titel «Spielend den Körper kennenlernen» + Einleitung |
 | `#anleitung` | «So läuft es»: Punkte, Münzen, Server |
 | `#willkommen` | die drei Anmelde-Schritte |
 
-Beide verschwinden beim Anmelden. Wer drin ist, weiss ja, wie es geht —
-dann soll gleich oben das erste Spiel stehen. (Zuerst blieb `#anleitung`
-stehen; Daniel wollte sie ebenfalls weg.)
+Alle drei verschwinden beim Anmelden — dann steht gleich zuoberst das
+erste Spiel. Das kam in drei Schritten: zuerst blieben Kopf und Anleitung
+stehen, Daniel wollte beide ebenfalls weg. **Angemeldet hat die Startseite
+damit gar keine Überschrift mehr** — nur noch Leiste, Kacheln, Fusszeile.
+Das ist so gewollt, nicht vergessen worden.
 
 `#willkommen` ist gold gehalten wie der «Neu hier?»-Knopf, auf den er
 zeigt. Der Pfeil `↑` wippt per CSS-`animation` nach oben zur Leiste.
@@ -608,8 +612,8 @@ Lila, damit man beide noch als Belohnungsspiele erkennt.
 
 Reihenfolge auf der Seite: `.kopf` · `#anleitung` · `#willkommen` ·
 `#spielbereich` (beide `.spiele`-Blöcke) · `.fusszeile` · `#geheimfeld`.
-Nur `.kopf` und `.fusszeile` sind immer da — alles andere hängt am
-Anmeldestand, siehe «Erst anmelden, dann spielen».
+Nur die `.fusszeile` ist immer da — alles andere hängt am Anmeldestand,
+siehe «Erst anmelden, dann spielen».
 
 Design: **breite Kacheln untereinander** (von Hanna gewählt), max. 500px breit,
 mittig. Jede Kachel: rundes Symbol · Titel · Erklärungssatz · Marke · Pfeil.

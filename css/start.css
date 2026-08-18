@@ -384,9 +384,13 @@ body.nicht-angemeldet #geheimfeld {
   display: none;
 }
 
-/* Angemeldet: beide Erklaerkaesten sind erledigt.
-   Wer drin ist, weiss ja, wie es geht - dann soll gleich
-   oben das erste Spiel stehen, nicht noch eine Anleitung. */
+/* Angemeldet: Kopfbereich und beide Erklaerkaesten sind erledigt.
+   Wer drin ist, weiss ja, wie es geht - dann soll gleich zuoberst
+   das erste Spiel stehen, nicht noch ein Titel und eine Anleitung.
+
+   .kopf gibt es nur auf der Startseite, darum steht die Regel hier
+   und nicht in grund.css. */
+body.angemeldet .kopf,
 body.angemeldet #anleitung,
 body.angemeldet #willkommen {
   display: none;
