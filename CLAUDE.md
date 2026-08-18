@@ -193,8 +193,12 @@ Hintergrund dem Server Bescheid geben.
   Blitzrunde ab `zielPunkte` richtigen **1**,
   Hangman gewonnen **2**. Jedes Mal neu, nicht nur beim ersten Mal.
 - `punkteDazu(n)` gibt `false` zurück, wenn niemand angemeldet ist — die
-  Spiele zeigen dann den Hinweis «Melde dich oben an». Ohne Anmeldung kann
-  man trotzdem normal spielen.
+  Spiele zeigen dann den Hinweis «Melde dich oben an».
+  **Seit 18.08.2026 kommt man aber gar nicht mehr so weit:** ohne Anmeldung
+  sind die Spielkacheln auf der Startseite weggeblendet (siehe «Erst
+  anmelden, dann spielen»). Die Rückfalllogik in den Spielen bleibt
+  trotzdem drin — sie ist die zweite Sicherung, falls jemand eine
+  Spielseite direkt über die Adresszeile aufruft.
 - Der eingegebene Name wird von `<` und `>` befreit, sonst würde er als
   HTML gelesen.
 - Die Leiste hat **zwei** Knöpfe und **zwei Zustände**, gemerkt in
@@ -291,10 +295,58 @@ Fingerabdruck gespeichert ist. Zurücksetzen geht nur über das Azure-Portal
 direkt gegen die echte Tabelle laufen lässt (17 Prüfungen, inkl. Aufräumen
 des Testkontos). Es braucht die beiden Einstellungen als Umgebungsvariablen.
 
+### Erst anmelden, dann spielen
+
+Ohne Anmeldung sieht man auf der Startseite nur den Kopf, die Anleitung und
+den Kasten «Melde dich zuerst oben an». Die Spielkacheln, das Code-Feld und
+die Rangliste sind weg.
+
+**Wie das gemacht ist — bewusst ohne eigene JavaScript-Datei:**
+
+`anmeldeStatusZeigen()` in `punkte.js` schreibt eine Klasse an den `<body>`:
+`angemeldet` oder `nicht-angemeldet`. Den Rest macht allein das CSS:
+
+```css
+body.nicht-angemeldet #spielbereich { display: none; }
+body.nicht-angemeldet #geheimfeld   { display: none; }
+body.nicht-angemeldet #rangliste    { display: none; }   /* in grund.css */
+body.angemeldet       #willkommen   { display: none; }
+```
+
+- Aufgerufen wird es aus `leisteZeichnen()`. Das läuft sowieso bei jeder
+  Änderung des Anmeldestands — so steht der Aufruf an **einer** Stelle
+  statt an fünf.
+- In **allen sieben** HTML-Dateien steht `<body class="nicht-angemeldet">`.
+  Das ist Absicht: so ist von Anfang an nichts zu sehen, was man noch nicht
+  sehen darf. Stünde dort nichts, blitzten die Kacheln kurz auf, bevor das
+  JavaScript läuft. **Neue Seiten brauchen diese Klasse ebenfalls.**
+- Auf der Startseite umschliesst `<div id="spielbereich">` beide
+  `.spiele`-Blöcke. `#anleitung` und `#willkommen` liegen **ausserhalb** —
+  sonst würden sie sich selber wegblenden.
+
+**Ehrlich dazusagen:** Das ist eine Anzeige-Sperre, kein Schloss. Wer
+`quiz.html` direkt in die Adresszeile tippt, kann weiterhin spielen — nur
+ohne Punkte. Für ein echtes Schloss müsste jede Spielseite beim Server
+nachfragen und sonst zur Startseite zurückschicken.
+
+**Zwei Kästen auf der Startseite:**
+
+| Kasten | wann sichtbar | Inhalt |
+|---|---|---|
+| `#anleitung` | **immer** | «So läuft es»: Punkte, Münzen, Server |
+| `#willkommen` | nur ausgeloggt | die drei Anmelde-Schritte |
+
+`#willkommen` ist gold gehalten wie der «Neu hier?»-Knopf, auf den er
+zeigt. Der Pfeil `↑` wippt per CSS-`animation` nach oben zur Leiste.
+
 ### Die Rangliste (linker Rand)
 
 Ein Kasten, der am **linken Fensterrand** klebt und die zehn Besten zeigt.
 Auf allen Seiten, gebaut von `js/rangliste.js`.
+
+**Nur für Angemeldete.** Ohne Ausweis blendet das CSS den Kasten weg und
+`ranglisteLaden()` fragt den Server gar nicht erst — vorher stand da für
+Nichtangemeldete eine Liste, in der man selber nicht vorkommen konnte.
 
 - Der Kasten steht in **keiner** HTML-Datei — `ranglisteEinbauen()` hängt ihn
   unten in den Body, genau wie `leisteEinbauen()` bei der Spielerleiste.
@@ -314,7 +366,8 @@ Auf allen Seiten, gebaut von `js/rangliste.js`.
   `salz` und `fingerabdruck` sind nicht dabei. Ein Test prüft das eigens.
 - Der Ausweis ist beim Abfragen **freiwillig**. Ist einer dabei, markiert der
   Server die eigene Zeile mit `ich: true` (Klasse `.rang-zeile.ich`, gold
-  hinterlegt). Ohne Anmeldung sieht man die Liste trotzdem.
+  hinterlegt). Der Server selber würde auch ohne Ausweis antworten — die
+  Anzeige verlangt ihn, nicht die Schnittstelle.
 - Sortiert wird nach Punkten, bei Gleichstand nach Münzen, dann nach Name —
   der Name zuletzt, damit die Reihenfolge nicht bei jedem Aufruf anders ist.
 - Plätze 1–3 bekommen 🥇🥈🥉, ab Platz 4 die Zahl. `PLAETZE = 10` und
@@ -546,6 +599,11 @@ Lila, damit man beide noch als Belohnungsspiele erkennt.
   nicht angefasst werden.
 
 ### Startseite (index.html)
+
+Reihenfolge auf der Seite: `.kopf` · `#anleitung` · `#willkommen` ·
+`#spielbereich` (beide `.spiele`-Blöcke) · `.fusszeile` · `#geheimfeld`.
+Die letzten beiden Kästen und der Spielbereich hängen am Anmeldestand —
+siehe «Erst anmelden, dann spielen».
 
 Design: **breite Kacheln untereinander** (von Hanna gewählt), max. 500px breit,
 mittig. Jede Kachel: rundes Symbol · Titel · Erklärungssatz · Marke · Pfeil.

@@ -53,14 +53,6 @@ function meinPlatz(liste) {
 
 function platzPruefen(liste) {
 
-  // Nicht angemeldet? Dann gibt es keinen eigenen Platz.
-  // Den Merkzettel löschen, damit nach dem nächsten Anmelden
-  // sauber von vorne gezählt wird.
-  if (token() === null) {
-    localStorage.removeItem(SCHLUESSEL_PLATZ);
-    return;
-  }
-
   const jetzt = meinPlatz(liste);
   const roh = localStorage.getItem(SCHLUESSEL_PLATZ);
 
@@ -178,6 +170,19 @@ function ranglisteZeichnen(daten) {
    auch - dann ist einfach keine Zeile hervorgehoben. */
 
 function ranglisteLaden() {
+
+  /* Nicht angemeldet? Dann ist der Kasten sowieso weggeblendet
+     (`body.nicht-angemeldet #rangliste` in grund.css) - wir
+     müssen den Server gar nicht erst fragen.
+
+     Der Merkzettel mit dem letzten Platz wird gelöscht, damit
+     nach dem nächsten Anmelden sauber von vorne gezählt wird
+     und nicht sofort eine Jubel-Tafel aufpoppt. */
+
+  if (token() === null) {
+    localStorage.removeItem(SCHLUESSEL_PLATZ);
+    return;
+  }
 
   serverFragen("rangliste", { token: token() })
     .then(ranglisteZeichnen)

@@ -790,10 +790,38 @@ function meldungZeigen(text, art) {
   meldung.className = "leiste-meldung " + art;
 }
 
+/* --- Am <body> anschreiben, ob jemand angemeldet ist ---
+
+   Warum am body und nicht bei jedem Kasten einzeln?
+   Weil dann das CSS die ganze Arbeit macht. Im CSS steht dann
+   zum Beispiel:
+
+     body.nicht-angemeldet #spielbereich { display: none; }
+
+   «Blende den Spielbereich weg, solange am body
+   nicht-angemeldet steht.» Ein einziger Handgriff hier oben
+   schaltet so die ganze Seite um - und wir brauchen keine
+   eigene JavaScript-Datei für die Startseite.
+
+   classList.toggle(name, ja) heisst: setz die Klasse, wenn ja
+   true ist, und nimm sie weg, wenn ja false ist. */
+
+function anmeldeStatusZeigen() {
+
+  const drin = angemeldeterSpieler() !== null;
+
+  document.body.classList.toggle("angemeldet", drin);
+  document.body.classList.toggle("nicht-angemeldet", drin === false);
+}
+
 function leisteZeichnen() {
 
   const leiste = document.getElementById("spielerleiste");
   const name = angemeldeterSpieler();
+
+  // Bei jedem Neuzeichnen kann sich der Anmeldestand geändert
+  // haben - darum steht das hier und nicht an fünf Stellen.
+  anmeldeStatusZeigen();
 
   // Ein Schildchen mit den übrigen Gratis-Rennen.
   // Sind keine übrig, bleibt der Text leer - dann sieht man nichts.

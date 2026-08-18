@@ -369,3 +369,114 @@
 .fusszeile {
   margin-bottom: 60px;
 }
+
+/* ============================================
+   Anmelden, bevor es losgeht
+
+   Am <body> steht, ob jemand angemeldet ist
+   (gesetzt von js/punkte.js). Diese vier Regeln
+   blenden danach ein und aus - mehr braucht es nicht.
+   ============================================ */
+
+/* Nicht angemeldet: keine Spiele, kein Code-Feld. */
+body.nicht-angemeldet #spielbereich,
+body.nicht-angemeldet #geheimfeld {
+  display: none;
+}
+
+/* Angemeldet: die Anmelde-Anleitung ist erledigt. */
+body.angemeldet #willkommen {
+  display: none;
+}
+
+/* --- Die kurze Anleitung «So läuft es» ---
+   Steht immer da, auch nach dem Anmelden. */
+
+#anleitung {
+  max-width: 500px;
+  margin: 0 auto 26px;
+  padding: 18px 24px;
+  box-sizing: border-box;
+
+  background-color: #f4f7f8;
+  border: 1px solid #e3e9eb;
+  border-radius: 16px;
+
+  text-align: left;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #16323d;
+}
+
+#anleitung p {
+  margin: 0 0 10px;
+}
+
+#anleitung p:last-child {
+  margin-bottom: 0;
+}
+
+.anleitung-titel {
+  font-weight: bold;
+  font-size: 17px;
+  color: #2a9d8f;
+}
+
+/* --- Der Kasten «Melde dich zuerst an» --- */
+
+#willkommen {
+  max-width: 500px;
+  margin: 0 auto 26px;
+  padding: 22px 26px;
+  box-sizing: border-box;
+
+  /* Gold wie der «Neu hier?»-Knopf, auf den er zeigt. */
+  background-color: #fdf3d3;
+  border: 2px solid #e8c96b;
+  border-radius: 16px;
+
+  text-align: left;
+  color: #16323d;
+}
+
+/* Der Pfeil zeigt nach oben zur Anmeldeleiste.
+   Er wippt, damit man ihn nicht übersieht. */
+.willkommen-pfeil {
+  margin: 0;
+  text-align: center;
+  font-size: 30px;
+  line-height: 1;
+  color: #a8760a;
+  animation: pfeil-wippen 1.4s ease-in-out infinite;
+}
+
+@keyframes pfeil-wippen {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+
+#willkommen h2 {
+  margin: 6px 0 14px;
+  text-align: center;
+  font-size: 20px;
+  color: #a8760a;
+}
+
+.willkommen-schritte {
+  margin: 0;
+  padding-left: 22px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.willkommen-schritte li {
+  margin-bottom: 8px;
+}
+
+.willkommen-fuss {
+  margin: 14px 0 0;
+  text-align: center;
+  font-size: 15px;
+  font-weight: bold;
+  color: #a8760a;
+}

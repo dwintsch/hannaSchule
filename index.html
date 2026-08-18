@@ -8,7 +8,10 @@
     <link rel="stylesheet" href="css/grund.css">
     <link rel="stylesheet" href="css/start.css">
   </head>
-<body>
+<!-- Die Klasse sagt, ob jemand angemeldet ist. js/punkte.js stellt sie
+     richtig; das CSS blendet danach ein und aus. So ist von Anfang an
+     nichts zu sehen, was man noch nicht sehen darf. -->
+<body class="nicht-angemeldet">
 
   <!-- Der farbige Kopfbereich -->
   <div class="kopf">
@@ -21,6 +24,60 @@
       über den Beruf <strong>Fachfrau Gesundheit</strong> kennenlernen und üben.
     </p>
   </div>
+
+
+  <!-- Die kurze Anleitung. Sie steht IMMER da - auch wenn man
+       schon angemeldet ist. -->
+  <div id="anleitung">
+    <p class="anleitung-titel">So läuft es</p>
+
+    <p>
+      In den vier <strong>Lernspielen</strong> &ndash; Quiz, Memory, Hangman
+      und Blitzrunde &ndash; verdienst du <strong>Punkte&nbsp;⭐</strong>.
+    </p>
+    <p>
+      Mit den Punkten bezahlst du die zwei <strong>Belohnungsspiele</strong>:
+      das Rennen und die Dachheldin.
+    </p>
+    <p>
+      In der Dachheldin sammelst du <strong>Münzen&nbsp;🪙</strong>.
+      Für je 100 Münzen bekommst du einen Punkt geschenkt.
+    </p>
+    <p>
+      Dein Punktestand liegt auf einem Server. Darum ist er an
+      <strong>jedem Computer derselbe</strong>.
+    </p>
+  </div>
+
+  <!-- Das sieht man nur, solange man NICHT angemeldet ist.
+       Das Wegblenden macht das CSS über die Klasse am <body>. -->
+  <div id="willkommen">
+    <p class="willkommen-pfeil">&uarr;</p>
+
+    <h2>Melde dich zuerst oben an</h2>
+
+    <ol class="willkommen-schritte">
+      <li>
+        Denk dir einen <strong>Namen</strong> und ein
+        <strong>Passwort</strong> aus und tippe beides oben ein.
+      </li>
+      <li>
+        Zum <strong>ersten Mal</strong> hier? Drück den goldenen Knopf
+        <strong>«Neu hier?»</strong> und dann <strong>«Registrieren»</strong>.
+      </li>
+      <li>
+        Warst du <strong>schon einmal</strong> da? Dann genügt
+        <strong>«Anmelden»</strong>.
+      </li>
+    </ol>
+
+    <p class="willkommen-fuss">
+      Danach siehst du alle sechs Spiele und die Rangliste.
+    </p>
+  </div>
+
+  <!-- Alles ab hier sieht man erst nach dem Anmelden. -->
+  <div id="spielbereich">
 
   <p class="waehle">Wähle aus, womit du starten willst!</p>
 
@@ -141,6 +198,9 @@
     </a>
 
   </div>
+
+  </div>
+  <!-- Ende von #spielbereich -->
 
   <p class="fusszeile">Ein Schulprojekt von Hanna &middot; 2026</p>
 

@@ -250,6 +250,15 @@ button {
   }
 }
 
+/* Die Rangliste sieht man nur, wenn man angemeldet ist.
+   Solange am <body> nicht-angemeldet steht, ist sie weg.
+   Vorher stand da fuer Nichtangemeldete eine Liste, in der
+   man selber gar nicht vorkommen konnte - das ergab wenig Sinn. */
+
+body.nicht-angemeldet #rangliste {
+  display: none;
+}
+
 /* --- Die Tafeln oben in der Mitte ---
    Kurze Nachrichten, die man nicht uebersehen soll:
    «Platz 1!» oder «100 Muenzen sind einen Punkt wert».
