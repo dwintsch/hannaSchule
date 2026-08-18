@@ -202,7 +202,78 @@
   </div>
   <!-- Ende von #spielbereich -->
 
-  <p class="fusszeile">Ein Schulprojekt von Hanna &middot; 2026</p>
+  <!-- Der Name ist ein Knopf. Er sieht aus wie unterstrichener Text,
+       weil das CSS ihm alles wegnimmt, was ein Knopf sonst hat.
+       aria-expanded sagt Vorleseprogrammen, ob der Text offen ist. -->
+  <p class="fusszeile">
+    Ein Schulprojekt von
+    <button id="name-knopf" class="name-knopf" aria-expanded="false"
+            onclick="machertextUmschalten()">Hanna</button>
+    &middot; 2026
+  </p>
+
+  <!-- Erscheint erst, wenn man oben auf den Namen drückt. -->
+  <div id="machertext" class="machertext">
+
+    <h2>Wie das gemacht wurde</h2>
+
+    <p>
+      Diese Lernwelt ist ein Informatik-Projekt von Hanna, entstanden in
+      drei Tagen zusammen mit ihrem Vater. Programmierkenntnisse waren
+      vorher keine vorhanden.
+    </p>
+    <p>
+      Hanna lernt den Beruf <strong>Fachfrau Gesundheit</strong>. Darum geht
+      es in allen Spielen um Pflege, Abkürzungen und den Körper.
+    </p>
+
+    <h3>Womit gearbeitet wurde</h3>
+
+    <p>
+      <strong>VS Code</strong> &ndash; der Editor. Darin schreibt man den
+      Text, aus dem eine Internetseite besteht. Es ist eigentlich nur ein
+      besseres Schreibprogramm.
+    </p>
+    <p>
+      <strong>Der Browser</strong> &ndash; zum Anschauen und Ausprobieren.
+      Speichern mit <code>Ctrl</code>+<code>S</code>, im Browser
+      <code>F5</code> drücken, und man sieht sofort, was sich geändert hat.
+    </p>
+    <p>
+      <strong>Git und GitHub</strong> &ndash; hier wird jede Änderung
+      aufbewahrt. Man kann jederzeit zurück zu einer älteren Fassung. Das
+      ist wie eine Rückgängig-Taste, die auch morgen noch funktioniert.
+    </p>
+    <p>
+      <strong>Azure</strong> &ndash; von Microsoft. Dort liegt die Seite im
+      Internet. Sobald eine Änderung zu GitHub geschickt wird, baut sich die
+      Website automatisch neu. Das dauert etwa zwei Minuten.
+    </p>
+    <p>
+      <strong>Azure Table Storage</strong> &ndash; eine Tabelle im Internet.
+      Dort stehen die Konten mit den Punkten drin.
+    </p>
+    <p>
+      <strong>Claude Code</strong> &ndash; ein KI-Assistent. Er hat erklärt,
+      Fehler gesucht und die Teile geschrieben, die für den Anfang zu
+      schwierig waren. Vieles ist selber getippt, anderes wurde gebaut und
+      danach erklärt.
+    </p>
+    <p>
+      Was <strong>nicht</strong> benutzt wurde: fertige Baukästen von anderen
+      Leuten. Es gibt Sammlungen, mit denen so etwas schneller geht &ndash;
+      aber dann versteht man nicht, was passiert. Alles hier ist von Hand
+      geschrieben.
+    </p>
+
+    <p>
+      Das Passwort wird <strong>nie</strong> gespeichert. Gespeichert wird
+      nur eine Art Fingerabdruck davon. Aus einem Fingerabdruck lässt sich
+      das Passwort nicht zurückrechnen &ndash; auch für uns nicht. Darum
+      kann ein vergessenes Passwort auch nicht nachgeschaut werden.
+    </p>
+
+  </div>
 
   <!-- Das Code-Feld unten in der Ecke.
        Wer den Code kennt, darf das Rennen gratis fahren. -->
@@ -216,5 +287,8 @@
 
   <!-- rangliste.js NACH punkte.js: es braucht serverFragen() und token() von dort. -->
   <script src="js/rangliste.js"></script>
+
+  <!-- Nur die Startseite hat diese Datei: der Knopf mit dem Namen. -->
+  <script src="js/start.js"></script>
 </body>
 </html>

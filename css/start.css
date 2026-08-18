@@ -487,3 +487,86 @@ body.angemeldet #willkommen {
   font-weight: bold;
   color: #a8760a;
 }
+
+/* ============================================
+   Der Name in der Fusszeile
+
+   Er ist ein <button>, kein Text - damit er auch
+   mit der Tastatur erreichbar ist. Aussehen soll
+   er aber wie unterstrichener Text. Darum nehmen
+   wir ihm hier alles weg, was ein Knopf sonst hat
+   (Farbe, Rahmen, Polster).
+   ============================================ */
+
+.name-knopf {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+
+  /* inherit heisst «nimm dasselbe wie drumherum».
+     So passt er sich der Fusszeile an. */
+  font: inherit;
+  color: inherit;
+
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.name-knopf:hover,
+.name-knopf:focus {
+  color: #2a9d8f;
+}
+
+/* --- Der Text, der beim Draufdrücken erscheint --- */
+
+.machertext {
+  display: none;   /* zu - bis js/start.js die Klasse «offen» setzt */
+}
+
+.machertext.offen {
+  display: block;
+
+  max-width: 500px;
+  margin: 0 auto 40px;
+  padding: 22px 26px;
+  box-sizing: border-box;
+
+  background-color: #f4f7f8;
+  border: 1px solid #e3e9eb;
+  border-radius: 16px;
+
+  text-align: left;
+  font-size: 15px;
+  line-height: 1.55;
+  color: #16323d;
+}
+
+.machertext h2 {
+  margin: 0 0 14px;
+  font-size: 20px;
+  color: #2a9d8f;
+}
+
+.machertext h3 {
+  margin: 22px 0 10px;
+  font-size: 17px;
+  color: #2a9d8f;
+}
+
+.machertext p {
+  margin: 0 0 12px;
+}
+
+.machertext p:last-child {
+  margin-bottom: 0;
+}
+
+/* Ctrl, S und F5 sollen wie Tasten aussehen. */
+.machertext code {
+  background-color: #ffffff;
+  border: 1px solid #cdd8dc;
+  border-radius: 5px;
+  padding: 1px 6px;
+  font-size: 14px;
+}

@@ -128,6 +128,7 @@ mein-quiz/
 └── js/
     ├── punkte.js   ← Anmelden + Punkte + Münzen + Code, auf ALLEN Seiten
     ├── rangliste.js ← die Rangliste links, auf ALLEN Seiten
+    ├── start.js     ← NUR Startseite: der Knopf mit dem Namen
     ├── konfetti.js ← wird von MEHREREN Spielen gebraucht
     ├── quiz.js     ← die Befehle vom Quiz
     ├── memory.js   ← die Befehle vom Memory
@@ -348,6 +349,36 @@ Das ist so gewollt, nicht vergessen worden.
 
 `#willkommen` ist gold gehalten wie der «Neu hier?»-Knopf, auf den er
 zeigt. Der Pfeil `↑` wippt per CSS-`animation` nach oben zur Leiste.
+
+### Der Name in der Fusszeile (`#machertext`, `js/start.js`)
+
+Unten steht «Ein Schulprojekt von **Hanna** · 2026». Der Name ist
+unterstrichen und anklickbar; darunter klappt der Text «Wie das gemacht
+wurde» auf — welche Programme benutzt wurden und wie das Passwort
+gespeichert wird.
+
+- Der Name ist ein **`<button>`**, kein `<span>`. Nur so kommt man mit der
+  Tabulatortaste hin und kann ihn mit Enter auslösen. Das CSS nimmt ihm
+  alles weg, was ein Knopf sonst hat (`background: none`, `border: none`,
+  `font: inherit`), damit er wie Text aussieht.
+- `machertextUmschalten()` setzt nur die Klasse `offen`. Das Anzeigen macht
+  wieder das CSS (`.machertext` ist `display: none`, `.machertext.offen`
+  ist `display: block`) — dasselbe Muster wie beim Anmelde-Zustand.
+- `aria-expanded` am Knopf wird mitgeführt, damit ein Vorleseprogramm
+  weiss, ob der Text offen ist.
+- **`js/start.js` ist die erste und einzige Datei nur für die Startseite.**
+  Vorher kam sie ohne aus. Wird sie grösser, gehört Startseiten-Logik
+  hierhin und nicht in `punkte.js`.
+- `#machertext` liegt **ausserhalb** von `#spielbereich` — sonst wäre er
+  für Nichtangemeldete weg, und gerade die wollen vielleicht wissen, was
+  das hier ist.
+
+**Zum Text selber:** In drei Runden mit Daniel gekürzt. Draussen sind
+bewusst: die drei Sprachen (HTML/CSS/JS), die Aufteilung nach Tagen, die
+Liste «Was ich gelernt habe» und «Was schiefging». Der Text steht in der
+**dritten Person** — die Ich-Form wurde ausdrücklich verworfen. Der
+Abschnitt über **Claude Code** ist bewusst drin: bei einem Schulprojekt
+ist offen gesagt besser als eine Lücke.
 
 ### Die Rangliste (linker Rand)
 
@@ -611,7 +642,8 @@ Lila, damit man beide noch als Belohnungsspiele erkennt.
 ### Startseite (index.html)
 
 Reihenfolge auf der Seite: `.kopf` · `#anleitung` · `#willkommen` ·
-`#spielbereich` (beide `.spiele`-Blöcke) · `.fusszeile` · `#geheimfeld`.
+`#spielbereich` (beide `.spiele`-Blöcke) · `.fusszeile` · `#machertext` ·
+`#geheimfeld`.
 Nur die `.fusszeile` ist immer da — alles andere hängt am Anmeldestand,
 siehe «Erst anmelden, dann spielen».
 
