@@ -185,7 +185,12 @@ Hintergrund dem Server Bescheid geben.
   anders funktioniert als früher.
 - Die Leiste steht in **keiner** HTML-Datei — `leisteEinbauen()` setzt sie
   oben in den Body. Neue Seiten brauchen nur `<script src="js/punkte.js">`.
-- Abmelden löscht nur, *wer* angemeldet ist. Die Punkte bleiben stehen.
+- Abmelden löscht *wer* angemeldet ist **und die Gratis-Runden**. Die
+  Punkte bleiben stehen — die liegen ja auf dem Server.
+  Warum die Gratis-Runden weg müssen: sie gehören zwar zum Computer und
+  nicht zum Konto, sollen aber nicht an die nächste Person weitervererbt
+  werden, die sich hier anmeldet. Von Daniel am 18.08.2026 gewünscht.
+  Wer sie wiederhaben will, tippt den Code nochmal ein.
 - **Münz-Eintausch** (`muenzenEintauschen()`): Sobald `MUENZEN_PRO_PUNKT`
   (= 100) Münzen beisammen sind, werden sie **weggenommen** und dafür gibt
   es 1 Punkt. Wie am Kiosk: Münzen rein, Ware raus.
@@ -300,6 +305,8 @@ funktioniert das Anmelden auch, wenn man `index.html` per Doppelklick
 **Was NICHT auf den Server geht:** die Gratis-Runden. Die gehören zum
 Computer, an dem der Code eingetippt wurde, nicht zum Konto — sonst könnte
 man mit einem Code auf allen Geräten gleichzeitig gratis spielen.
+Beim **Abmelden** werden sie trotzdem gelöscht, damit sie nicht an die
+nächste Person weitergehen.
 
 **Passwort vergessen** gibt es nicht. Es führt kein Weg zurück, weil nur der
 Fingerabdruck gespeichert ist. Zurücksetzen geht nur über das Azure-Portal

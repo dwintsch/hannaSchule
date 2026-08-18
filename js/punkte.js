@@ -482,6 +482,16 @@ function abmelden() {
   localStorage.removeItem(SCHLUESSEL_TOKEN);
   localStorage.removeItem(SCHLUESSEL_SPIELER);
 
+  /* Auch die Gratis-Runden sind weg.
+
+     Sie gehören zwar zum Computer und nicht zum Konto - aber
+     wer sich abmeldet, gibt den Platz frei. Sonst würde die
+     nächste Person die Gratis-Runden erben, die jemand anders
+     mit dem Code freigeschaltet hat. Wer sie wieder will,
+     tippt den Code einfach nochmal ein. */
+
+  localStorage.removeItem(SCHLUESSEL_GRATIS);
+
   // Wer sich abmeldet, will sich normalerweise wieder
   // anmelden - nicht ein zweites Konto anlegen.
   leistenModus = "anmelden";
@@ -645,6 +655,10 @@ function punkteAbziehen(anzahl) {
    zum Computer, an dem man den Code eingetippt hat -
    nicht zum Konto. Sonst könnte man mit einem Code
    auf allen Geräten gleichzeitig gratis spielen.
+
+   Beim Abmelden werden sie trotzdem gelöscht: sie sollen
+   nicht an die nächste Person weitervererbt werden.
+   Siehe abmelden() weiter oben.
    ============================================ */
 
 function gratisRennen() {
