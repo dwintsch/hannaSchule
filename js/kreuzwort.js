@@ -1,5 +1,5 @@
 /* ============================================
-   Buchstabensalat
+   Kreuzworträtsel
    Organe in einem Gitter aus Buchstaben suchen.
    ============================================ */
 
@@ -11,14 +11,16 @@
    · keine Leerschläge und keine Bindestriche
    · höchstens so lang wie das Gitter breit ist (also 12)
 
-   Es sind mehr, als in einer Runde gebraucht werden.
-   Darum ist jede Runde anders. */
+   Im Moment sind es genau so viele, wie pro Runde versteckt
+   werden (anzahlWoerter). Anders wird jede Runde trotzdem:
+   die Wörter landen jedes Mal woanders im Gitter.
+
+   Schreibst du mehr dazu, werden pro Runde nur noch
+   anzahlWoerter davon ausgesucht - dann wechseln auch die
+   Wörter selber. */
 
 const organe = [
-  "HERZ", "LUNGE", "LEBER", "NIERE", "MAGEN", "DARM", "MILZ", "HAUT",
-  "GEHIRN", "BLASE", "MUSKEL", "KNOCHEN", "ARTERIE", "VENE", "THYMUS",
-  "MANDEL", "DICKDARM", "MASTDARM", "KEHLKOPF", "PROSTATA", "EIERSTOCK",
-  "BAUCHFELL", "STIMMBAND", "ZWERCHFELL", "GALLENBLASE", "LYMPHKNOTEN"
+  "GEHIRN", "HERZ", "LUNGE", "LEBER", "NIERE", "MAGEN", "DARM", "HAUT"
 ];
 
 /* --- Einstellungen. Hier darfst du drehen. --- */
@@ -31,13 +33,16 @@ const belohnung = 2;       // Punkte, wenn ALLE gefunden sind
 /* In welche Richtungen ein Wort liegen darf.
    ds = Schritt zur Seite, dz = Schritt nach unten.
 
-   Absichtlich kein Rückwärts: ein Wort von hinten zu lesen
-   ist viel schwerer und macht keinen Spass mehr. */
+   Nur waagrecht und senkrecht - wie in einem richtigen
+   Kreuzworträtsel. Schräg gab es kurz, wurde aber wieder
+   herausgenommen.
+
+   Auch kein Rückwärts: ein Wort von hinten zu lesen ist
+   viel schwerer und macht keinen Spass mehr. */
 
 const richtungen = [
   { ds: 1, dz: 0 },   // waagrecht nach rechts
-  { ds: 0, dz: 1 },   // senkrecht nach unten
-  { ds: 1, dz: 1 }    // schräg nach rechts unten
+  { ds: 0, dz: 1 }    // senkrecht nach unten
 ];
 
 const buchstaben = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -304,7 +309,7 @@ function feldGeklickt(nr) {
   auswahlLoeschen();
 
   if (felder === null) {
-    meldung("Das ist keine gerade Linie.", "daneben");
+    meldung("Nur waagrecht oder senkrecht.", "daneben");
     return;
   }
 
@@ -314,11 +319,9 @@ function feldGeklickt(nr) {
 /* --- Der Strich zwischen zwei Feldern ---
 
    Gibt die Felder dazwischen zurück - aber nur, wenn die
-   zwei Felder wirklich auf einer geraden Linie liegen:
-   gleiche Zeile, gleiche Spalte, oder genau schräg.
-
-   Genau schräg heisst: gleich viele Schritte zur Seite wie
-   nach unten. Darum der Vergleich der beiden Abstände.
+   zwei Felder in derselben Zeile oder in derselben Spalte
+   liegen. Schräg zählt hier nicht: dort liegt ja auch kein
+   Wort.
 
    Passt es nicht, kommt null zurück. */
 
@@ -332,10 +335,9 @@ function strichVon(a, b) {
   const weitS = spalteB - spalteA;
   const weitZ = zeileB - zeileA;
 
-  const geradeaus = (weitS === 0 || weitZ === 0);
-  const schraeg = (Math.abs(weitS) === Math.abs(weitZ));
-
-  if (geradeaus === false && schraeg === false) {
+  // Eines von beiden muss 0 sein: entweder gleiche Zeile
+  // (kein Schritt nach unten) oder gleiche Spalte.
+  if (weitS !== 0 && weitZ !== 0) {
     return null;
   }
 
