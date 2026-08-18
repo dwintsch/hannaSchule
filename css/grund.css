@@ -87,11 +87,15 @@ button {
 }
 
 
-/* Der zweite Knopf «Neu hier?» soll leiser sein als
-   «Anmelden» - man braucht ihn ja nur ein einziges Mal. */
+/* Der zweite Knopf «Neu hier?» ist gold - dieselbe Farbe wie
+   die Blitzrunde. So sieht man auf einen Blick, dass er etwas
+   anderes tut als der türkise «Anmelden» daneben.
+
+   Schrift kräftig, Rahmen hell: genau so macht es die
+   Blitzrunde auch. Siehe Farbtabelle in CLAUDE.md. */
 .leiste-zweit {
-  color: #6b7d84;
-  border-color: #cdd8dc;
+  color: #a8760a;
+  border-color: #e8c96b;
 }
 
 .leiste-knopf:disabled {

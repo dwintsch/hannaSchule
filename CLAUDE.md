@@ -651,7 +651,7 @@ Kontrast braucht (Überschriften, Zähler), und beim Konfetti.
 | Pastellrot | `#f7cfc9` + Schrift `#8c3125` | «falsch» in Quiz und Hangman |
 | Rosa | `#c2557a`, Karten `#f7d9e3` | Memory |
 | Orange | `#d2691e`, hell `#e8a76b`, pastell `#fde8d7` | Hangman |
-| Gold | `#a8760a`, pastell `#fdf3d3`, Rahmen `#e8c96b` | Blitzrunde |
+| Gold | `#a8760a`, pastell `#fdf3d3`, Rahmen `#e8c96b` | Blitzrunde, Knopf «Neu hier?» |
 | Lila | `#7b5aa6` / `#5b3f87`, pastell `#ece3f7` / `#ddd2ee`, Rahmen `#b79ddb` | Rennen |
 | Flieder | `#5a63b8` / `#414a94`, pastell `#e3e5f7` / `#d4d7f0`, Rahmen `#a8aee0` | Dachheldin |
 | Münz-Bronze | `#f7e0cd` + Schrift `#8f5228` | `.muenzen-marke` in der Leiste |
