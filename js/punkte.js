@@ -54,10 +54,10 @@ const PIN = "8590";
 
 const GRATIS_PRO_CODE = 5;
 
-/* --- Münzen umtauschen ---
-   Für je so viele gesammelte Münzen gibt es 1 Punkt geschenkt.
-   Damit sind die Münzen aus der Dachheldin nicht mehr nur eine
-   Sammelzahl, sondern zahlen sich am Schluss auch aus.
+/* --- Münzen eintauschen ---
+   Sobald so viele Münzen beisammen sind, werden sie
+   WEGGENOMMEN und dafür gibt es einen Punkt. Wie am Kiosk:
+   Münzen rein, Ware raus.
 
    Hier darfst du drehen: 50 macht es leichter, 200 schwerer. */
 
@@ -289,9 +289,9 @@ function punkteVon(name) {
 
    Punkte verdient man in den Lernspielen und bezahlt damit die
    Belohnungsspiele. Münzen sammelt man IM Belohnungsspiel ein.
-   Bezahlen kann man mit ihnen nichts. Dafür gibt es für je
-   100 gesammelte Münzen einen Punkt geschenkt - siehe
-   MUENZEN_PRO_PUNKT weiter oben.
+   Sobald 100 beisammen sind, werden sie gegen einen Punkt
+   eingetauscht und sind danach weg - siehe
+   muenzenEintauschen() und MUENZEN_PRO_PUNKT weiter oben.
    Darum haben sie ihre eigene Schublade im Notizheft. */
 
 function muenzenVon(name) {
@@ -417,6 +417,10 @@ async function anmelden() {
     // in der Rangliste soll darum hervorgehoben werden.
     ranglisteAuffrischen();
 
+    // Lagen vom letzten Mal schon 100 Münzen herum, werden
+    // sie gleich hier eingetauscht.
+    muenzenEintauschen();
+
     // Falls noch etwas vom letzten Mal liegen geblieben ist.
     stapelSenden();
 
@@ -531,54 +535,69 @@ function muenzenDazu(anzahl) {
     return false;
   }
 
-  const vorher = muenzenVon(name);
-  const nachher = vorher + anzahl;
-
-  localStorage.setItem(SCHLUESSEL_MUENZEN + name, nachher);
+  localStorage.setItem(SCHLUESSEL_MUENZEN + name, muenzenVon(name) + anzahl);
   stapelDazu({ muenzen: anzahl });
 
-  /* --- Die Belohnung ---
-     Für je 100 Münzen gibt es einen Punkt.
-
-     Wie rechnet man aus, ob gerade eine volle Hunderterstufe
-     überschritten wurde? Man schaut, wie viele Hunderter es
-     vorher waren und wie viele es jetzt sind - die Differenz
-     ist die Belohnung.
-
-     Math.floor schneidet die Nachkommastellen weg:
-     aus 99/100 = 0.99 wird 0, aus 100/100 = 1 wird 1.
-
-     Beispiel: 99 -> 101 Münzen
-       vorher:  floor(99/100)  = 0
-       nachher: floor(101/100) = 1
-       Belohnung: 1 - 0 = 1 Punkt
-
-     So funktioniert es auch, wenn jemand mit einem Schlag
-     250 Münzen bekäme - dann gäbe es zwei Punkte auf einmal. */
-
-  const belohnung = Math.floor(nachher / MUENZEN_PRO_PUNKT) -
-    Math.floor(vorher / MUENZEN_PRO_PUNKT);
-
-  if (belohnung > 0) {
-
-    // punkteDazu schickt gleich den ganzen Stapel ab -
-    // die Münzen von oben reisen also mit.
-    punkteDazu(belohnung);
-
-    let wort = " Punkte";
-    if (belohnung === 1) {
-      wort = " Punkt";
-    }
-
-    tafelZeigen("\u{1FA99} " + nachher + " Münzen! Das gibt " +
-      belohnung + wort + " \u{2B50}", 5000);
-
-  } else {
+  // Sind jetzt 100 beisammen? Dann gleich eintauschen.
+  // Der Eintausch schickt den Stapel selber ab - darum
+  // nur dann selber schicken, wenn nichts getauscht wurde.
+  if (muenzenEintauschen() === 0) {
     stapelSenden();
   }
 
   leisteZeichnen();
   return true;
+}
+
+/* --- Münzen gegen Punkte eintauschen ---
+
+   Sobald 100 Münzen beisammen sind, werden sie WEGGENOMMEN
+   und dafür gibt es einen Punkt. Wie am Kiosk: Münzen rein,
+   Ware raus - die Münzen sind danach weg.
+
+   Math.floor schneidet die Nachkommastellen weg. Aus
+   250 / 100 = 2.5 wird also 2. So viele Punkte gibt es,
+   und 200 Münzen werden abgezogen - die restlichen 50
+   bleiben liegen und zählen beim nächsten Mal mit.
+
+   Zurück kommt die Anzahl Punkte, damit der Aufrufer weiss,
+   ob überhaupt etwas passiert ist. */
+
+function muenzenEintauschen() {
+
+  const name = angemeldeterSpieler();
+
+  if (name === null) {
+    return 0;
+  }
+
+  const habe = muenzenVon(name);
+  const belohnung = Math.floor(habe / MUENZEN_PRO_PUNKT);
+
+  if (belohnung === 0) {
+    return 0;
+  }
+
+  const abzug = belohnung * MUENZEN_PRO_PUNKT;
+
+  // Erst die Münzen weg - lokal und beim Server.
+  // Minus, weil sie abgezogen werden.
+  localStorage.setItem(SCHLUESSEL_MUENZEN + name, habe - abzug);
+  stapelDazu({ muenzen: -abzug });
+
+  // Dann die Punkte dazu. punkteDazu schickt den ganzen
+  // Stapel ab - die abgezogenen Münzen reisen also mit.
+  punkteDazu(belohnung);
+
+  let wort = " Punkt";
+  if (belohnung > 1) {
+    wort = " Punkte";
+  }
+
+  tafelZeigen("🪙 " + abzug + " Münzen eingetauscht gegen " +
+    belohnung + wort + " ⭐", 5000);
+
+  return belohnung;
 }
 
 /* --- Punkte bezahlen ---
@@ -933,6 +952,10 @@ function kontoAuffrischen() {
 
       // Erst jetzt nachreichen, was liegen geblieben ist.
       stapelSenden();
+
+      // Hat man am anderen Computer Münzen gesammelt, sind
+      // vielleicht 100 beisammen. Dann jetzt eintauschen.
+      muenzenEintauschen();
     })
     .catch(function (fehler) {
 

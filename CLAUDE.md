@@ -150,7 +150,7 @@ Zwei Sorten Spiele — das ist das Konzept (wie bei Anton):
 | Was | Wo verdient | Wofür |
 |---|---|---|
 | **Punkte** ⭐ | Lernspiele | bezahlen die Belohnungsspiele |
-| **Münzen** 🪙 | nur in der Dachheldin | pro 100 Münzen gibt es **1 Punkt** geschenkt |
+| **Münzen** 🪙 | nur in der Dachheldin | je 100 werden **gegen 1 Punkt eingetauscht** und sind dann weg |
 | **Gratis-Runden** 🔓 | Code-Feld auf der Startseite | ersetzen die Punkte |
 
 **Anmelden und Punkte** (`js/punkte.js`, CSS `#spielerleiste` in `grund.css`):
@@ -180,13 +180,19 @@ Hintergrund dem Server Bescheid geben.
 - Die Leiste steht in **keiner** HTML-Datei — `leisteEinbauen()` setzt sie
   oben in den Body. Neue Seiten brauchen nur `<script src="js/punkte.js">`.
 - Abmelden löscht nur, *wer* angemeldet ist. Die Punkte bleiben stehen.
-- **Münz-Bonus:** Für je `MUENZEN_PRO_PUNKT` (= 100) gesammelte Münzen gibt
-  es **1 Punkt** geschenkt. Gerechnet wird in `muenzenDazu()` über den
-  Sprung der Hunderterstufe:
-  `floor(nachher / 100) - floor(vorher / 100)`. So funktioniert es auch,
-  wenn jemand mit einem Schlag 250 Münzen bekäme (dann zwei Punkte), und
-  es kann **nicht** doppelt auslösen, wenn man von 100 auf 101 weiterzählt.
-  Dazu erscheint eine Tafel.
+- **Münz-Eintausch** (`muenzenEintauschen()`): Sobald `MUENZEN_PRO_PUNKT`
+  (= 100) Münzen beisammen sind, werden sie **weggenommen** und dafür gibt
+  es 1 Punkt. Wie am Kiosk: Münzen rein, Ware raus.
+  `floor(habe / 100)` ergibt die Punkte, `punkte × 100` die abgezogenen
+  Münzen — der Rest bleibt liegen und zählt beim nächsten Mal mit. Bei
+  250 Münzen gibt es also 2 Punkte, und 50 bleiben stehen.
+  Beim Server geht das als **negative** Münz-Veränderung durch (`-100`),
+  darum stimmt es auch auf dem anderen Gerät.
+  Gerufen wird es aus `muenzenDazu()`, nach dem Anmelden und beim
+  Auffrischen — sonst blieben 100 Münzen liegen, die man an einem anderen
+  Computer gesammelt hat. Dazu erscheint eine Tafel.
+  Vorher gab es den Punkt **geschenkt**, ohne dass die Münzen wegkamen —
+  von Daniel am 18.08.2026 geändert.
   **Ehrlich dazusagen:** Gerechnet wird im Browser, nicht auf dem Server.
   Wer gleichzeitig an zwei Computern genau über die Hundertergrenze
   kommt, könnte den Bonus zweimal bekommen. Bei diesem Projekt egal.
@@ -584,7 +590,7 @@ gewählt. Farbe: **Gold** (`#a8760a`, Flächen `#fdf3d3`, Rahmen `#e8c96b`).
 
 ### Dachheldin (dach.html)
 
-Belohnungsspiel im Stil eines Endless Runners, von Dach zu Dach springen
+Belohnungsspiel im Stil eines Endless Runners, von Krankenhaus zu Krankenhaus springen
 und **Münzen** sammeln. Kostet 2 Punkte. Farbe: **Pastell-Flieder**
 (`#5a63b8`) — von Hanna gewählt. Vorher war es dasselbe Lila wie beim
 Rennen; sie wollte eine eigene Farbe. Flieder liegt bewusst nah beim
@@ -666,11 +672,20 @@ Lila, damit man beide noch als Belohnungsspiele erkennt.
 - Münzen: `muenzenDazu(1)` sofort beim Einsammeln, damit die Leiste oben
   live mitzählt. Ohne Anmeldung nicht gespeichert (wird auf der Tafel
   ehrlich gesagt).
-- Seit 18.08.2026 sind die Münzen **nicht mehr nur eine Sammelzahl**: für
-  je 100 gibt es 1 Punkt geschenkt. Damit lohnt sich die Dachheldin auch
-  für Leute, die keine Rekorde jagen. Der Umtausch steckt komplett in
-  `muenzenDazu()` in `punkte.js` — `dach.js` weiss nichts davon und musste
-  nicht angefasst werden.
+- Seit 18.08.2026 sind die Münzen **nicht mehr nur eine Sammelzahl**: je
+  100 werden gegen 1 Punkt eingetauscht und sind dann weg. Damit lohnt
+  sich die Dachheldin auch für Leute, die keine Rekorde jagen. Der
+  Eintausch steckt komplett in `punkte.js` — `dach.js` weiss nichts davon
+  und musste nicht angefasst werden.
+- **Die Häuser sind Krankenhäuser.** Das steckt komplett im CSS: `.dach`
+  bekommt Fenster aus zwei übereinanderliegenden `repeating-linear-gradient`
+  (das obere malt waagrechte Streifen in der Wandfarbe und schneidet die
+  senkrechten Säulen des unteren in einzelne Fenster), und `.dach::after`
+  hängt ein weisses **H** an — das internationale Zeichen für ein Spital.
+  **Absichtlich kein rotes Kreuz:** das ist ein geschütztes Zeichen.
+  `overflow: hidden` ist nötig, weil ein Haus nur 60px hoch sein kann.
+  `dach.js` weiss von alldem nichts — für das Spiel sind es weiterhin
+  einfach Dächer mit der Klasse `.dach`.
 
 ### Startseite (index.html)
 

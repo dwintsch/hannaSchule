@@ -1,7 +1,8 @@
 /* ============================================
    Dachheldin - ein Belohnungsspiel
 
-   Als Superheldin von Dach zu Dach springen und Münzen sammeln.
+   Als Superheldin von Krankenhaus zu Krankenhaus springen
+   und Münzen sammeln.
    Bezahlt wird mit den Punkten aus den Lernspielen,
    genau wie beim Rennen.
 
@@ -121,7 +122,8 @@ function zeigeStarttafel() {
 
   tafel.innerHTML =
     "<div><strong>Bereit?</strong></div>" +
-    "<div>Spring von Dach zu Dach und sammle Münzen &#129689;." +
+    "<div>Spring von Krankenhaus zu Krankenhaus und sammle " +
+    "Münzen &#129689;." +
     "<br>Fällst du in eine Lücke, ist die Runde vorbei." +
     "<br>" + preis + "</div>" +
     '<button class="tafelknopf" onclick="starten()">Springen</button>';

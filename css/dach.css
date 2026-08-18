@@ -56,7 +56,7 @@ h1 {
   border-radius: 14px;
 }
 
-/* --- Ein Dach ---
+/* --- Ein Krankenhaus ---
    position: absolute heisst: an einer festen Stelle im
    Spielfeld. bottom: 0 setzt es unten an den Rand, darum
    muss das JavaScript nur die Höhe angeben.
@@ -66,11 +66,65 @@ h1 {
   position: absolute;
   bottom: 0;
 
-  background-color: #d4d7f0;
   border: 2px solid #c2c7e8;
   border-top: 5px solid #7f88cc;
   border-radius: 3px 3px 0 0;
   box-sizing: border-box;
+
+  /* Damit Fenster und Schild nie unten hinausragen,
+     wenn ein Haus einmal ganz niedrig ist. */
+  overflow: hidden;
+
+  /* --- Die Fenster ---
+     Zwei Muster uebereinander ergeben ein Raster:
+
+     Das ZWEITE (untere) malt senkrechte helle Streifen -
+     das waeren durchgehende Saeulen.
+     Das ERSTE (obere) malt waagrechte Streifen in der
+     Wandfarbe und deckt die Saeulen stellenweise wieder zu.
+
+     Uebrig bleiben lauter kleine Rechtecke: die Fenster.
+     Was zuerst steht, liegt oben - wie bei den Ebenen im SVG. */
+
+  background-color: #d4d7f0;
+  background-image:
+    repeating-linear-gradient(to bottom,
+      #d4d7f0 0 14px, transparent 14px 24px),
+    repeating-linear-gradient(to right,
+      transparent 0 8px, #f2f4fd 8px 20px);
+}
+
+/* --- Das Schild am Haus ---
+   Ein weisses «H» - das internationale Zeichen fuer ein
+   Krankenhaus. Absichtlich KEIN rotes Kreuz: das ist ein
+   geschuetztes Zeichen und darf nicht einfach so verwendet
+   werden.
+
+   ::after haengt etwas an das Element an, ohne dass es im
+   HTML stehen muss. Das JavaScript weiss also gar nichts
+   davon - fuer das Spiel sind es weiterhin einfach Daecher. */
+
+.dach::after {
+  content: "H";
+  position: absolute;
+  top: 7px;
+  left: 50%;
+
+  /* Die eigene halbe Breite zurueck - so steht es mittig,
+     egal wie breit das Haus ist. */
+  transform: translateX(-50%);
+
+  width: 22px;
+  height: 19px;
+  line-height: 19px;
+  text-align: center;
+
+  font-size: 14px;
+  font-weight: bold;
+  color: #414a94;
+
+  background-color: #ffffff;
+  border-radius: 4px;
 }
 
 /* --- Die Figur --- */
