@@ -28,7 +28,7 @@ const organe = [
 const anzahlWoerter = 8;   // wie viele pro Runde versteckt werden
 const spalten = 12;        // Breite des Gitters
 const zeilen = 12;         // Höhe des Gitters
-const belohnung = 2;       // Punkte, wenn ALLE gefunden sind
+const belohnung = 1;       // Punkte, wenn ALLE gefunden sind
 
 /* In welche Richtungen ein Wort liegen darf.
    ds = Schritt zur Seite, dz = Schritt nach unten.
@@ -429,7 +429,14 @@ function vielleichtFertig() {
   // Die Punkte gibt es nur mit Anmeldung. punkteDazu sagt
   // uns selber, ob es geklappt hat.
   if (punkteDazu(belohnung) === true) {
-    text = text + " Das gibt " + belohnung + " Punkte &#11088;";
+
+    // «1 Punkt» aber «2 Punkte» - genau wie in der Leiste oben.
+    let wort = " Punkte";
+    if (belohnung === 1) {
+      wort = " Punkt";
+    }
+
+    text = text + " Das gibt " + belohnung + wort + " &#11088;";
   } else {
     text = text + "<br>Melde dich oben an, dann gibt es dafür Punkte.";
   }

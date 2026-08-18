@@ -201,7 +201,7 @@ Hintergrund dem Server Bescheid geben.
   kommt, könnte den Bonus zweimal bekommen. Bei diesem Projekt egal.
 - Punkte: Quiz mit ≥ `anzahlFragen - 2` richtigen **1**, Memory gelöst **1**,
   Blitzrunde ab `zielPunkte` richtigen **1**,
-  Hangman gewonnen **2**, Kreuzworträtsel alle Wörter gefunden **2**.
+  Hangman gewonnen **2**, Kreuzworträtsel alle Wörter gefunden **1**.
   Jedes Mal neu, nicht nur beim ersten Mal.
 - `punkteDazu(n)` gibt `false` zurück, wenn niemand angemeldet ist — die
   Spiele zeigen dann den Hinweis «Melde dich oben an».
@@ -598,8 +598,8 @@ online, da war der Umzug billiger als ein Name, der nichts mehr bedeutet.
   Runde trotzdem: die Wörter landen jedes Mal woanders im Gitter.
   Schreibt man mehr dazu, wechseln automatisch auch die Wörter selber.
   Zuerst waren 26 drin, das war Daniel zu viel.
-- **Punkte: 2, wenn alle gefunden sind** (`belohnung`). Nicht pro Wort —
-  so von Daniel gewünscht.
+- **Punkte: 1, wenn alle gefunden sind** (`belohnung`). Nicht pro Wort —
+  so von Daniel gewünscht. Zuerst waren es 2, gleich darauf auf 1 gesenkt.
 - Richtungen: **nur waagrecht → und senkrecht ↓**, wie in einem richtigen
   Kreuzworträtsel. Schräg gab es kurz, wurde von Daniel wieder
   herausgenommen. **Auch kein Rückwärts**: ein Wort von hinten zu lesen ist
