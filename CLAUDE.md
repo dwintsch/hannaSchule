@@ -352,6 +352,12 @@ nachfragen und sonst zur Startseite zurückschicken.
 |---|---|
 | `.kopf` | Titel «Spielend den Körper kennenlernen» + Einleitung |
 | `#anleitung` | «So läuft es»: Punkte, Münzen, Server |
+
+Der Kasten `#anleitung` zählt die Spiele namentlich auf und nennt den
+Preis. Er veraltet darum bei jedem neuen Spiel und bei jeder
+Preisänderung — genau das ist am 18.08.2026 passiert. Ein Test prüft
+jetzt, dass **jedes** Spiel darin vorkommt, dass «1 Punkt» dasteht und
+dass nicht mehr «geschenkt» behauptet wird.
 | `#willkommen` | die drei Anmelde-Schritte |
 
 Alle drei verschwinden beim Anmelden — dann steht gleich zuoberst das
