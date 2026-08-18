@@ -49,34 +49,97 @@ h1 {
 
 #gitter {
   display: grid;
-  gap: 1px;
   width: 100%;
   height: 100%;
 }
 
+/* Jedes Kästchen bekommt einen feinen Rand. So sieht man das
+   Raster und kann besser abschätzen, wo die Schlange gleich
+   hinkommt. box-sizing sorgt dafür, dass der Rand INNEN
+   gerechnet wird - sonst würde das Feld breiter als 15 Kästchen. */
+
 .kaestchen {
-  border-radius: 3px;
+  box-sizing: border-box;
+  border: 1px solid #efe7ee;
+  border-radius: 2px;
 }
 
-/* --- Die Schlange --- */
+/* --- Die Schlange ---
+   Grün, damit sie sich von allem anderen abhebt. */
 
 .kaestchen.koerper {
-  background-color: #c9a3c4;
+  background-color: #5aa85f;
+  border-color: #4c9152;
 }
 
-/* Der Kopf ist dunkler, damit man sieht, wo vorne ist. */
-.kaestchen.kopf {
-  background-color: #6b3a60;
+/* Kopf und Schwanz sind Zeichnungen. Das Kästchen selber
+   bleibt darum leer - gefärbt wird im SVG. */
+
+.kaestchen.kopf svg,
+.kaestchen.schwanz svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  /* Die Zunge darf über den Rand hinausschauen. */
+  overflow: visible;
 }
 
-/* --- Das Vitamin ---
-   Ein runder Punkt in Grün: die einzige Farbe hier, die
-   nicht zur Schlange gehört. So kann man es nicht
-   verwechseln. */
+/* --- Die Zeichnung drehen ---
+   Beide sind nach rechts gezeichnet. Je nachdem wohin die
+   Schlange läuft, drehen wir sie. Das JavaScript hängt dazu
+   nur die Klasse an - gedreht wird hier. */
 
-.kaestchen.futter {
-  background-color: #6cbf84;
-  border-radius: 50%;
+.kaestchen.nach-rechts svg { transform: rotate(0deg); }
+.kaestchen.nach-unten  svg { transform: rotate(90deg); }
+.kaestchen.nach-links  svg { transform: rotate(180deg); }
+.kaestchen.nach-oben   svg { transform: rotate(270deg); }
+
+/* ============================================
+   HIER FÄRBST DU DIE SCHLANGE
+   Alle Farben der zwei Zeichnungen stehen hier
+   beisammen. Ändere einen Wert, Ctrl+S, im
+   Browser F5 - mehr braucht es nicht.
+   ============================================ */
+
+.kopf-haut {
+  fill: #3d8442;
+}
+
+.schwanz-haut {
+  fill: #5aa85f;
+}
+
+/* Die Zunge ist nur ein Strich mit zwei Spitzen -
+   darum fill: none und eine dicke Linie. */
+.zunge {
+  fill: none;
+  stroke: #d94f5c;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.auge {
+  fill: #ffffff;
+}
+
+.pupille {
+  fill: #1f3a22;
+}
+
+/* --- Die Äpfel ---
+   Ein Emoji im Kästchen. Hier braucht es keine Zeichnung:
+   ein Apfel muss weder gedreht noch umgefärbt werden. */
+
+.kaestchen.apfel {
+  font-size: 15px;
+  line-height: 1;
+  text-align: center;
+
+  /* Der Apfel soll mitten im Kästchen sitzen. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* --- Die Tafel über dem Spielfeld ---

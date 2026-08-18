@@ -474,7 +474,7 @@ geladen ist.
 
 ### Das Rennen (rennen.html)
 
-Belohnungsspiel im Stil von Subway Surfers, **kostet 2 Punkte pro Runde**
+Belohnungsspiel im Stil von Subway Surfers, **kostet 1 Punkt pro Runde**
 (`kosten` in `rennen.js`).
 
 - Gespielt wird mit einem **Spitalbett** (`#bett`), von oben gesehen, mit
@@ -676,7 +676,7 @@ gewählt. Farbe: **Gold** (`#a8760a`, Flächen `#fdf3d3`, Rahmen `#e8c96b`).
 ### Dachheldin (dach.html)
 
 Belohnungsspiel im Stil eines Endless Runners, von Krankenhaus zu Krankenhaus springen
-und **Münzen** sammeln. Kostet 2 Punkte. Farbe: **Pastell-Flieder**
+und **Münzen** sammeln. Kostet 1 Punkt. Farbe: **Pastell-Flieder**
 (`#5a63b8`) — von Hanna gewählt. Vorher war es dasselbe Lila wie beim
 Rennen; sie wollte eine eigene Farbe. Flieder liegt bewusst nah beim
 Lila, damit man beide noch als Belohnungsspiele erkennt.
@@ -774,7 +774,7 @@ Lila, damit man beide noch als Belohnungsspiele erkennt.
 
 ### Snake (snake.html)
 
-Das dritte Belohnungsspiel, **kostet 2 Punkte**. Von Daniel am 18.08.2026
+Das dritte Belohnungsspiel, **kostet 1 Punkt**. Von Daniel am 18.08.2026
 aus vier Vorschlägen gewählt. Farbe: **Pflaume** (`#8a4f7d`) — bewusst nah
 bei Lila (Rennen) und Flieder (Dachheldin), damit die drei als Gruppe
 erkennbar bleiben.
@@ -782,6 +782,11 @@ erkennbar bleiben.
 Heisst nach aussen **Snake**, nicht «Die Schlange» — so von Daniel
 gewünscht. Die Dateien heissen entsprechend `snake.*`.
 
+- **Alle drei Belohnungsspiele kosten seit 18.08.2026 nur noch 1 Punkt**
+  (vorher 2). Geändert an je einer Stelle: `const kosten` zuoberst in
+  `rennen.js`, `dach.js` und `snake.js`, plus die drei Marken auf der
+  Startseite. Dazu neu `punkteWort(n)` in `punkte.js` — «1 Punkt» statt
+  «1 Punkte». Der Befehl steht dort, weil ihn alle drei brauchen.
 - **Die Schlange ist eine Liste von Kästchennummern**, Kopf zuvorderst.
   Jeder Takt hängt vorne eines an (`unshift`) und nimmt hinten eines weg
   (`pop`) — das sieht aus wie Kriechen. Beim Fressen lassen wir das hintere
@@ -803,9 +808,36 @@ gewünscht. Die Dateien heissen entsprechend `snake.*`.
 - Tempo: `startTempo` 200 ms, pro Vitamin 6 ms schneller, Deckel bei
   `schnellstes` = 90 ms. `setInterval` kann man nicht schneller stellen —
   `uhrStellen()` stoppt darum die alte Uhr und startet eine neue.
-- `futterHinlegen()` sammelt **alle freien Kästchen** ein und zieht eines.
-  Nicht «würfeln bis es passt»: das dauert immer länger, je voller das
-  Feld wird. Ist kein Kästchen mehr frei, hat man **gewonnen**.
+- Es liegen immer **drei Äpfel** gleichzeitig da (`anzahlFutter`). `futter`
+  ist darum eine **Liste** von Kästchennummern, nicht eine einzelne Zahl.
+  Wird einer gefressen, nimmt `splice` ihn heraus und `futterAuffuellen()`
+  legt sofort einen neuen.
+- `freieKaestchen()` sammelt **alle freien Kästchen** ein und `futterAuffuellen()`
+  zieht eines. Nicht «würfeln bis es passt»: das dauert immer länger, je
+  voller das Feld wird. Gewonnen hat man, wenn die Schlange so lang ist
+  wie das Feld Kästchen hat.
+- **Kopf und Schwanz sind kleine `<svg>`**, direkt in `snake.js` als
+  Textbausteine `KOPF_BILD` und `SCHWANZ_BILD`. Der Kopf hat zwei Augen
+  und eine rote Zunge, der Schwanz läuft spitz zu. Kein Emoji — dieselbe
+  Begründung wie überall: umfärben und **drehen** geht nur bei einer
+  Zeichnung.
+- Beide sind **nach rechts** gezeichnet. Gedreht wird im CSS über die
+  Klassen `nach-rechts` / `nach-unten` / `nach-links` / `nach-oben`, die
+  `richtungsKlasse()` aus dem Unterschied zweier Kästchennummern ableitet:
+  +1 rechts, -1 links, +`breite` runter, -`breite` hoch. An den Wänden ist
+  immer Schluss, darum kann die Rechnung nie über den Rand springen.
+- Der Kopf schaut weg vom zweiten Stück, die Schwanzspitze weg vom
+  vorletzten. So stimmt die Drehung auch in der Kurve.
+- Die Äpfel sind **Emojis** 🍎 im Kästchen. Hier braucht es keine
+  Zeichnung: ein Apfel muss weder gedreht noch umgefärbt werden.
+- Die Schlange ist **grün** (`#5aa85f`, Kopf dunkler `#3d8442`), obwohl das
+  Spiel sonst pflaumenfarben ist. So von Daniel gewünscht — und es hilft:
+  Grün gehört sonst nirgends im Spiel hin, man verwechselt nichts.
+  Die Farben stehen gebündelt unter «HIER FÄRBST DU DIE SCHLANGE».
+- Jedes Kästchen hat einen **feinen Rand** (`#efe7ee`), damit man das
+  Raster sieht und abschätzen kann, wo die Schlange gleich hinkommt.
+  Von Daniel gewünscht. `box-sizing: border-box` ist dabei Pflicht, sonst
+  würde das Feld breiter als 15 Kästchen.
 - Start mit der **Leertaste** oder dem Knopf, dazu `tipptGerade()` wie beim
   Rennen. Vier Steuerknöpfe im Kreuz fürs Vorführen ohne Tastatur.
 - Rekord über `rekordSpeichern("snake", schlange.length)`.

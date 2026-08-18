@@ -4,14 +4,14 @@
 
    Die Schlange ist eine LISTE von Kästchen. Vorne kommt
    bei jedem Takt eines dazu, hinten fällt eines weg -
-   das sieht dann aus wie Kriechen. Frisst sie ein Vitamin,
+   das sieht dann aus wie Kriechen. Frisst sie einen Apfel,
    lassen wir das hintere einfach stehen: schon ist sie
    ein Kästchen länger.
    ============================================ */
 
 /* --- Einstellungen. Hier darfst du drehen. --- */
 
-const kosten = 2;          // Punkte pro Runde
+const kosten = 1;          // Punkte pro Runde
 const breite = 15;         // Kästchen nebeneinander
 const hoehe = 15;          // Kästchen untereinander
 
@@ -20,6 +20,7 @@ const schnellstes = 90;    // schneller wird sie nie
 const schneller = 6;       // um so viel schneller pro Vitamin
 
 const startLaenge = 3;
+const anzahlFutter = 3;    // wie viele Äpfel gleichzeitig liegen
 
 /* --- Die Schubladen --- */
 
@@ -27,7 +28,7 @@ let laeuft = false;
 let schlange = [];             // die Kästchennummern, Kopf zuvorderst
 let richtung = { ds: 1, dz: 0 };
 let naechsteRichtung = { ds: 1, dz: 0 };
-let futter = 0;                // wo das Vitamin liegt
+let futter = [];               // wo die Äpfel liegen (mehrere!)
 let tempo = startTempo;
 let uhr = null;
 
@@ -58,6 +59,35 @@ function gitterBauen() {
   felder = gitter.children;
 }
 
+/* --- Die zwei Zeichnungen ---
+
+   Kopf und Schwanz sind kleine <svg>, keine Emojis. Grund:
+   ein Emoji könnte man weder umfärben noch drehen - und
+   gedreht werden müssen beide, je nachdem wohin die
+   Schlange gerade läuft.
+
+   Beide sind nach RECHTS gezeichnet. Das Drehen macht das
+   CSS über die Klassen nach-rechts / nach-unten / nach-links
+   / nach-oben. */
+
+const KOPF_BILD =
+  '<svg viewBox="0 0 20 20">' +
+  '<rect class="kopf-haut" x="1" y="2" width="16" height="16" rx="7" />' +
+  '<path class="zunge" d="M16 10 H18.6 M18.6 10 L20 8.4 M18.6 10 L20 11.6" />' +
+  '<circle class="auge" cx="12.4" cy="6.4" r="2" />' +
+  '<circle class="auge" cx="12.4" cy="13.6" r="2" />' +
+  '<circle class="pupille" cx="13.2" cy="6.4" r="0.9" />' +
+  '<circle class="pupille" cx="13.2" cy="13.6" r="0.9" />' +
+  '</svg>';
+
+/* Der Schwanz läuft spitz zu. Die breite Seite zeigt zum
+   Körper, die Spitze nach aussen. */
+
+const SCHWANZ_BILD =
+  '<svg viewBox="0 0 20 20">' +
+  '<path class="schwanz-haut" d="M0 3.5 L19 10 L0 16.5 Z" />' +
+  '</svg>';
+
 /* --- Von Spalte und Zeile zur Kästchennummer ---
    Wie beim Kreuzworträtsel: das Feld ist in Wahrheit
    eine einzige lange Liste. */
@@ -74,6 +104,46 @@ function zeigeAnzeige() {
     " &nbsp;·&nbsp; Rekord: " + rekordVon("snake");
 }
 
+/* --- In welche Richtung schaut ein Stück? ---
+
+   Der Unterschied zweier Kästchennummern verrät die Richtung:
+   +1 ist rechts, -1 links, +breite ist eine Zeile tiefer,
+   -breite eine höher. An den Wänden ist immer Schluss, darum
+   kann die Rechnung nie über den Rand springen. */
+
+function richtungsKlasse(unterschied) {
+
+  if (unterschied === 1) {
+    return "nach-rechts";
+  }
+  if (unterschied === -1) {
+    return "nach-links";
+  }
+  if (unterschied === breite) {
+    return "nach-unten";
+  }
+  return "nach-oben";
+}
+
+/* Der Kopf schaut dorthin, wo er herkam - also weg vom
+   zweiten Stück. Ganz am Anfang gibt es noch kein zweites,
+   dann nehmen wir die gemerkte Richtung. */
+
+function kopfRichtung() {
+
+  if (schlange.length >= 2) {
+    return schlange[0] - schlange[1];
+  }
+  return richtung.ds + richtung.dz * breite;
+}
+
+/* Die Schwanzspitze zeigt vom Körper weg. */
+
+function schwanzRichtung() {
+  const letztes = schlange.length - 1;
+  return schlange[letztes] - schlange[letztes - 1];
+}
+
 /* --- Das Feld anmalen --- */
 
 function zeichnen() {
@@ -82,46 +152,76 @@ function zeichnen() {
   // so wenig, dass sich Feineres nicht lohnt.
   for (let i = 0; i < felder.length; i++) {
     felder[i].className = "kaestchen";
+    felder[i].innerHTML = "";
   }
 
   for (let i = 0; i < schlange.length; i++) {
 
-    // Das erste Stück ist der Kopf und sieht anders aus.
+    const kaestchen = felder[schlange[i]];
+
     if (i === 0) {
-      felder[schlange[i]].className = "kaestchen kopf";
+
+      // Das erste Stück ist der Kopf.
+      kaestchen.className = "kaestchen kopf " +
+        richtungsKlasse(kopfRichtung());
+      kaestchen.innerHTML = KOPF_BILD;
+
+    } else if (i === schlange.length - 1) {
+
+      // Das letzte ist der Schwanz.
+      kaestchen.className = "kaestchen schwanz " +
+        richtungsKlasse(schwanzRichtung());
+      kaestchen.innerHTML = SCHWANZ_BILD;
+
     } else {
-      felder[schlange[i]].className = "kaestchen koerper";
+      kaestchen.className = "kaestchen koerper";
     }
   }
 
-  felder[futter].className = "kaestchen futter";
+  // Und zuletzt die Äpfel.
+  for (let i = 0; i < futter.length; i++) {
+    felder[futter[i]].className = "kaestchen apfel";
+    felder[futter[i]].innerHTML = "&#127822;";
+  }
 }
 
-/* --- Ein neues Vitamin hinlegen ---
-   Es darf nicht unter der Schlange liegen. Darum sammeln
-   wir zuerst alle freien Kästchen ein und ziehen dann eines
-   davon. Das ist sicherer als «würfeln bis es passt» -
-   dieses Würfeln würde immer länger dauern, je voller
-   das Feld wird. */
+/* --- Welche Kästchen sind frei? ---
+   Frei heisst: keine Schlange und kein Apfel drauf. */
 
-function futterHinlegen() {
+function freieKaestchen() {
 
   const frei = [];
 
   for (let i = 0; i < breite * hoehe; i++) {
-    if (schlange.indexOf(i) === -1) {
+    if (schlange.indexOf(i) === -1 && futter.indexOf(i) === -1) {
       frei.push(i);
     }
   }
 
-  // Kein freies Kästchen mehr? Dann ist das Feld voll -
-  // das ist der perfekte Sieg.
-  if (frei.length === 0) {
-    gewonnen();
-    return;
-  }
+  return frei;
+}
 
-  futter = frei[Math.floor(Math.random() * frei.length)];
+/* --- Äpfel nachlegen ---
+   Es sollen immer «anzahlFutter» Stück auf dem Feld liegen.
+   Wird einer gefressen, kommt sofort ein neuer dazu.
+
+   Wir sammeln zuerst alle freien Kästchen ein und ziehen
+   dann eines. Das ist sicherer als «würfeln bis es passt» -
+   dieses Würfeln würde immer länger dauern, je voller das
+   Feld wird. Ist gar nichts mehr frei, hören wir einfach auf. */
+
+function futterAuffuellen() {
+
+  while (futter.length < anzahlFutter) {
+
+    const frei = freieKaestchen();
+
+    if (frei.length === 0) {
+      return;
+    }
+
+    futter.push(frei[Math.floor(Math.random() * frei.length)]);
+  }
 }
 
 /* --- Die Uhr neu stellen ---
@@ -173,7 +273,9 @@ function starten() {
   tempo = startTempo;
   laeuft = true;
 
-  futterHinlegen();
+  futter = [];
+  futterAuffuellen();
+
   zeichnen();
   zeigeAnzeige();
 
@@ -201,7 +303,11 @@ function takt() {
   }
 
   const neu = nummerVon(s, z);
-  const frisst = (neu === futter);
+
+  // Liegt auf dem neuen Kästchen ein Apfel? indexOf gibt
+  // seinen Platz in der Liste zurück, oder -1.
+  const apfelPlatz = futter.indexOf(neu);
+  const frisst = (apfelPlatz >= 0);
 
   /* In sich selber?
 
@@ -226,7 +332,15 @@ function takt() {
   if (frisst === true) {
 
     // Hinten NICHT wegnehmen - so wird sie länger.
-    futterHinlegen();
+    // Den gefressenen Apfel wegnehmen und einen neuen legen.
+    futter.splice(apfelPlatz, 1);
+    futterAuffuellen();
+
+    // Ganzes Feld voll? Das ist der perfekte Sieg.
+    if (schlange.length === breite * hoehe) {
+      gewonnen();
+      return;
+    }
 
     if (tempo > schnellstes) {
       tempo = tempo - schneller;
@@ -243,11 +357,7 @@ function takt() {
     schlange.pop();   // hinten wegnehmen
   }
 
-  // Ist das Feld voll geworden, hat futterHinlegen() schon
-  // gewonnen() gerufen und die Uhr abgestellt.
-  if (laeuft === true) {
-    zeichnen();
-  }
+  zeichnen();
 }
 
 /* --- Steuern ---
@@ -345,7 +455,7 @@ function zeigeStarttafel() {
   if (frei === false && punkteVon(name) < kosten) {
     tafel.innerHTML =
       "<div><strong>Zu wenig Punkte</strong></div>" +
-      "<div>Eine Runde kostet " + kosten + " Punkte. Du hast " +
+      "<div>Eine Runde kostet " + kosten + punkteWort(kosten) + ". Du hast " +
       punkteVon(name) + ".<br>Spiel ein Quiz, ein Memory oder Hangman!</div>" +
       '<button class="tafelknopf" disabled>Losspielen</button>';
     tafel.classList.remove("weg");
@@ -353,7 +463,7 @@ function zeigeStarttafel() {
   }
 
   // Der Satz mit dem Preis heisst anders, wenn es gratis ist.
-  let preis = "Eine Runde kostet " + kosten + " Punkte.";
+  let preis = "Eine Runde kostet " + kosten + punkteWort(kosten) + ".";
   if (frei === true) {
     preis = "&#128275; Dein Code gilt &ndash; noch " + gratisRennen() +
             " Runden gratis!";
@@ -361,7 +471,7 @@ function zeigeStarttafel() {
 
   tafel.innerHTML =
     "<div><strong>Bereit?</strong></div>" +
-    "<div>Sammle die Vitamine &#127823; ein und beiss dich nicht " +
+    "<div>Sammle die &Auml;pfel &#127822; ein und beiss dich nicht " +
     "selber.<br>" + preis + "</div>" +
     '<button class="tafelknopf" onclick="starten()">Losspielen</button>' +
     '<div class="tastenhinweis">oder einfach die Leertaste dr&uuml;cken</div>';
@@ -387,7 +497,7 @@ function nochmalKnopf() {
   }
 
   return '<button class="tafelknopf" onclick="starten()">' +
-    "Nochmal (" + kosten + " Punkte)</button>";
+    "Nochmal (" + kosten + punkteWort(kosten) + ")</button>";
 }
 
 /* --- Verloren --- */
@@ -441,7 +551,7 @@ gitterBauen();
 // über ein leeres Feld stolpert, setzen wir das Vitamin
 // irgendwohin und malen einmal.
 schlange = [];
-futter = 0;
+futter = [];
 zeichnen();
 
 zeigeAnzeige();

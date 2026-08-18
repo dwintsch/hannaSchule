@@ -5,7 +5,7 @@
 
 /* --- Einstellungen. Hier darfst du drehen. --- */
 
-const kosten = 2;          // Punkte pro Runde
+const kosten = 1;          // Punkte pro Runde
 const spurBreite = 100;    // eine Spur ist 100 Pixel breit
 const startTempo = 4;      // Pixel pro Takt am Anfang
 const taktLaenge = 20;     // Millisekunden pro Takt
@@ -82,14 +82,14 @@ function zeigeStarttafel() {
   if (frei === false && punkteVon(name) < kosten) {
     tafel.innerHTML =
       "<div><strong>Zu wenig Punkte</strong></div>" +
-      "<div>Ein Rennen kostet " + kosten + " Punkte. Du hast " +
+      "<div>Ein Rennen kostet " + kosten + punkteWort(kosten) + ". Du hast " +
       punkteVon(name) + ".<br>Spiel ein Quiz, ein Memory oder Hangman!</div>" +
       '<button class="tafelknopf" disabled>Rennen starten</button>';
     return;
   }
 
   // Der Satz mit dem Preis heisst anders, wenn es gratis ist.
-  let preis = "Ein Rennen kostet " + kosten + " Punkte.";
+  let preis = "Ein Rennen kostet " + kosten + punkteWort(kosten) + ".";
   if (frei === true) {
     preis = "&#128275; Dein Code gilt &ndash; noch " + gratisRennen() +
             " Rennen gratis!";
@@ -391,7 +391,7 @@ function verloren(worein) {
   const frei = codeIstFrei();
 
   let knopf = '<button class="tafelknopf" onclick="starten()">' +
-              "Nochmal (" + kosten + " Punkte)</button>";
+              "Nochmal (" + kosten + punkteWort(kosten) + ")</button>";
 
   if (frei === true) {
     knopf = '<button class="tafelknopf" onclick="starten()">' +

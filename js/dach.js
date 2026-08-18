@@ -15,7 +15,7 @@
 
 /* --- Einstellungen. Hier darfst du drehen. --- */
 
-const kosten = 2;          // Punkte pro Runde
+const kosten = 1;          // Punkte pro Runde
 const taktLaenge = 20;     // Millisekunden pro Takt
 const startTempo = 3.2;    // Pixel pro Takt am Anfang
 const maxTempo = 8;        // schneller wird es nie
@@ -107,14 +107,14 @@ function zeigeStarttafel() {
   if (frei === false && punkteVon(name) < kosten) {
     tafel.innerHTML =
       "<div><strong>Zu wenig Punkte</strong></div>" +
-      "<div>Eine Runde kostet " + kosten + " Punkte. Du hast " +
+      "<div>Eine Runde kostet " + kosten + punkteWort(kosten) + ". Du hast " +
       punkteVon(name) + ".<br>Spiel ein Quiz, ein Memory, Hangman " +
       "oder eine Blitzrunde!</div>" +
       '<button class="tafelknopf" disabled>Springen</button>';
     return;
   }
 
-  let preis = "Eine Runde kostet " + kosten + " Punkte.";
+  let preis = "Eine Runde kostet " + kosten + punkteWort(kosten) + ".";
   if (frei === true) {
     preis = "&#128275; Dein Code gilt &ndash; noch " + gratisRennen() +
             " Runden gratis!";
@@ -530,7 +530,7 @@ function nochmalKnopf() {
   }
 
   return '<button class="tafelknopf" onclick="starten()">' +
-         "Nochmal (" + kosten + " Punkte)</button>";
+         "Nochmal (" + kosten + punkteWort(kosten) + ")</button>";
 }
 
 /* --- Ehrlicher Hinweis für Nichtangemeldete --- */

@@ -761,6 +761,18 @@ function rekordSpeichern(spiel, wert) {
    Die Leiste ganz oben
    ============================================ */
 
+/* --- «1 Punkt» oder «2 Punkte»? ---
+   Das Wort muss zur Zahl passen. Weil das an vielen Stellen
+   gebraucht wird, steht es hier einmal statt überall neu. */
+
+function punkteWort(anzahl) {
+
+  if (anzahl === 1) {
+    return " Punkt";
+  }
+  return " Punkte";
+}
+
 /* --- Eine Tafel kurz einblenden ---
    Für Nachrichten, die man nicht übersehen soll: «Platz 1!»
    oder «100 Münzen sind einen Punkt wert». Sie erscheint oben
