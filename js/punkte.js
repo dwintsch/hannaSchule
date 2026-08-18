@@ -54,6 +54,15 @@ const PIN = "8590";
 
 const GRATIS_PRO_CODE = 5;
 
+/* --- Münzen umtauschen ---
+   Für je so viele gesammelte Münzen gibt es 1 Punkt geschenkt.
+   Damit sind die Münzen aus der Dachheldin nicht mehr nur eine
+   Sammelzahl, sondern zahlen sich am Schluss auch aus.
+
+   Hier darfst du drehen: 50 macht es leichter, 200 schwerer. */
+
+const MUENZEN_PRO_PUNKT = 100;
+
 /* --- Was die Leiste gerade anzeigt ---
    "anmelden"     = du hast schon ein Konto
    "registrieren" = du legst dir gerade eines an
@@ -197,7 +206,7 @@ function stapelIstLeer(stapel) {
    So kann nichts doppelt gezählt werden. */
 
 /* --- Die Rangliste anstupsen ---
-   Haben sich Punkte geändert, stimmt die Rangliste rechts
+   Haben sich Punkte geändert, stimmt die Rangliste links
    nicht mehr. Es gibt sie aber nur, wenn js/rangliste.js
    geladen ist. Darum zuerst nachschauen, ob es den Befehl
    überhaupt gibt - genau wie beim Code-Feld ganz unten.
@@ -280,7 +289,9 @@ function punkteVon(name) {
 
    Punkte verdient man in den Lernspielen und bezahlt damit die
    Belohnungsspiele. Münzen sammelt man IM Belohnungsspiel ein.
-   Sie werden nur gezählt - man kann nichts damit kaufen.
+   Bezahlen kann man mit ihnen nichts. Dafür gibt es für je
+   100 gesammelte Münzen einen Punkt geschenkt - siehe
+   MUENZEN_PRO_PUNKT weiter oben.
    Darum haben sie ihre eigene Schublade im Notizheft. */
 
 function muenzenVon(name) {
@@ -520,10 +531,51 @@ function muenzenDazu(anzahl) {
     return false;
   }
 
-  localStorage.setItem(SCHLUESSEL_MUENZEN + name, muenzenVon(name) + anzahl);
+  const vorher = muenzenVon(name);
+  const nachher = vorher + anzahl;
 
+  localStorage.setItem(SCHLUESSEL_MUENZEN + name, nachher);
   stapelDazu({ muenzen: anzahl });
-  stapelSenden();
+
+  /* --- Die Belohnung ---
+     Für je 100 Münzen gibt es einen Punkt.
+
+     Wie rechnet man aus, ob gerade eine volle Hunderterstufe
+     überschritten wurde? Man schaut, wie viele Hunderter es
+     vorher waren und wie viele es jetzt sind - die Differenz
+     ist die Belohnung.
+
+     Math.floor schneidet die Nachkommastellen weg:
+     aus 99/100 = 0.99 wird 0, aus 100/100 = 1 wird 1.
+
+     Beispiel: 99 -> 101 Münzen
+       vorher:  floor(99/100)  = 0
+       nachher: floor(101/100) = 1
+       Belohnung: 1 - 0 = 1 Punkt
+
+     So funktioniert es auch, wenn jemand mit einem Schlag
+     250 Münzen bekäme - dann gäbe es zwei Punkte auf einmal. */
+
+  const belohnung = Math.floor(nachher / MUENZEN_PRO_PUNKT) -
+    Math.floor(vorher / MUENZEN_PRO_PUNKT);
+
+  if (belohnung > 0) {
+
+    // punkteDazu schickt gleich den ganzen Stapel ab -
+    // die Münzen von oben reisen also mit.
+    punkteDazu(belohnung);
+
+    let wort = " Punkte";
+    if (belohnung === 1) {
+      wort = " Punkt";
+    }
+
+    tafelZeigen("\u{1FA99} " + nachher + " Münzen! Das gibt " +
+      belohnung + wort + " \u{2B50}", 5000);
+
+  } else {
+    stapelSenden();
+  }
 
   leisteZeichnen();
   return true;
@@ -689,6 +741,39 @@ function rekordSpeichern(spiel, wert) {
 /* ============================================
    Die Leiste ganz oben
    ============================================ */
+
+/* --- Eine Tafel kurz einblenden ---
+   Für Nachrichten, die man nicht übersehen soll: «Platz 1!»
+   oder «100 Münzen sind einen Punkt wert». Sie erscheint oben
+   in der Mitte und verschwindet nach ein paar Sekunden von selbst.
+
+   Alle Tafeln kommen in denselben Behälter. Der stellt sie
+   untereinander - sonst würden zwei gleichzeitige Tafeln
+   genau übereinander liegen und man könnte keine lesen. */
+
+function tafelZeigen(text, wielange) {
+
+  let behaelter = document.getElementById("tafeln");
+
+  // Beim ersten Mal gibt es den Behälter noch nicht.
+  if (behaelter === null) {
+    behaelter = document.createElement("div");
+    behaelter.id = "tafeln";
+    document.body.insertAdjacentElement("beforeend", behaelter);
+  }
+
+  const tafel = document.createElement("div");
+  tafel.className = "tafel";
+  tafel.innerHTML = textSichern(text);
+
+  behaelter.insertAdjacentElement("beforeend", tafel);
+
+  // Wieder wegräumen. Ohne das würden sich die Tafeln
+  // stapeln, bis die Seite neu geladen wird.
+  setTimeout(function () {
+    tafel.remove();
+  }, wielange);
+}
 
 /* Schreibt einen Satz unten in die Leiste.
    art ist "stimmt" (grün), "falsch" (rot) oder "" (grau). */

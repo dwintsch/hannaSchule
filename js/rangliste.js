@@ -1,5 +1,5 @@
 /* ============================================
-   Die Rangliste am rechten Rand
+   Die Rangliste am linken Rand
 
    Zeigt die zehn Besten. Steht auf JEDER Seite -
    darum eine eigene Datei, genau wie punkte.js
@@ -19,6 +19,69 @@
 
 const MEDAILLEN = ["\u{1F947}", "\u{1F948}", "\u{1F949}"];
 
+/* Hier merken wir uns, auf welchem Platz man beim letzten Mal
+   war. Nur so lässt sich erkennen, dass jemand AUFGESTIEGEN ist -
+   sonst käme die Jubel-Meldung bei jedem Seitenaufruf neu. */
+
+const SCHLUESSEL_PLATZ = "lernwelt-letzter-platz";
+
+/* --- Auf welchem Platz stehe ich? ---
+   Gibt 0 zurück, wenn man nicht in der Liste steht. */
+
+function meinPlatz(liste) {
+
+  for (let i = 0; i < liste.length; i++) {
+    if (liste[i].ich === true) {
+      return i + 1;
+    }
+  }
+  return 0;
+}
+
+/* --- Bin ich gerade aufgestiegen? ---
+
+   Die Meldung soll nur kommen, wenn man WIRKLICH neu
+   auf Platz 1 ist. Darum drei Bedingungen:
+
+   1. jetzt bin ich Erste
+   2. ich weiss, wo ich vorher war (beim allerersten Mal
+      nach dem Anmelden weiss ich es noch nicht)
+   3. vorher war ich es noch nicht
+
+   Ohne Nummer 2 würde die Meldung bei jedem Seitenwechsel
+   wieder aufpoppen, solange man vorne liegt. */
+
+function platzPruefen(liste) {
+
+  // Nicht angemeldet? Dann gibt es keinen eigenen Platz.
+  // Den Merkzettel löschen, damit nach dem nächsten Anmelden
+  // sauber von vorne gezählt wird.
+  if (token() === null) {
+    localStorage.removeItem(SCHLUESSEL_PLATZ);
+    return;
+  }
+
+  const jetzt = meinPlatz(liste);
+  const roh = localStorage.getItem(SCHLUESSEL_PLATZ);
+
+  // null heisst «ich weiss es noch nicht».
+  const vorher = (roh === null) ? null : Number(roh);
+
+  localStorage.setItem(SCHLUESSEL_PLATZ, jetzt);
+
+  if (jetzt === 1 && vorher !== null && vorher !== 1) {
+
+    tafelZeigen("\u{1F3C6} Platz 1! Du führst die Rangliste an.", 7000);
+
+    // Konfetti gibt es nur auf Seiten, die konfetti.js geladen
+    // haben. Darum zuerst nachschauen, ob es den Befehl gibt -
+    // derselbe Trick wie bei ranglisteAuffrischen in punkte.js.
+    if (typeof konfetti === "function") {
+      konfetti(120, 7000);
+    }
+  }
+}
+
 /* --- Den leeren Kasten in die Seite setzen --- */
 
 function ranglisteEinbauen() {
@@ -32,7 +95,7 @@ function ranglisteEinbauen() {
 
   // beforeend heisst: ganz unten anhängen. Wo genau er
   // steht, macht nichts aus - das CSS klebt ihn sowieso
-  // an den rechten Rand (position: fixed).
+  // an den linken Rand (position: fixed).
   document.body.insertAdjacentElement("beforeend", kasten);
 }
 
@@ -77,6 +140,10 @@ function ranglisteZeichnen(daten) {
   if (kasten === null) {
     return;
   }
+
+  // Zuerst schauen, ob jemand aufgestiegen ist - noch bevor
+  // die neue Liste gezeichnet wird.
+  platzPruefen(daten.liste);
 
   let inhalt = '<h2 class="rang-titel">&#127942; Rangliste</h2>';
 

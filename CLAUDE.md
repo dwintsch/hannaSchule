@@ -127,7 +127,7 @@ mein-quiz/
 │   └── rangliste/        ← wer hat am meisten Punkte?
 └── js/
     ├── punkte.js   ← Anmelden + Punkte + Münzen + Code, auf ALLEN Seiten
-    ├── rangliste.js ← die Rangliste rechts, auf ALLEN Seiten
+    ├── rangliste.js ← die Rangliste links, auf ALLEN Seiten
     ├── konfetti.js ← wird von MEHREREN Spielen gebraucht
     ├── quiz.js     ← die Befehle vom Quiz
     ├── memory.js   ← die Befehle vom Memory
@@ -149,7 +149,7 @@ Zwei Sorten Spiele — das ist das Konzept (wie bei Anton):
 | Was | Wo verdient | Wofür |
 |---|---|---|
 | **Punkte** ⭐ | Lernspiele | bezahlen die Belohnungsspiele |
-| **Münzen** 🪙 | nur in der Dachheldin | reine Sammelzahl, kauft nichts |
+| **Münzen** 🪙 | nur in der Dachheldin | pro 100 Münzen gibt es **1 Punkt** geschenkt |
 | **Gratis-Runden** 🔓 | Code-Feld auf der Startseite | ersetzen die Punkte |
 
 **Anmelden und Punkte** (`js/punkte.js`, CSS `#spielerleiste` in `grund.css`):
@@ -179,6 +179,16 @@ Hintergrund dem Server Bescheid geben.
 - Die Leiste steht in **keiner** HTML-Datei — `leisteEinbauen()` setzt sie
   oben in den Body. Neue Seiten brauchen nur `<script src="js/punkte.js">`.
 - Abmelden löscht nur, *wer* angemeldet ist. Die Punkte bleiben stehen.
+- **Münz-Bonus:** Für je `MUENZEN_PRO_PUNKT` (= 100) gesammelte Münzen gibt
+  es **1 Punkt** geschenkt. Gerechnet wird in `muenzenDazu()` über den
+  Sprung der Hunderterstufe:
+  `floor(nachher / 100) - floor(vorher / 100)`. So funktioniert es auch,
+  wenn jemand mit einem Schlag 250 Münzen bekäme (dann zwei Punkte), und
+  es kann **nicht** doppelt auslösen, wenn man von 100 auf 101 weiterzählt.
+  Dazu erscheint eine Tafel.
+  **Ehrlich dazusagen:** Gerechnet wird im Browser, nicht auf dem Server.
+  Wer gleichzeitig an zwei Computern genau über die Hundertergrenze
+  kommt, könnte den Bonus zweimal bekommen. Bei diesem Projekt egal.
 - Punkte: Quiz mit ≥ `anzahlFragen - 2` richtigen **1**, Memory gelöst **1**,
   Blitzrunde ab `zielPunkte` richtigen **1**,
   Hangman gewonnen **2**. Jedes Mal neu, nicht nur beim ersten Mal.
@@ -281,9 +291,9 @@ Fingerabdruck gespeichert ist. Zurücksetzen geht nur über das Azure-Portal
 direkt gegen die echte Tabelle laufen lässt (17 Prüfungen, inkl. Aufräumen
 des Testkontos). Es braucht die beiden Einstellungen als Umgebungsvariablen.
 
-### Die Rangliste (rechter Rand)
+### Die Rangliste (linker Rand)
 
-Ein Kasten, der am **rechten Fensterrand** klebt und die zehn Besten zeigt.
+Ein Kasten, der am **linken Fensterrand** klebt und die zehn Besten zeigt.
 Auf allen Seiten, gebaut von `js/rangliste.js`.
 
 - Der Kasten steht in **keiner** HTML-Datei — `ranglisteEinbauen()` hängt ihn
@@ -313,10 +323,47 @@ Auf allen Seiten, gebaut von `js/rangliste.js`.
 - `.rang-zeile` hat von Anfang an einen **durchsichtigen** Rahmen. Sonst
   würde die eigene Zeile beim Einfärben plötzlich 2px höher und die Liste
   würde zucken.
-- **Unter 1100px Fensterbreite wird sie ausgeblendet** (`@media` in
+- **Unter 1250px Fensterbreite wird sie ausgeblendet** (`@media` in
   `grund.css`). Sonst fiele sie über den Inhalt. Das Spiel in der Mitte ist
   wichtiger als die Liste am Rand.
 - `z-index: 40` — weniger als die 50 vom Konfetti, damit es davor regnet.
+- Sie ist **280px breit** und in grösserer Schrift gehalten (von Daniel so
+  gewünscht). Beim Verbreitern muss die `@media`-Grenze mitwachsen, sonst
+  überlappt sie den Inhalt.
+
+**Die Meldung «Platz 1»** (`platzPruefen()` in `rangliste.js`):
+
+Wer neu auf den ersten Platz steigt, bekommt eine Tafel und Konfetti.
+Der letzte Platz steht unter `lernwelt-letzter-platz` im `localStorage`.
+
+Drei Bedingungen müssen stimmen — **alle drei sind nötig**:
+
+1. jetzt Platz 1
+2. der frühere Platz ist überhaupt bekannt (`!== null`)
+3. der frühere Platz war nicht schon 1
+
+Ohne Nummer 2 poppte die Meldung bei **jedem Seitenwechsel** wieder auf,
+solange man vorne liegt — das ist der Fehler, auf den man hier hereinfällt.
+Beim Abmelden wird der Merkzettel gelöscht, damit nach dem nächsten
+Anmelden sauber von vorne gezählt wird.
+
+Konfetti gibt es nur auf Seiten, die `konfetti.js` geladen haben. Darum
+`if (typeof konfetti === "function")` — derselbe Trick wie bei
+`ranglisteAuffrischen()`.
+
+### Die Tafeln (`tafelZeigen`, `#tafeln` in `grund.css`)
+
+Kurze Einblendungen oben in der Mitte, die nach ein paar Sekunden von
+selbst verschwinden. Zwei Stellen brauchen sie: die Meldung «Platz 1» und
+der Münz-Bonus. Der Befehl steht in `punkte.js`, weil das auf allen Seiten
+geladen ist.
+
+- Alle Tafeln kommen in **denselben Behälter** `#tafeln` (flex, Spalte).
+  Ohne ihn lägen zwei gleichzeitige Tafeln exakt übereinander.
+- `z-index: 60` — **über** dem Konfetti (50), sonst liest man sie nicht.
+- `pointer-events: none`, damit man hindurchklicken kann.
+- `setTimeout` räumt jede Tafel wieder weg. Ohne das stapeln sie sich,
+  bis die Seite neu geladen wird.
 
 ### Das Rennen (rennen.html)
 
@@ -492,6 +539,11 @@ Lila, damit man beide noch als Belohnungsspiele erkennt.
 - Münzen: `muenzenDazu(1)` sofort beim Einsammeln, damit die Leiste oben
   live mitzählt. Ohne Anmeldung nicht gespeichert (wird auf der Tafel
   ehrlich gesagt).
+- Seit 18.08.2026 sind die Münzen **nicht mehr nur eine Sammelzahl**: für
+  je 100 gibt es 1 Punkt geschenkt. Damit lohnt sich die Dachheldin auch
+  für Leute, die keine Rekorde jagen. Der Umtausch steckt komplett in
+  `muenzenDazu()` in `punkte.js` — `dach.js` weiss nichts davon und musste
+  nicht angefasst werden.
 
 ### Startseite (index.html)
 

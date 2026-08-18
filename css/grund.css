@@ -135,7 +135,7 @@ button {
   font-weight: bold;
 }
 
-/* --- Die Rangliste am rechten Rand ---
+/* --- Die Rangliste am linken Rand ---
    position: fixed klebt den Kasten ans Fenster, nicht an die
    Seite. Darum bleibt er stehen, auch wenn man scrollt - und
    darum verschiebt er den Inhalt in der Mitte nicht.
@@ -146,8 +146,8 @@ button {
 #rangliste {
   position: fixed;
   top: 18px;
-  right: 18px;
-  width: 220px;
+  left: 18px;      /* links - von Daniel so gewuenscht */
+  width: 280px;
   z-index: 40;
 
   /* Bei sehr vielen Zeilen soll der Kasten nicht aus dem
@@ -155,21 +155,21 @@ button {
   max-height: calc(100vh - 36px);
   overflow-y: auto;
 
-  /* box-sizing: das Polster wird in die 220px eingerechnet,
+  /* box-sizing: das Polster wird in die 280px eingerechnet,
      statt sie breiter zu machen. */
   box-sizing: border-box;
-  padding: 14px 16px;
+  padding: 18px 20px;
 
   background-color: #f4f7f8;
   border: 1px solid #e3e9eb;
-  border-radius: 14px;
-  font-size: 14px;
+  border-radius: 16px;
+  font-size: 16px;
   color: #16323d;
 }
 
 .rang-titel {
-  margin: 0 0 10px;
-  font-size: 15px;
+  margin: 0 0 12px;
+  font-size: 19px;
   text-align: center;
   color: #a8760a;   /* Gold - passt zu Pokal und Medaillen */
 }
@@ -184,9 +184,9 @@ button {
 .rang-zeile {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 5px 7px;
-  border-radius: 8px;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
 
   /* Der Rahmen ist von Anfang an da, nur unsichtbar. Sonst
      wuerde die eigene Zeile beim Einfaerben ploetzlich
@@ -195,7 +195,8 @@ button {
 }
 
 .rang-platz {
-  width: 22px;
+  width: 30px;
+  font-size: 19px;
   text-align: center;
   flex-shrink: 0;   /* die Medaille darf nie gequetscht werden */
 }
@@ -210,7 +211,7 @@ button {
 .rang-punkte {
   color: #8a6318;
   font-weight: bold;
-  font-size: 13px;
+  font-size: 15px;
   white-space: nowrap;
 }
 
@@ -224,24 +225,78 @@ button {
 .rang-hinweis {
   margin: 0;
   text-align: center;
-  font-size: 13px;
+  font-size: 15px;
   color: #6b7d84;
 }
 
 .rang-fuss {
-  margin: 8px 0 0;
+  margin: 10px 0 0;
   text-align: center;
-  font-size: 12px;
+  font-size: 13px;
   color: #6b7d84;
 }
 
 /* Auf schmalen Bildschirmen wuerde die Rangliste ueber den
    Inhalt fallen. Dort wird sie ausgeblendet - das Spiel in
-   der Mitte ist wichtiger als die Liste am Rand. */
+   der Mitte ist wichtiger als die Liste am Rand.
 
-@media (max-width: 1100px) {
+   1250px, weil der Kasten jetzt 280px breit ist: links 280
+   plus die Seite in der Mitte (max. 560) plus rechts nochmal
+   so viel Luft, damit es mittig bleibt. */
+
+@media (max-width: 1250px) {
   #rangliste {
     display: none;
+  }
+}
+
+/* --- Die Tafeln oben in der Mitte ---
+   Kurze Nachrichten, die man nicht uebersehen soll:
+   «Platz 1!» oder «100 Muenzen sind einen Punkt wert».
+   Hergestellt von tafelZeigen() in js/punkte.js.
+
+   Der Behaelter stellt sie untereinander. Ohne ihn laegen
+   zwei gleichzeitige Tafeln genau uebereinander. */
+
+#tafeln {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);   /* die eigene halbe Breite
+                                    zurueck - so ist sie mittig */
+  z-index: 60;    /* ueber dem Konfetti (50), sonst liest man sie nicht */
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  pointer-events: none;   /* man kann hindurchklicken */
+}
+
+.tafel {
+  background-color: #fdf3d3;
+  border: 2px solid #e8c96b;
+  border-radius: 14px;
+  padding: 12px 22px;
+
+  color: #a8760a;
+  font-size: 17px;
+  font-weight: bold;
+
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  animation: tafel-rein 0.35s ease-out;
+}
+
+/* Sie rutscht von oben herein und wird dabei sichtbar. */
+@keyframes tafel-rein {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
