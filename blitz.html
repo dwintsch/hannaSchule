@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <title>Blitzrunde</title>
+
+    <!-- grund.css gilt auf allen Seiten, blitz.css nur hier. -->
+    <link rel="stylesheet" href="css/grund.css">
+    <link rel="stylesheet" href="css/blitz.css">
+  </head>
+<body>
+
+  <p class="zurueck-zur-startseite"><a href="index.html">&#8592; Zur Startseite</a></p>
+
+  <h1>Blitzrunde</h1>
+
+  <p class="anleitung">
+    Stimmt die Aussage oder nicht? Du hast <strong>60 Sekunden</strong>.<br>
+    Klicke die Knöpfe &ndash; oder nimm die <strong>Pfeiltasten</strong>:
+    &#8592; für Richtig, &#8594; für Falsch.
+  </p>
+
+  <p id="anzeige"></p>
+
+  <!-- Die Karte mit der Aussage. Den Text setzt das JavaScript. -->
+  <div id="karte">
+    <p id="aussage">Bereit?</p>
+  </div>
+
+  <!-- Die zwei Antwortknöpfe. Sie sind gesperrt (disabled),
+       bis die Runde gestartet ist. -->
+  <div id="knoepfe">
+    <button class="antwort ja" onclick="antworten(true)" disabled>
+      &#10004; Richtig
+    </button>
+    <button class="antwort nein" onclick="antworten(false)" disabled>
+      &#10008; Falsch
+    </button>
+  </div>
+
+  <button id="startknopf" onclick="starten()">Los geht&rsquo;s!</button>
+
+  <p id="ende"></p>
+
+  <button class="neustart" onclick="location.reload()">Neue Runde</button>
+
+  <!-- punkte.js und konfetti.js zuerst: blitz.js braucht Befehle daraus. -->
+  <script src="js/punkte.js"></script>
+  <script src="js/konfetti.js"></script>
+  <script src="js/blitz.js"></script>
+</body>
+</html>

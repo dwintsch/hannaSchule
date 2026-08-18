@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <title>Dachheldin</title>
+
+    <!-- grund.css gilt auf allen Seiten, dach.css nur hier. -->
+    <link rel="stylesheet" href="css/grund.css">
+    <link rel="stylesheet" href="css/dach.css">
+  </head>
+<body>
+
+  <p class="zurueck-zur-startseite"><a href="index.html">&#8592; Zur Startseite</a></p>
+
+  <h1>Dachheldin</h1>
+
+  <p class="anleitung">
+    Du bist eine Superheldin! Spring von Dach zu Dach und sammle
+    Münzen &#129689;.<br>
+    Springen mit der <strong>Leertaste</strong> &ndash; oder mit dem
+    Knopf unten.
+  </p>
+
+  <p id="anzeige"></p>
+
+  <!-- Das Spielfeld. Dächer und Münzen setzt das JavaScript. -->
+  <div id="dachfeld">
+    <!-- Die Heldin. Selber gezeichnet mit svg, damit man sie
+         umfärben und anders anziehen kann - genau wie das
+         Galgenmännchen im Hangman.
+
+         Sie schaut nach rechts, also in die Richtung, in die sie
+         läuft. Darum flattert der Umhang nach LINKS, hinter ihr her.
+
+         Die Reihenfolge im svg ist wichtig: was weiter unten steht,
+         liegt oben. Der Umhang kommt zuerst, also liegt er hinten. -->
+    <div id="figur">
+
+      <svg class="heldin" viewBox="0 0 26 34">
+
+        <!-- Der Umhang, flattert hinter ihr -->
+        <path class="umhang" d="M12 11 Q1.5 13 2.5 25 Q7.5 20 12 19 Z" />
+
+        <!-- Arm hinten -->
+        <path class="haut" d="M11 14 L6.5 17.5" />
+
+        <!-- Beine -->
+        <path class="haut" d="M11.5 24.5 L7.5 30.5" />
+        <path class="haut" d="M15.5 24.5 L19.5 29" />
+
+        <!-- Stiefel -->
+        <path class="stiefel" d="M7.5 30.5 L4.5 32.5" />
+        <path class="stiefel" d="M19.5 29.5 L22.5 31.5" />
+
+        <!-- Die Hose -->
+        <path class="hose" d="M9.8 19.5 L18.2 19.5 L17.8 25 L10.2 25 Z" />
+
+        <!-- Der Anzug -->
+        <path class="anzug" d="M10.4 11.5 L17.6 11.5 L18.4 20 L9.6 20 Z" />
+
+        <!-- Der Stern auf der Brust. Ein Superhelden-Zeichen! -->
+        <path class="stern" d="M14 13 L15 15.4 L17.5 15.5 L15.5 17
+                               L16.2 19.4 L14 18 L11.8 19.4 L12.5 17
+                               L10.5 15.5 L13 15.4 Z" />
+
+        <!-- Die langen Haare, wehen nach hinten -->
+        <path class="haare" d="M9.6 3.5 Q3.5 6 5 14 Q8 9.5 10.5 9 Z" />
+
+        <!-- Kopf -->
+        <circle class="haut kopf" cx="14" cy="7.5" r="4.7" />
+
+        <!-- Haare oben auf dem Kopf -->
+        <path class="haare" d="M9.3 6.5 Q9.3 2.4 14 2.4 Q18.3 2.4 18.5 5.4
+                               Q16 3.8 13 5 Q10.8 5.6 9.3 6.5 Z" />
+
+        <!-- Auge -->
+        <circle class="auge" cx="16.7" cy="7.8" r="0.9" />
+
+        <!-- Arm vorne, nach vorne gestreckt -->
+        <path class="haut" d="M17 13.5 L21.8 10.5" />
+
+      </svg>
+
+      <!-- Wird nur beim Absturz gezeigt -->
+      <span class="knall">&#128165;</span>
+
+    </div>
+
+    <!-- Liegt über dem Spielfeld: Start- und Schlussmeldung -->
+    <div id="tafel"></div>
+  </div>
+
+  <!-- Springen zum Anklicken, für Laptop ohne Tastatur -->
+  <div id="steuerung">
+    <button class="sprungknopf" onclick="springen()">&#11014; Springen</button>
+  </div>
+
+  <!-- punkte.js und konfetti.js zuerst: dach.js braucht Befehle daraus. -->
+  <script src="js/punkte.js"></script>
+  <script src="js/konfetti.js"></script>
+  <script src="js/dach.js"></script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+/* ============================================
+   Aussehen NUR für die Blitzrunde (blitz.html)
+
+   Die Farbe der Blitzrunde ist GOLD.
+   Quiz türkis, Memory rosa, Hangman orange,
+   Rennen lila - und dieses Spiel gold.
+   ============================================ */
+
+h1 {
+  color: #a8760a;
+}
+
+.anleitung {
+  max-width: 480px;
+  margin: 0 auto 15px;
+  line-height: 1.5;
+  color: #16323d;
+}
+
+#anzeige {
+  font-size: 18px;
+  font-weight: bold;
+  color: #a8760a;
+  min-height: 24px;
+}
+
+/* --- Die Karte mit der Aussage --- */
+
+#karte {
+  /* flex mit center: der Satz sitzt genau in der Mitte,
+     egal ob er kurz oder lang ist. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  max-width: 480px;
+  min-height: 150px;
+  margin: 18px auto;
+  padding: 25px 30px;
+  box-sizing: border-box;
+
+  background-color: #fdf3d3;
+  border: 2px solid #e8c96b;
+  border-radius: 18px;
+
+  /* transition heisst: die Farbe wechselt weich statt plötzlich. */
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+#aussage {
+  margin: 0;
+  font-size: 21px;
+  line-height: 1.4;
+  color: #16323d;
+}
+
+/* Kurzes Aufblinken nach der Antwort.
+   Genau dasselbe Pastellgrün und Pastellrot wie im Quiz und im
+   Hangman - richtig und falsch sollen überall gleich aussehen. */
+
+#karte.gut {
+  background-color: #bfe6cd;
+  border-color: #7cc79a;
+}
+
+#karte.schlecht {
+  background-color: #f7cfc9;
+  border-color: #e39b90;
+}
+
+/* --- Die zwei Antwortknöpfe --- */
+
+#knoepfe {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;      /* auf schmalen Bildschirmen umbrechen */
+  gap: 12px;
+}
+
+.antwort {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 16px 30px;
+  min-width: 155px;
+  margin: 0;
+}
+
+.antwort.ja {
+  background-color: #bfe6cd;
+  color: #1e5b3a;
+}
+
+.antwort.nein {
+  background-color: #f7cfc9;
+  color: #8c3125;
+}
+
+/* :disabled heisst «gesperrt». Solange keine Runde läuft,
+   sind die Knöpfe blass und man kann nicht klicken. */
+.antwort:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* --- Der Startknopf --- */
+
+#startknopf {
+  background-color: #fdf3d3;
+  color: #8a6318;
+  border: 2px solid #e8c96b;
+  font-size: 17px;
+  font-weight: bold;
+  margin-top: 14px;
+}
+
+/* --- Das Ergebnis am Schluss --- */
+
+#ende {
+  max-width: 420px;
+  margin: 18px auto;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+/* Den Rahmen gibt es erst, wenn wirklich etwas drinsteht -
+   sonst stünde von Anfang an ein leerer Kasten da.
+   Gleicher Trick wie beim Quiz mit .ergebnis-karte. */
+#ende.ende-karte {
+  padding: 18px 20px;
+  background-color: #fdf3d3;
+  border: 2px solid #e8c96b;
+  border-radius: 14px;
+  color: #8a6318;
+  font-weight: bold;
+}
+
+/* Auch der Neustart-Knopf und der Link nach oben
+   führen die Goldfarbe weiter. */
+
+.neustart {
+  color: #a8760a;
+  border-color: #a8760a;
+}
+
+.zurueck-zur-startseite a {
+  color: #a8760a;
+}

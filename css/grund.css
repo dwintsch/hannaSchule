@@ -134,3 +134,23 @@ button {
 .zurueck-zur-startseite a:hover {
   text-decoration: underline;
 }
+
+/* Das Schildchen, wenn der Code an ist.
+   Steht hier, weil die Leiste auf allen Seiten gleich ist. */
+.frei-marke {
+  background-color: #ece3f7;
+  color: #5b3f87;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-weight: bold;
+}
+
+/* Das Schildchen mit den Münzen aus dem Dachsprung.
+   Bronze, damit man es nicht mit dem Stern verwechselt. */
+.muenzen-marke {
+  background-color: #f7e0cd;
+  color: #8f5228;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-weight: bold;
+}

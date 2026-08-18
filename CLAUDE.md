@@ -25,42 +25,101 @@ Sie will **selber programmieren**, nicht nur zuschauen. Also:
   erkläre danach, was ich geändert habe (Vorher/Nachher zeigen).
 - Immer prüfen, ob sie den Schritt wirklich gemacht hat (Datei lesen), bevor es weitergeht.
 
+## WO GEARBEITET WIRD — bitte zuerst lesen
+
+Ab **18.08.2026** ist der einzige richtige Ordner:
+
+```
+C:\Projects\hannaSchule
+```
+
+Dieser Ordner ist ein **git-Repository** und hängt an GitHub und Azure.
+
+- GitHub: `https://github.com/dwintsch/hannaSchule.git`, Branch **`main`**
+- Azure: **Static Web Apps**, Name `witty-water-0c6d8c31e`
+- Workflow: `.github/workflows/azure-static-web-apps-witty-water-0c6d8c31e.yml`
+
+**Wichtig:** `C:\Users\danie\mein-quiz` ist der **alte** Ordner. Dort wurde
+bis zum 18.08.2026 vormittags gearbeitet. Sein Inhalt wurde hierher kopiert.
+Nicht mehr dort arbeiten — sonst gibt es zwei Versionen, die auseinanderlaufen.
+Er darf als Sicherung stehen bleiben.
+
+### Wie eine Änderung ins Internet kommt
+
+1. Datei hier in `C:\Projects\hannaSchule` ändern
+2. `git add` + `git commit`
+3. `git push` auf `main`
+4. Der Workflow läuft auf GitHub automatisch los und lädt alles zu Azure
+5. Nach 1–2 Minuten ist die Website neu
+
+**Erst ein `push` macht die Änderung öffentlich.** Speichern allein genügt
+nicht — anders als früher, wo die Datei direkt im Browser geöffnet wurde.
+Vor jedem Push nachfragen: es ist die einzige Aktion, die nach aussen geht.
+
+### Was im Workflow steht (und warum)
+
+- `app_location: "/"` — die `index.html` liegt im Wurzelverzeichnis
+- `skip_app_build: true` und `skip_api_build: true` — reines HTML/CSS/JS,
+  kein Build. Oryx (Azures Build-Werkzeug) wird komplett übersprungen.
+- `api_location: ""` — **noch keine** Azure Functions. Diese Zeile ist der
+  Ort, an dem ein Server-Teil später eingehängt würde (siehe «Login»).
+- Der Kommentar im Workflow warnt: ein `npm install` im Schritt «Get Id
+  Token» legte eine `package.json` an, worauf Oryx fälschlich ein
+  Node-Projekt vermutete. Darum dort **kein** npm.
+- `git push` auf `main` löst den Deploy aus, ein Pull Request baut eine
+  Vorschau-Umgebung.
+
 ## Technisches
 
-Aus dem Quiz wird eine **Lernwelt**: eine Startseite, von der aus mehrere
-Spiele erreichbar sind (Quiz fertig, Memory als Nächstes, drittes Spiel offen).
+Aus dem Quiz ist eine **Lernwelt** geworden: eine Startseite, von der aus
+sechs Spiele erreichbar sind.
 
 ```
 mein-quiz/
-├── index.html      ← Startseite mit den Spiel-Kacheln
+├── index.html      ← Startseite mit den Spiel-Kacheln + Code-Feld
 ├── quiz.html       ← das Quiz (hiess früher index.html)
 ├── memory.html     ← das Abkürzungs-Memory
 ├── galgen.html     ← das Hangman
+├── blitz.html      ← die Blitzrunde (richtig/falsch auf Zeit)
 ├── rennen.html     ← Belohnungsspiel, KOSTET Punkte
+├── dach.html       ← Belohnungsspiel Dachheldin, KOSTET Punkte
 ├── css/
 │   ├── grund.css   ← gilt auf ALLEN Seiten (Farben, Schrift, Knöpfe,
 │   │                  .neustart, .zurueck-zur-startseite,
-│   │                  #spielerleiste, .konfetti)
-│   ├── start.css   ← nur Startseite
+│   │                  #spielerleiste, .punkte-marke, .muenzen-marke,
+│   │                  .frei-marke, .konfetti)
+│   ├── start.css   ← nur Startseite (inkl. #geheimfeld)
 │   ├── quiz.css    ← nur Quiz
 │   ├── memory.css  ← nur Memory
 │   ├── galgen.css  ← nur Hangman
-│   └── rennen.css  ← nur Rennen
+│   ├── blitz.css   ← nur Blitzrunde
+│   ├── rennen.css  ← nur Rennen
+│   └── dach.css    ← nur Dachheldin
 └── js/
-    ├── punkte.js   ← Anmelden + Punktekonto, auf ALLEN Seiten
+    ├── punkte.js   ← Anmelden + Punkte + Münzen + Code, auf ALLEN Seiten
     ├── konfetti.js ← wird von MEHREREN Spielen gebraucht
     ├── quiz.js     ← die Befehle vom Quiz
     ├── memory.js   ← die Befehle vom Memory
     ├── galgen.js   ← die Befehle vom Hangman
-    └── rennen.js   ← die Befehle vom Rennen
+    ├── blitz.js    ← die Befehle von der Blitzrunde
+    ├── rennen.js   ← die Befehle vom Rennen
+    └── dach.js     ← die Befehle von der Dachheldin
 ```
 
 Zwei Sorten Spiele — das ist das Konzept (wie bei Anton):
 
 | Sorte | Spiele | Punkte |
 |---|---|---|
-| **Lernspiele** | Quiz, Memory, Hangman | **verdienen** |
-| **Belohnung** | Rennen | **kosten** |
+| **Lernspiele** | Quiz, Memory, Hangman, Blitzrunde | **verdienen** |
+| **Belohnung** | Rennen, Dachheldin | **kosten** |
+
+**Drei Sorten Zahlen — nicht verwechseln:**
+
+| Was | Wo verdient | Wofür |
+|---|---|---|
+| **Punkte** ⭐ | Lernspiele | bezahlen die Belohnungsspiele |
+| **Münzen** 🪙 | nur in der Dachheldin | reine Sammelzahl, kauft nichts |
+| **Gratis-Runden** 🔓 | Code-Feld auf der Startseite | ersetzen die Punkte |
 
 **Anmelden und Punkte** (`js/punkte.js`, CSS `#spielerleiste` in `grund.css`):
 
@@ -74,6 +133,7 @@ Ehrlich dazusagen: gilt nur für diesen Browser auf diesem Computer.
   oben in den Body. Neue Seiten brauchen nur `<script src="js/punkte.js">`.
 - Abmelden löscht nur, *wer* angemeldet ist. Die Punkte bleiben stehen.
 - Punkte: Quiz mit ≥ `anzahlFragen - 2` richtigen **1**, Memory gelöst **1**,
+  Blitzrunde ab `zielPunkte` richtigen **1**,
   Hangman gewonnen **2**. Jedes Mal neu, nicht nur beim ersten Mal.
 - `punkteDazu(n)` gibt `false` zurück, wenn niemand angemeldet ist — die
   Spiele zeigen dann den Hinweis «Melde dich oben an». Ohne Anmeldung kann
@@ -130,6 +190,132 @@ gleichnamigen Befehl in `memory.js`.
   und in `index.html` das `<div class="spiel bald">` in ein `<a class="spiel">`
   umwandeln.
 
+### Das Code-Feld (index.html unten rechts, `#geheimfeld`)
+
+Ein kleines Feld unten in der Ecke der Startseite. Wer den PIN kennt,
+bekommt **fünf Gratis-Runden** für die Belohnungsspiele.
+
+- `PIN` und `GRATIS_PRO_CODE` stehen zuoberst in `js/punkte.js`.
+  Aktuell `"8590"` und `5`. Nur dort ändern.
+- Gespeichert als **Zahl** unter `lernwelt-gratis-rennen`, nicht als «ja».
+  `punkteAbziehen()` knipst pro Start eine Runde ab (Fünferkarte).
+  Ist der Schlüssel bei 0, kostet es wieder Punkte.
+- `codeIstFrei()` ist nur `gratisRennen() > 0` — ein Einzeiler, damit die
+  Spiele nicht überall `> 0` schreiben müssen.
+- `type="password"` versteckt die Eingabe, `autocomplete="off"` verhindert
+  Chromes «Passwort speichern?». **Ehrlich dazusagen:** versteckt ≠ geheim,
+  der PIN steht im Klartext in `punkte.js`.
+- Das Feld ist mit `opacity: 0.6` blass und wird bei `:hover` /
+  `:focus-within` deutlich. Vorher stand 0.3 — da hat Hanna es nicht
+  gefunden. Nicht wieder blasser machen.
+- Wünsche von Hanna in dieser Reihenfolge: erst Enter-Cheat, dann Feld
+  statt Enter, dann «Code» statt «Geheimcode», dann PIN 8590, dann Ziffern
+  verstecken, dann fünf Runden statt einer. Der Verlauf zeigt: sie
+  präzisiert gerne schrittweise — kleine Schritte anbieten, nicht alles
+  auf einmal fertig bauen wollen.
+
+### Blitzrunde (blitz.html)
+
+Richtig oder falsch in **60 Sekunden**. Von Hanna aus vier Vorschlägen
+gewählt. Farbe: **Gold** (`#a8760a`, Flächen `#fdf3d3`, Rahmen `#e8c96b`).
+
+- Die 30 Aussagen stehen **nur** in `aussagen` zuoberst in `js/blitz.js`,
+  gruppiert nach Themen. `startZeit` 60, `zielPunkte` 8.
+- **Regel für neue Aussagen** (von Hanna eingefordert): Keine zwei Aussagen
+  dürfen über dieselbe Sache das Gegenteil behaupten. Ich hatte zuerst
+  «ss heisst selbstständig» *und* «ss heisst mit Hilfe» drin, nur damit
+  15:15 aufgeht — das hat sie sofort reklamiert. Jede Sache genau einmal.
+- **15 richtig, 15 falsch.** Wichtig, sonst gewinnt man durch stures
+  Drücken auf einen Knopf. Vorher war es 15:7.
+- Steuerung mit `←` / `→` **und** Knöpfen. Die Karte blinkt 300 ms grün
+  oder rot (`#karte.gut` / `.schlecht`), gleiche Pastelltöne wie im Quiz.
+- Die Aussagen sind **fachlich noch nicht von Hanna geprüft**.
+
+### Dachheldin (dach.html)
+
+Belohnungsspiel im Stil eines Endless Runners, von Dach zu Dach springen
+und **Münzen** sammeln. Kostet 2 Punkte. Farbe: **Pastell-Flieder**
+(`#5a63b8`) — von Hanna gewählt. Vorher war es dasselbe Lila wie beim
+Rennen; sie wollte eine eigene Farbe. Flieder liegt bewusst nah beim
+Lila, damit man beide noch als Belohnungsspiele erkennt.
+
+- Steuerung: **Leertaste** oder Knopf. `springen()` geht nur, wenn
+  `amBoden === true` — so gibt es keinen Doppelsprung.
+- Kein Doppelsprung heisst: `preventDefault()` bei der Leertaste ist
+  Pflicht, sonst scrollt die Seite *und* der fokussierte Knopf feuert nochmal.
+- **Die wichtigste Erkenntnis:** Absprung und Schwerkraft müssen mit dem
+  Tempo mitwachsen (`sprungKraft * faktor`, `schwerkraft * faktor * faktor`,
+  `faktor = tempo / startTempo`). Sonst fliegt der gleiche Sprung bei hohem
+  Tempo immer weiter und irgendwann über jedes Dach hinweg — dann ist kein
+  Sprung mehr zu schaffen. Ich habe das mit einer Simulation in Node
+  gefunden: ein Test-Spieler, der den besten Absprungpunkt sucht, starb
+  ohne Skalierung reproduzierbar bei Tempo ≈ 9,5 an einer Hauswand.
+- Dazu `maxTempo = 8`. Mit Deckel schafft der Test-Spieler 60'000 Takte in
+  allen Durchläufen, ohne Deckel stirbt er. **Nicht erhöhen ohne neu
+  durchzurechnen.**
+- Dächer 90–150 px breit (breiter als der 70 px lange Sprungbogen),
+  Lücken **40–57 px**, Höhenwechsel **-40 bis +30** — nach oben weniger, weil
+  der Sprung nur etwa 60 px hoch geht.
+- Landung: `alteFuesse <= dachOben && neueFuesse >= dachOben`. Die alte
+  Fussposition ist nötig, sonst würde die Figur auf ein höheres Dach
+  «hochschnappen», statt an die Wand zu knallen.
+- `dachUnter()` darf das erste Treffer-Dach zurückgeben, weil die Lücke
+  (≥ 40) immer breiter ist als die Figur (26) — sie kann nie auf zwei
+  Dächern gleichzeitig stehen.
+
+**Das Ziel bei Strecke 800** (von Hanna gewünscht):
+
+- `ziel = 800`, `zielVorlauf = 100`, `zielBelohnung = 1` — alles oben in
+  `dach.js`. 800 Takte × 20 ms = **16 Sekunden** pro Runde, Tempo am Ziel
+  4,1 (Deckel 8). 16 Sekunden ist die von Hanna gewählte Rundenlänge
+  (zuerst 1000 = 20 s, dann auf 800 gekürzt) — beim Ändern nachrechnen.
+- Wer das Ziel erreicht: Konfetti + **1 Gratis-Runde** gutgeschrieben.
+  Der Knopf heisst danach von selbst «Nochmal (noch 1 gratis)».
+- Das Zielband ist ein `<div class="ziel">` (schwarz-weiss gestreift via
+  `repeating-linear-gradient`) mit Schild `.ziel-band`. `zielBandSetzen()`
+  stellt es bei `x = figurX + (ziel - strecke) * tempo` hin, damit es
+  **genau bei Strecke 800** bei der Heldin ist. Das Tempo wächst dabei
+  leicht weiter, die Abweichung ist ~6 px — vernachlässigbar.
+- Das Konfetti fiel **schon immer** von oben nach unten (`top: -20px`,
+  `translateY(105vh)` in `grund.css`). Für die Dachheldin musste nur
+  `konfetti.js` in `dach.html` dazugeladen werden.
+- `gratisRundenDazu(n)` in `punkte.js` ist der gemeinsame Befehl für
+  Code-Feld und Ziel. Braucht **keine** Anmeldung: Gratis-Runden gehören
+  zum Browser, nicht zu einem Namen.
+- Der Rekord ist jetzt der **Münz-Rekord** (`rekordSpeichern("dach-muenzen",
+  muenzen)`). Vorher war es die Strecke — die ist bei 800 gedeckelt und
+  taugt nicht mehr als Bestleistung.
+- `nochmalKnopf()` und `muenzHinweis()` sind ausgelagert, weil beide
+  Schlusstafeln (Absturz und Ziel) sie brauchen.
+
+**Die Heldin** (von Hanna gewünscht: Frau mit Superhelden-Umhang):
+
+- Sie ist ein **`<svg>` direkt in `dach.html`**, kein Emoji. Grund: ein Emoji
+  lässt sich nicht umfärben und nicht spiegeln — 🏃 schaut nach links, sie
+  läuft aber nach rechts. Gezeichnet ist sie nach rechts schauend.
+- Teile mit eigener Klasse: `.umhang` `.anzug` `.hose` `.stern` `.haare`
+  `.stiefel` `.haut` `.auge`. Die Farben stehen gebündelt unter
+  «HIER ZIEHST DU DIE HELDIN AN» in `dach.css` — dort ändern, nicht verstreut.
+  Umfärben ist ausdrücklich als *ihr* Spielplatz gedacht.
+- Reihenfolge im SVG zählt: später gezeichnet = liegt oben. Umhang zuerst
+  (liegt hinten), Kopf nach dem Anzug, vorderer Arm zuletzt.
+- Der Umhang flattert per CSS-`animation` mit `transform-origin: 12px 11px`
+  (die Schulter). Ohne origin würde er um die Bildmitte kippen.
+- Beim Absturz wird die Zeichnung nur **versteckt**
+  (`figur.classList.add("abgestuerzt")`, CSS blendet `.knall` 💥 ein).
+  Vorher stand dort `figur.innerHTML = "..."` — das hätte das SVG zerstört.
+- **Name:** «Dachheldin». Hanna schlug «Superman Rennen» vor; Superman und
+  Supergirl sind geschützte Namen, darum ein eigener. Dateien heissen weiter
+  `dach.*` — passt zum Namen, anders als bei galgen/Hangman.
+- **Titelbild** auf der Startseite: ebenfalls ein `<svg>` (Heldin springt
+  über die Lücke zwischen zwei Dächern), kein Emoji. Klassen dort mit
+  `k-` vorne (`.k-umhang`, `.k-dach` …), damit sie nicht mit `.dach`
+  aus `start.css` oder mit `dach.css` kollidieren. Farben in `start.css`.
+
+- Münzen: `muenzenDazu(1)` sofort beim Einsammeln, damit die Leiste oben
+  live mitzählt. Ohne Anmeldung nicht gespeichert (wird auf der Tafel
+  ehrlich gesagt).
+
 ### Startseite (index.html)
 
 Design: **breite Kacheln untereinander** (von Hanna gewählt), max. 500px breit,
@@ -149,8 +335,8 @@ nach rechts; beim Laden rutschen Kopf und Kacheln gestaffelt herein.
 - Fertiges Spiel = `<a class="spiel" href="...">` → anklickbar
 - Noch nicht fertig = `<div class="spiel bald">` → grau, nicht anklickbar
 
-Die «kommt bald»-Kacheln stehen absichtlich schon da: so sieht man am
-Präsentationstag den Plan hinter dem Projekt.
+Die «kommt bald»-Kacheln stehen absichtlich schon da: so sieht man den
+Plan hinter dem Projekt.
 
 ### Memory (memory.html)
 
@@ -335,6 +521,19 @@ Kontrast braucht (Überschriften, Zähler), und beim Konfetti.
 | Pastellrot | `#f7cfc9` + Schrift `#8c3125` | «falsch» in Quiz und Hangman |
 | Rosa | `#c2557a`, Karten `#f7d9e3` | Memory |
 | Orange | `#d2691e`, hell `#e8a76b`, pastell `#fde8d7` | Hangman |
+| Gold | `#a8760a`, pastell `#fdf3d3`, Rahmen `#e8c96b` | Blitzrunde |
+| Lila | `#7b5aa6` / `#5b3f87`, pastell `#ece3f7` / `#ddd2ee`, Rahmen `#b79ddb` | Rennen |
+| Flieder | `#5a63b8` / `#414a94`, pastell `#e3e5f7` / `#d4d7f0`, Rahmen `#a8aee0` | Dachheldin |
+| Münz-Bronze | `#f7e0cd` + Schrift `#8f5228` | `.muenzen-marke` in der Leiste |
+
+Jedes Spiel hat **eine** eigene Farbe, die es überall durchzieht: Überschrift,
+Zähler, Knöpfe, Neustart-Knopf, Link «Zur Startseite» und die Kachel auf der
+Startseite. Beim Umfärben eines Spiels also immer beide Dateien anschauen:
+`css/<spiel>.css` **und** den Block in `css/start.css`.
+
+Achtung beim Umfärben mit Suchen-und-Ersetzen: Rennen und Dachheldin hatten
+einmal **dieselben** Hex-Werte. In `start.css` stehen beide Blöcke direkt
+untereinander — dort nur den richtigen Block ändern, nicht global ersetzen.
 
 Pastellgrün und Pastellrot sind in Quiz und Hangman **absichtlich identisch** —
 richtig und falsch sollen überall gleich aussehen. Wer eine davon ändert,
@@ -366,38 +565,64 @@ Das Quiz ist ein **Lernprojekt für die Schule**. Es ist keine medizinische
 Beratung und ersetzt keine Ausbildung. Bei Pflege-Fachfragen: Hanna kennt sich
 in dem Bereich besser aus — im Zweifel nachfragen statt behaupten.
 
-## Stand am Ende von Tag 2 (17.08.2026)
+## Es gibt KEINE Präsentation
+
+Hier stand früher, Tag 3 sei ein Präsentationstag. Das war falsch.
+Hanna hat am 18.08.2026 ausdrücklich gesagt, dass sie **keine Präsentation
+halten muss** und das ganz aus dem Programm gestrichen haben will.
+Also: nicht mehr erwähnen, keine Zeit dafür reservieren, kein Drängen
+zum Abschliessen.
+
+## Stand am Dienstag, 18.08.2026
 
 **Fertig und spielbar:** Startseite, Quiz (10 Fragen), Memory (8 Paare),
-Hangman (55 Wörter, 9 Fehler), Rennen (Belohnung), Anmelden mit Punktekonto,
-Konfetti, Smileys, einheitliches Pastell-Farbkonzept.
+Hangman (55 Wörter, 9 Fehler), Blitzrunde (30 Aussagen in 60 Sekunden),
+Rennen und Dachheldin (Belohnung), Anmelden mit Punktekonto, Münzen,
+Code-Feld für Gratis-Runden, Konfetti, Smileys, Pastell-Farbkonzept
+mit einer eigenen Farbe pro Spiel.
 
-**Sicherung:** `C:\Users\danie\mein-quiz-sicherung-2026-08-17.zip`
+**Sicherungen** (in `C:\Users\danie\`):
 
-**Zuletzt offen geblieben:**
+- `mein-quiz-sicherung-2026-08-18-0954.zip` ← aktuell: Dachheldin mit
+  Ziel bei 800, Superheldin-SVG, Titelbild, Münzen
+- `mein-quiz-sicherung-2026-08-18.zip` ← Vormittag: Blitzrunde und
+  Dachsprung neu, noch mit Emoji-Figur und ohne Ziel
+- `mein-quiz-sicherung-2026-08-17.zip` ← Ende Tag 2
 
-1. Hanna hat gemeldet, dass man mit **3× Enter** Spiele gratis freischalten
-   kann. `starten()` im Rennen ist inzwischen gegen Doppelstart abgesichert
-   (`laeuft`-Wache, `clearInterval`, `blur()`). **Noch nicht bestätigt, ob das
-   die richtige Lücke war** — zuerst nachfragen, auf welcher Seite und nach
-   welchem Schritt es passiert, bevor weiter geraten wird.
-2. Punkte lassen sich unbegrenzt farmen (dasselbe Quiz mehrfach spielen).
+Neue Sicherung mit **Datum und Uhrzeit** im Namen anlegen, die alten
+**nicht** überschreiben — so kann man notfalls zurück. Mehrere pro Tag
+sind ausdrücklich in Ordnung.
+
+**Geklärt: die «3× Enter»-Sache war gar kein Fehler.** Hanna wollte einen
+Cheat-Code *haben*, nicht ein Loch gestopft bekommen. Daraus wurde das
+Code-Feld auf der Startseite. Lehre daraus: bei so einer Meldung zuerst
+fragen, ob sie einen Fehler **meldet** oder eine Funktion **wünscht** —
+ich hatte zuerst lange nach einer Sicherheitslücke gesucht, die es nie gab.
+
+**Noch offen:**
+
+1. Punkte lassen sich unbegrenzt farmen (dasselbe Quiz mehrfach spielen).
    Ist so gewollt; Hanna weiss davon und könnte es begrenzen wollen.
+2. Die 30 Aussagen in `js/blitz.js` sind von mir vorgeschlagen und noch
+   **nicht von Hanna fachlich durchgesehen**. Sie kennt den Beruf, ich nicht.
 
-**Tag 3 ist der Präsentationstag** — Zeit dafür reservieren, nicht mehr
-beliebig Neues anfangen. Gute Erzählpunkte für die Präsentation:
+**Was sie am Projekt selber erklären kann:**
 
 - Warum es drei Dateien pro Spiel gibt (HTML / CSS / JavaScript)
 - Warum `grund.css`, `konfetti.js` und `punkte.js` geteilt werden
 - Das Farbkonzept: jede Farbe hat eine Bedeutung
-- Warum ein echtes Login einen Server bräuchte
+- Warum ein echtes Login einen Server bräuchte — und warum `type="password"`
+  die Zahlen nur **versteckt**, nicht geheim macht
 - Der gelenkte Zufall bei den Sternen («fühlte sich unfair an»)
+- Warum 15 richtige und 7 falsche Aussagen ein kaputtes Spiel wären
 - Der Fehler mit dem fehlenden `</fieldset>` und wie sie ihn gefunden hat
 
-## Offene Ideen für den Rest der Zeit
+## Offene Ideen
 
 - Mehr Fragen (sie schreibt eigene aus ihrem Berufsfeld)
+- Eigene Aussagen für die Blitzrunde
 - Fortschrittsanzeige («Frage 2 von 5»)
 - Knopf «Nochmal von vorne»
 - Erklärung zur richtigen Antwort einblenden
-- Präsentation für den dritten Tag vorbereiten
+- Ein sechstes Spiel: Reihenfolge sortieren, «Wo ist das Organ?»
+  oder Buchstabensalat (Vorschläge lagen schon auf dem Tisch)

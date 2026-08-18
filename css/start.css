@@ -155,6 +155,12 @@
 .hangman .marke       { background-color: #fde8d7; color: #a8501a; }
 .hangman:hover        { border-color: #e8964f; }
 
+.blitz .symbol      { background-color: #fdf3d3; }
+.blitz .spiel-titel { color: #a8760a; }
+.blitz .spiel-pfeil { color: #a8760a; }
+.blitz .marke       { background-color: #fdf3d3; color: #8a6318; }
+.blitz:hover        { border-color: #e8c96b; }
+
 /* Die Belohnungsspiele in Pastell-Lila - so sieht man sofort,
    dass sie zu einer anderen Gruppe gehören. */
 .rennen .symbol      { background-color: #ece3f7; }
@@ -162,6 +168,54 @@
 .rennen .spiel-pfeil { color: #7b5aa6; }
 .rennen .marke       { background-color: #ece3f7; color: #5b3f87; }
 .rennen:hover        { border-color: #b79ddb; }
+
+/* Die Dachheldin hat ihr eigenes Pastell-Flieder - ein helles
+   Blau-Lila. Nahe beim Lila vom Rennen, weil beide Belohnungen
+   sind, aber klar unterscheidbar. So von Hanna gewählt. */
+.dach .symbol      { background-color: #e3e5f7; }
+.dach .spiel-titel { color: #5a63b8; }
+.dach .spiel-pfeil { color: #5a63b8; }
+.dach .marke       { background-color: #e3e5f7; color: #414a94; }
+.dach:hover        { border-color: #a8aee0; }
+
+/* --- Das Titelbild der Dachheldin ---
+   Die Klassen fangen alle mit k- an (für «Kachel»). So können
+   sie nicht mit den .dach-Regeln oder mit css/dach.css
+   durcheinandergeraten. */
+
+.dach .symbol svg {
+  width: 40px;
+  height: 40px;
+  overflow: visible;
+}
+
+.k-dach    { fill: #a8aee0; }   /* die Dächer, dunkleres Flieder */
+.k-umhang  { fill: #e03e3e; }   /* Umhang */
+.k-anzug   { fill: #2f5fbf; }   /* Anzug */
+.k-hose    { fill: #e03e3e; }   /* Hose */
+.k-stern   { fill: #f2c14e; }   /* Stern auf der Brust */
+.k-haare   { fill: #4a2f1c; }   /* Haare */
+.k-auge    { fill: #2b2b2b; }
+
+.k-haut {
+  fill: #f2c9a0;
+  stroke: #f2c9a0;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
+.k-stiefel {
+  stroke: #e03e3e;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  fill: none;
+}
+
+/* Beim Draufzeigen hebt die Heldin ab. */
+.dach:hover .symbol svg {
+  transform: translateY(-3px);
+  transition: transform 0.2s;
+}
 
 /* Die Überschrift über den Belohnungsspielen */
 .belohnung-titel {
@@ -210,6 +264,7 @@
 .spiel:nth-child(1) { animation-delay: 0.10s; }
 .spiel:nth-child(2) { animation-delay: 0.20s; }
 .spiel:nth-child(3) { animation-delay: 0.30s; }
+.spiel:nth-child(4) { animation-delay: 0.40s; }
 
 /* --- Spiele, die noch nicht fertig sind ---
    Im Moment nicht gebraucht - alle drei sind fertig.
@@ -237,4 +292,80 @@
   margin-top: 45px;
   font-size: 14px;
   color: #9aa7ad;
+}
+
+/* ===== Das Code-Feld unten in der Ecke =====
+
+   position: fixed heisst: es klebt am Fensterrand fest und
+   bleibt beim Scrollen immer unten rechts stehen.
+   Genau wie das Konfetti in grund.css.
+
+   Es ist absichtlich blass (opacity: 0.6). Erst wenn man mit
+   der Maus hinzeigt oder hineinklickt, wird es richtig sichtbar -
+   ein geheimer Code soll ja nicht jedem ins Auge springen. */
+
+#geheimfeld {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  max-width: 210px;
+
+  padding: 8px 10px;
+  background-color: #f4f7f8;
+  border: 1px solid #e3e9eb;
+  border-radius: 12px;
+
+  opacity: 0.6;
+  transition: opacity 0.25s;
+}
+
+/* :hover = Maus zeigt darauf.
+   :focus-within = irgendetwas darin ist gerade angeklickt. */
+#geheimfeld:hover,
+#geheimfeld:focus-within {
+  opacity: 1;
+}
+
+#codefeld {
+  width: 105px;
+  padding: 6px 9px;
+
+  /* Die Punkte stehen etwas weiter auseinander -
+     so kann man sie beim Tippen besser zählen. */
+  letter-spacing: 3px;
+  font-family: Arial;
+  font-size: 13px;
+  color: #16323d;
+  border: 1px solid #cdd8dc;
+  border-radius: 7px;
+}
+
+/* Der OK-Knopf. Kleiner als die grossen Knöpfe in grund.css. */
+#geheimfeld button {
+  font-size: 13px;
+  padding: 6px 13px;
+  margin: 0;
+}
+
+/* Die Antwortzeile. width: 100% heisst: sie nimmt eine
+   ganze Zeile für sich, also unter dem Feld und dem Knopf. */
+#codemeldung {
+  width: 100%;
+  margin: 5px 0 0;
+  font-size: 12px;
+  text-align: right;
+}
+
+#codemeldung.stimmt { color: #1e5b3a; }
+#codemeldung.falsch { color: #8c3125; }
+
+/* Damit das Feld die Fusszeile nicht überdeckt. */
+.fusszeile {
+  margin-bottom: 60px;
 }

@@ -1,0 +1,302 @@
+/* ============================================
+   Aussehen NUR für die Dachheldin (dach.html)
+
+   Farbe: PASTELL-FLIEDER, ein helles Blau-Lila.
+   So von Hanna gewählt.
+
+   Jedes Spiel hat seine eigene Farbe:
+   Quiz türkis · Memory rosa · Hangman orange ·
+   Blitzrunde gold · Rennen lila · Dachheldin flieder.
+
+   Flieder liegt nahe beim Lila vom Rennen - so sieht
+   man immer noch, dass beide Belohnungsspiele sind.
+
+   Die Farben:
+   Schrift        #5a63b8   Überschrift, Anzeige, Link
+   Schrift dunkel #414a94   auf hellen Flächen
+   Himmel         #eff0fb bis #dcdff5 (Verlauf)
+   Dächer         #d4d7f0   mit Kante #7f88cc
+   Rahmen         #a8aee0
+   ============================================ */
+
+h1 {
+  color: #5a63b8;
+}
+
+.anleitung {
+  max-width: 480px;
+  margin: 0 auto 15px;
+  line-height: 1.5;
+  color: #16323d;
+}
+
+#anzeige {
+  font-size: 18px;
+  font-weight: bold;
+  color: #5a63b8;
+  min-height: 24px;
+}
+
+/* --- Das Spielfeld ---
+   Die Grösse muss zu feldBreite und feldHoehe
+   in js/dach.js passen! */
+
+#dachfeld {
+  position: relative;   /* Bezugsrahmen für alles darin */
+  overflow: hidden;     /* was hinausrutscht, wird abgeschnitten */
+
+  width: 440px;
+  height: 320px;
+  margin: 15px auto;
+
+  /* Der Himmel: ein Verlauf von hell nach etwas dunkler. */
+  background: linear-gradient(to bottom, #eff0fb, #dcdff5);
+
+  border: 3px solid #a8aee0;
+  border-radius: 14px;
+}
+
+/* --- Ein Dach ---
+   position: absolute heisst: an einer festen Stelle im
+   Spielfeld. bottom: 0 setzt es unten an den Rand, darum
+   muss das JavaScript nur die Höhe angeben.
+   Die dunkle Linie oben ist die Dachkante. */
+
+.dach {
+  position: absolute;
+  bottom: 0;
+
+  background-color: #d4d7f0;
+  border: 2px solid #c2c7e8;
+  border-top: 5px solid #7f88cc;
+  border-radius: 3px 3px 0 0;
+  box-sizing: border-box;
+}
+
+/* --- Die Figur --- */
+
+#figur {
+  position: absolute;
+  width: 26px;
+  height: 34px;
+  z-index: 3;
+}
+
+#figur .heldin {
+  width: 26px;
+  height: 34px;
+  display: block;
+}
+
+/* ===== HIER ZIEHST DU DIE HELDIN AN =====
+   Ändere einfach die Farben. Jedes Kleidungsstück hat im svg
+   seine eigene Klasse, darum genügt hier eine Zeile.
+
+   Ein paar Ideen:
+   Umhang   gold #f2c14e · grün #2e8b57 · pink #e8438f
+   Anzug    lila #6a4c9c · türkis #2a9d8f · schwarz #2b2b2b
+   Haare    blond #d9a54a · schwarz #2b2b2b · rot #b34a2f
+   Stern    weiss #ffffff sieht auch stark aus                 */
+
+.umhang {
+  fill: #e03e3e;      /* Umhang: rot */
+
+  /* Der Umhang flattert. Er dreht sich ein bisschen hin und her,
+     und zwar um die Schulter - darum transform-origin. */
+  transform-origin: 12px 11px;
+  animation: flattern 0.35s ease-in-out infinite alternate;
+}
+
+@keyframes flattern {
+  from { transform: rotate(-5deg); }
+  to   { transform: rotate(7deg); }
+}
+
+.anzug {
+  fill: #2f5fbf;      /* Anzug: blau */
+}
+
+.hose {
+  fill: #e03e3e;      /* Hose: rot wie der Umhang */
+}
+
+.stern {
+  fill: #f2c14e;      /* Stern auf der Brust: gold */
+}
+
+.haare {
+  fill: #4a2f1c;      /* Haare: dunkelbraun */
+}
+
+.stiefel {
+  stroke: #e03e3e;    /* Stiefel: rot wie der Umhang */
+  stroke-width: 3;
+  stroke-linecap: round;
+  fill: none;
+}
+
+/* Haut und Kopf. stroke ist die Linie, fill die Füllung -
+   die Arme und Beine sind Linien, der Kopf ist ein Kreis.
+   Darum braucht es beides. */
+.haut {
+  stroke: #f2c9a0;
+  stroke-width: 3.4;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.haut.kopf {
+  fill: #f2c9a0;
+  stroke: none;
+}
+
+.auge {
+  fill: #2b2b2b;
+}
+
+/* --- Beim Absturz ---
+   Statt die Zeichnung wegzuwerfen, wird sie nur versteckt und
+   das Explosions-Zeichen eingeblendet. Beim nächsten Start
+   nehmen wir die Klasse einfach wieder weg. */
+
+.knall {
+  display: none;
+  font-size: 26px;
+  line-height: 34px;
+}
+
+#figur.abgestuerzt .heldin {
+  display: none;
+}
+
+#figur.abgestuerzt .knall {
+  display: block;
+}
+
+/* --- Eine Münze --- */
+
+.muenze {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  font-size: 20px;
+  line-height: 24px;
+  text-align: center;
+  z-index: 2;
+
+  /* Sie wippt leicht auf und ab, damit sie auffällt. */
+  animation: wippen 1s ease-in-out infinite;
+}
+
+@keyframes wippen {
+  from { transform: translateY(0); }
+  50%  { transform: translateY(-6px); }
+  to   { transform: translateY(0); }
+}
+
+/* --- Das Zielband ---
+   Ein schwarz-weiss gestreifter Balken über die ganze Höhe,
+   wie am Ziel bei einem Rennen.
+
+   repeating-linear-gradient heisst «Farbverlauf, der sich
+   wiederholt». Hier wechselt er alle 10 Pixel die Farbe -
+   das ergibt die Streifen. Genau denselben Trick benutzt
+   die Strasse im Rennen. */
+
+.ziel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  z-index: 1;          /* hinter der Heldin (die hat 3) */
+
+  background: repeating-linear-gradient(
+    to bottom,
+    #2b2b2b 0 10px,
+    #ffffff 10px 20px
+  );
+
+  border-left: 1px solid #5a63b8;
+  border-right: 1px solid #5a63b8;
+}
+
+/* Das Schild oben am Zielband */
+.ziel-band {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+
+  /* Schiebt das Schild um die halbe eigene Breite nach links,
+     damit es genau mittig über dem Balken sitzt. */
+  transform: translateX(-50%);
+
+  white-space: nowrap;   /* nicht umbrechen */
+  background-color: #f2c14e;
+  color: #414a94;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 4px 9px;
+  border: 2px solid #5a63b8;
+  border-radius: 9px;
+}
+
+/* --- Die Tafel über dem Spielfeld --- */
+
+#tafel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 25px;
+
+  display: flex;
+  flex-direction: column;   /* alles untereinander */
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #414a94;
+  font-size: 15px;
+  line-height: 1.5;
+  z-index: 10;
+}
+
+/* Beim Spielen ist die Tafel weg. */
+#tafel.weg {
+  display: none;
+}
+
+#tafel strong {
+  font-size: 20px;
+  color: #5a63b8;
+}
+
+.tafelknopf {
+  background-color: #d4d7f0;
+  color: #414a94;
+  font-size: 16px;
+  padding: 12px 22px;
+  margin: 4px 0 0;
+}
+
+/* --- Der Sprungknopf --- */
+
+#steuerung {
+  margin-top: 6px;
+}
+
+.sprungknopf {
+  background-color: #d4d7f0;
+  color: #414a94;
+  font-size: 17px;
+  font-weight: bold;
+  padding: 14px 32px;
+}
+
+/* Der Link nach oben führt die Fliederfarbe weiter. */
+.zurueck-zur-startseite a {
+  color: #5a63b8;
+}

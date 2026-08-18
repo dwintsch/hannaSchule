@@ -53,7 +53,11 @@ function zeigeStarttafel() {
 
   const name = angemeldeterSpieler();
 
-  if (name === null) {
+  // Ist der Code an? Dann braucht es weder Anmeldung
+  // noch Punkte - die zwei Prüfungen darunter überspringen wir.
+  const frei = codeIstFrei();
+
+  if (name === null && frei === false) {
     tafel.innerHTML =
       "<div><strong>Erst anmelden</strong></div>" +
       "<div>Melde dich oben an, dann kannst du mit deinen Punkten " +
@@ -62,7 +66,7 @@ function zeigeStarttafel() {
     return;
   }
 
-  if (punkteVon(name) < kosten) {
+  if (frei === false && punkteVon(name) < kosten) {
     tafel.innerHTML =
       "<div><strong>Zu wenig Punkte</strong></div>" +
       "<div>Ein Rennen kostet " + kosten + " Punkte. Du hast " +
@@ -71,11 +75,18 @@ function zeigeStarttafel() {
     return;
   }
 
+  // Der Satz mit dem Preis heisst anders, wenn es gratis ist.
+  let preis = "Ein Rennen kostet " + kosten + " Punkte.";
+  if (frei === true) {
+    preis = "&#128275; Dein Code gilt &ndash; noch " + gratisRennen() +
+            " Rennen gratis!";
+  }
+
   tafel.innerHTML =
     "<div><strong>Bereit?</strong></div>" +
     "<div>Fahr um die Hindernisse &#128679; herum." +
     "<br>Ein Stern &#11088; gibt dir einen Schutzschild." +
-    "<br>Ein Rennen kostet " + kosten + " Punkte.</div>" +
+    "<br>" + preis + "</div>" +
     '<button class="tafelknopf" onclick="starten()">Rennen starten</button>';
 }
 
@@ -317,12 +328,19 @@ function verloren() {
     zusatz = "<br>Neuer Rekord!";
   }
 
+  const frei = codeIstFrei();
+
   let knopf = '<button class="tafelknopf" onclick="starten()">' +
               "Nochmal (" + kosten + " Punkte)</button>";
 
-  const name = angemeldeterSpieler();
-  if (name === null || punkteVon(name) < kosten) {
-    knopf = '<button class="tafelknopf" disabled>Zu wenig Punkte</button>' ;
+  if (frei === true) {
+    knopf = '<button class="tafelknopf" onclick="starten()">' +
+            "Nochmal (noch " + gratisRennen() + " gratis)</button>";
+  } else {
+    const name = angemeldeterSpieler();
+    if (name === null || punkteVon(name) < kosten) {
+      knopf = '<button class="tafelknopf" disabled>Zu wenig Punkte</button>';
+    }
   }
 
   tafel.innerHTML =
