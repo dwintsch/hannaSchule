@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <title>Buchstabensalat</title>
+
+    <!-- grund.css gilt auf allen Seiten, salat.css nur hier. -->
+    <link rel="stylesheet" href="css/grund.css">
+    <link rel="stylesheet" href="css/salat.css">
+  </head>
+<!-- Die Klasse sagt, ob jemand angemeldet ist. js/punkte.js stellt sie
+     richtig; das CSS blendet danach ein und aus. So ist von Anfang an
+     nichts zu sehen, was man noch nicht sehen darf. -->
+<body class="nicht-angemeldet">
+
+  <p class="zurueck-zur-startseite"><a href="index.html">&#8592; Zur Startseite</a></p>
+
+  <h1>Buchstabensalat</h1>
+
+  <p class="anleitung">
+    Finde die versteckten Organe. Sie stehen <strong>waagrecht &rarr;</strong>,
+    <strong>senkrecht &darr;</strong> oder <strong>schr&auml;g &searr;</strong>
+    &ndash; nie r&uuml;ckw&auml;rts.<br>
+    Klick auf den <strong>ersten</strong> Buchstaben und dann auf den
+    <strong>letzten</strong>.
+  </p>
+
+  <p id="anzeige"></p>
+
+  <!-- Das Gitter und die Wortliste stellt das JavaScript her. -->
+  <div id="gitter"></div>
+
+  <div id="woerterliste"></div>
+
+  <p id="ergebnis"></p>
+
+  <button class="neustart" onclick="neuesSpiel()">Neuer Salat</button>
+
+  <script src="js/punkte.js"></script>
+
+  <!-- rangliste.js NACH punkte.js: es braucht serverFragen() und token() von dort. -->
+  <script src="js/rangliste.js"></script>
+
+  <!-- konfetti.js VOR salat.js: salat.js ruft konfetti(). -->
+  <script src="js/konfetti.js"></script>
+  <script src="js/salat.js"></script>
+</body>
+</html>

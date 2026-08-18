@@ -161,6 +161,12 @@
 .blitz .marke       { background-color: #fdf3d3; color: #8a6318; }
 .blitz:hover        { border-color: #e8c96b; }
 
+.salat .symbol      { background-color: #dceaf1; }
+.salat .spiel-titel { color: #1f6f8b; }
+.salat .spiel-pfeil { color: #1f6f8b; }
+.salat .marke       { background-color: #dceaf1; color: #155268; }
+.salat:hover        { border-color: #9dc4d6; }
+
 /* Die Belohnungsspiele in Pastell-Lila - so sieht man sofort,
    dass sie zu einer anderen Gruppe gehören. */
 .rennen .symbol      { background-color: #ece3f7; }

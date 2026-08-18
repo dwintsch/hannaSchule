@@ -1,0 +1,153 @@
+/* ============================================
+   Buchstabensalat
+   Gilt NUR auf salat.html.
+
+   Die Farbe des Spiels ist Petrolblau. Jedes Spiel hat
+   seine eigene, damit man auf einen Blick weiss, wo man
+   ist - siehe Farbtabelle in CLAUDE.md.
+   ============================================ */
+
+h1 {
+  color: #1f6f8b;
+}
+
+.anleitung {
+  max-width: 460px;
+  margin: 0 auto 15px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #16323d;
+}
+
+#anzeige {
+  font-size: 17px;
+  font-weight: bold;
+  color: #1f6f8b;
+  margin-bottom: 12px;
+}
+
+/* --- Das Gitter ---
+
+   display: grid stellt die Felder in Zeilen und Spalten.
+   Wie viele Spalten es sind, setzt das JavaScript -
+   nicht hier. So muss man die Zahl nur an einem Ort ändern. */
+
+#gitter {
+  display: grid;
+  gap: 2px;
+
+  width: 372px;
+  max-width: 100%;
+  margin: 0 auto 18px;
+}
+
+/* Ein einzelnes Feld ist ein <button> - so kommt man auch
+   mit der Tabulatortaste hin und kann mit Enter auswählen.
+   aspect-ratio: 1 heisst «genau so hoch wie breit». */
+
+.feld {
+  aspect-ratio: 1;
+  padding: 0;
+  margin: 0;
+
+  background-color: #f4f9fb;
+  color: #16323d;
+  border: 1px solid #dceaf1;
+  border-radius: 4px;
+
+  font-size: 15px;
+  font-weight: bold;
+  font-family: Arial;
+  cursor: pointer;
+
+  /* Damit ein langer Druck auf dem Handy nicht den Text
+     markiert, statt das Feld auszuwählen. */
+  user-select: none;
+}
+
+.feld:hover {
+  background-color: #dceaf1;
+}
+
+/* Der erste angeklickte Buchstabe. */
+.feld.gewaehlt {
+  background-color: #1f6f8b;
+  border-color: #155268;
+  color: #ffffff;
+}
+
+/* Ein gefundenes Wort bleibt stehen.
+   Es kommt NACH .gewaehlt, damit ein gefundenes Feld
+   gefunden aussieht und nicht gewählt. */
+.feld.gefunden {
+  background-color: #bfe6cd;
+  border-color: #8fcfa8;
+  color: #1e5b3a;
+  cursor: default;
+}
+
+/* --- Die Liste der gesuchten Wörter --- */
+
+#woerterliste {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+
+  max-width: 460px;
+  margin: 0 auto 16px;
+}
+
+.wort {
+  background-color: #dceaf1;
+  color: #155268;
+  border-radius: 20px;
+  padding: 5px 13px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Gefunden: durchgestrichen und blass - wie auf einem
+   Einkaufszettel, den man abhakt. */
+.wort.erledigt {
+  background-color: #bfe6cd;
+  color: #1e5b3a;
+  text-decoration: line-through;
+  opacity: 0.65;
+}
+
+/* --- Die Rückmeldung unter dem Gitter --- */
+
+#ergebnis {
+  min-height: 24px;
+  margin: 0 auto 14px;
+  font-size: 16px;
+}
+
+#ergebnis.treffer {
+  color: #1e5b3a;
+  font-weight: bold;
+}
+
+#ergebnis.daneben {
+  color: #8c3125;
+}
+
+/* Erst am Schluss wird ein Rahmen sichtbar. Vorher stünde
+   sonst ein leerer Kasten da - derselbe Trick wie im Quiz. */
+.ergebnis-karte {
+  max-width: 420px;
+  padding: 16px 20px;
+  background-color: #dceaf1;
+  border: 2px solid #9dc4d6;
+  border-radius: 14px;
+  color: #155268;
+  font-weight: bold;
+}
+
+/* --- Der Knopf für eine neue Runde --- */
+
+.neustart {
+  color: #1f6f8b;
+  border-color: #1f6f8b;
+}

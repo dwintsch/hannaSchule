@@ -92,7 +92,7 @@ Vor jedem Push nachfragen: es ist die einzige Aktion, die nach aussen geht.
 ## Technisches
 
 Aus dem Quiz ist eine **Lernwelt** geworden: eine Startseite, von der aus
-sechs Spiele erreichbar sind.
+sieben Spiele erreichbar sind.
 
 ```
 mein-quiz/
@@ -101,6 +101,7 @@ mein-quiz/
 ├── memory.html     ← das Abkürzungs-Memory
 ├── galgen.html     ← das Hangman
 ├── blitz.html      ← die Blitzrunde (richtig/falsch auf Zeit)
+├── salat.html      ← der Buchstabensalat (Organe suchen)
 ├── rennen.html     ← Belohnungsspiel, KOSTET Punkte
 ├── dach.html       ← Belohnungsspiel Dachheldin, KOSTET Punkte
 ├── css/
@@ -113,6 +114,7 @@ mein-quiz/
 │   ├── memory.css  ← nur Memory
 │   ├── galgen.css  ← nur Hangman
 │   ├── blitz.css   ← nur Blitzrunde
+│   ├── salat.css   ← nur Buchstabensalat
 │   ├── rennen.css  ← nur Rennen
 │   └── dach.css    ← nur Dachheldin
 ├── staticwebapp.config.json  ← sagt Azure: der Server-Teil ist Node 20
@@ -134,6 +136,7 @@ mein-quiz/
     ├── memory.js   ← die Befehle vom Memory
     ├── galgen.js   ← die Befehle vom Hangman
     ├── blitz.js    ← die Befehle von der Blitzrunde
+    ├── salat.js    ← die Befehle vom Buchstabensalat
     ├── rennen.js   ← die Befehle vom Rennen
     └── dach.js     ← die Befehle von der Dachheldin
 ```
@@ -142,7 +145,7 @@ Zwei Sorten Spiele — das ist das Konzept (wie bei Anton):
 
 | Sorte | Spiele | Punkte |
 |---|---|---|
-| **Lernspiele** | Quiz, Memory, Hangman, Blitzrunde | **verdienen** |
+| **Lernspiele** | Quiz, Memory, Hangman, Blitzrunde, Buchstabensalat | **verdienen** |
 | **Belohnung** | Rennen, Dachheldin | **kosten** |
 
 **Drei Sorten Zahlen — nicht verwechseln:**
@@ -198,7 +201,8 @@ Hintergrund dem Server Bescheid geben.
   kommt, könnte den Bonus zweimal bekommen. Bei diesem Projekt egal.
 - Punkte: Quiz mit ≥ `anzahlFragen - 2` richtigen **1**, Memory gelöst **1**,
   Blitzrunde ab `zielPunkte` richtigen **1**,
-  Hangman gewonnen **2**. Jedes Mal neu, nicht nur beim ersten Mal.
+  Hangman gewonnen **2**, Buchstabensalat alle Wörter gefunden **2**.
+  Jedes Mal neu, nicht nur beim ersten Mal.
 - `punkteDazu(n)` gibt `false` zurück, wenn niemand angemeldet ist — die
   Spiele zeigen dann den Hinweis «Melde dich oben an».
   **Seit 18.08.2026 kommt man aber gar nicht mehr so weit:** ohne Anmeldung
@@ -571,6 +575,65 @@ bekommt **fünf Gratis-Runden** für die Belohnungsspiele.
   präzisiert gerne schrittweise — kleine Schritte anbieten, nicht alles
   auf einmal fertig bauen wollen.
 
+### Buchstabensalat (salat.html)
+
+Organe in einem 12×12-Gitter suchen. Von Daniel am 18.08.2026 gewünscht;
+stand schon länger unter «Offene Ideen». Farbe: **Petrolblau** (`#1f6f8b`,
+dunkel `#155268`, pastell `#dceaf1`, Rahmen `#9dc4d6`) — die einzige Farbe,
+die in der Palette noch frei war.
+
+- Die Wörter stehen **nur** in der Liste `organe` zuoberst in `js/salat.js`.
+  Dieselben Regeln wie beim Hangman: GROSSBUCHSTABEN, **keine Umlaute**
+  (ein Ä bräuchte ein eigenes Feld im Gitter), keine Leerschläge, keine
+  Bindestriche. Dazu: **höchstens 12 Buchstaben**, sonst passt es nicht ins
+  Gitter. Es sind 26 Stück — pro Runde werden `anzahlWoerter` (= 8) davon
+  zufällig versteckt, darum ist jede Runde anders.
+- **Punkte: 2, wenn alle gefunden sind** (`belohnung`). Nicht pro Wort —
+  so von Daniel gewünscht.
+- Richtungen: waagrecht →, senkrecht ↓, schräg ↘. **Absichtlich kein
+  Rückwärts**: ein Wort von hinten zu lesen ist viel schwerer und macht
+  keinen Spass mehr. Anklicken darf man aber von beiden Enden — darum
+  vergleicht `wortPruefen()` auch die umgedrehte Feldliste.
+- Gespielt wird mit **zwei Klicks**: erster Buchstabe, letzter Buchstabe.
+  Kein Ziehen — das funktioniert auf dem Handy schlecht und wäre viel mehr
+  Code. Zweimal dasselbe Feld bricht die Auswahl ab.
+- `wortLegen()` probiert **200 zufällige Stellen** aus. Passt heisst: jedes
+  Feld ist leer oder es steht schon derselbe Buchstabe drin — so dürfen
+  sich Wörter kreuzen. Klappt es nicht, wird das Wort **weggelassen** und
+  zählt nicht mit (darum steht in der Anzeige `gesucht.length` und nicht
+  `anzahlWoerter`). Ohne die Obergrenze könnte die Schleife ewig laufen,
+  wenn das Gitter zu voll ist.
+- **Die langen Wörter werden zuerst gelegt** (`gitterBauen()` sortiert
+  absteigend nach Länge). Das ist kein Schönheitsfehler, sondern gemessen:
+  GALLENBLASE (11 Buchstaben) passt schräg nur an 4 Stellen im 12×12-Gitter.
+  Wird es zuletzt gelegt, findet es oft keinen Platz mehr.
+
+  | Reihenfolge | ein Anlauf reicht |
+  |---|---|
+  | zufällig (die erste Fassung) | **99,2 %** |
+  | lange zuerst | **100 %** |
+
+  Gemessen über je 3000 Runden. 0,8 % klingt wenig — im Test ist es genau
+  einmal in rund vierzig Läufen aufgetaucht, und dann fehlte ein Wort.
+  Dazu kommt in `neuesSpiel()` eine Schleife mit **20 Anläufen** als zweite
+  Sicherung. Beim Ändern der Wortliste oder der Gittergrösse bitte neu
+  durchrechnen — dasselbe gilt bei der Dachheldin für den Sprung.
+- Das Gitter ist in Wahrheit **eine einzige lange Liste**. `nummerVon()`
+  rechnet Spalte und Zeile in die Platznummer um.
+- `strichVon(a, b)` prüft, ob zwei Felder auf einer geraden Linie liegen:
+  gleiche Zeile, gleiche Spalte, oder **gleich viele Schritte zur Seite
+  wie nach unten** (das ist genau schräg). Sonst `null`.
+- **Die Spaltenzahl setzt das JavaScript**, nicht das CSS
+  (`gridTemplateColumns`). Absicht: beim Memory steht `repeat(4, 1fr)` im
+  CSS, und beim Ändern der Paarzahl muss man daran denken. Hier nicht.
+- Ein Feld ist ein `<button>`, damit man auch mit der Tabulatortaste
+  hinkommt. `user-select: none`, sonst markiert ein langer Druck auf dem
+  Handy den Text statt das Feld auszuwählen.
+- `.feld.gefunden` steht im CSS **nach** `.feld.gewaehlt`, damit ein
+  gefundenes Feld gefunden aussieht und nicht gewählt.
+- Konfetti bei allen gefundenen Wörtern.
+- **Die 26 Organe sind fachlich noch nicht von Hanna durchgesehen.**
+
 ### Blitzrunde (blitz.html)
 
 Richtig oder falsch in **60 Sekunden**. Von Hanna aus vier Vorschlägen
@@ -901,6 +964,7 @@ Kontrast braucht (Überschriften, Zähler), und beim Konfetti.
 | Gold | `#a8760a`, pastell `#fdf3d3`, Rahmen `#e8c96b` | Blitzrunde, Knopf «Neu hier?» |
 | Lila | `#7b5aa6` / `#5b3f87`, pastell `#ece3f7` / `#ddd2ee`, Rahmen `#b79ddb` | Rennen |
 | Flieder | `#5a63b8` / `#414a94`, pastell `#e3e5f7` / `#d4d7f0`, Rahmen `#a8aee0` | Dachheldin |
+| Petrolblau | `#1f6f8b` / `#155268`, pastell `#dceaf1`, Rahmen `#9dc4d6` | Buchstabensalat |
 | Münz-Bronze | `#f7e0cd` + Schrift `#8f5228` | `.muenzen-marke` in der Leiste |
 
 Jedes Spiel hat **eine** eigene Farbe, die es überall durchzieht: Überschrift,
@@ -1008,5 +1072,5 @@ ich hatte zuerst lange nach einer Sicherheitslücke gesucht, die es nie gab.
 - Fortschrittsanzeige («Frage 2 von 5»)
 - Knopf «Nochmal von vorne»
 - Erklärung zur richtigen Antwort einblenden
-- Ein sechstes Spiel: Reihenfolge sortieren, «Wo ist das Organ?»
-  oder Buchstabensalat (Vorschläge lagen schon auf dem Tisch)
+- Noch ein Spiel: Reihenfolge sortieren oder «Wo ist das Organ?»
+  (der Buchstabensalat aus dieser Liste ist am 18.08.2026 gebaut worden)
