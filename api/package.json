@@ -1,0 +1,9 @@
+{
+  "name": "lernwelt-api",
+  "version": "1.0.0",
+  "description": "Der Server-Teil der Lernwelt: Konten, Punkte, Muenzen",
+  "private": true,
+  "dependencies": {
+    "@azure/data-tables": "^13.2.2"
+  }
+}

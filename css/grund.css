@@ -66,6 +66,17 @@ button {
   width: 150px;
 }
 
+/* Das Passwortfeld. type="password" macht Punkte statt
+   Buchstaben - damit niemand mitlesen kann, der daneben steht. */
+#passwortfeld {
+  border: 1px solid #cdd8dc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 15px;
+  font-family: Arial;
+  width: 120px;
+}
+
 .leiste-knopf {
   background-color: #ffffff;
   color: #2a9d8f;
@@ -73,6 +84,42 @@ button {
   font-size: 14px;
   padding: 7px 14px;
   margin: 0;
+}
+
+
+/* Der zweite Knopf «Neu hier?» soll leiser sein als
+   «Anmelden» - man braucht ihn ja nur ein einziges Mal. */
+.leiste-zweit {
+  color: #6b7d84;
+  border-color: #cdd8dc;
+}
+
+.leiste-knopf:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Die Zeile für Meldungen wie «Passwort stimmt nicht».
+   flex-basis: 100% heisst: nimm die ganze Breite - so
+   steht der Satz auf einer eigenen Zeile unter der Leiste. */
+.leiste-meldung {
+  flex-basis: 100%;
+  margin: 0;
+  text-align: center;
+  font-size: 14px;
+  color: #6b7d84;
+}
+
+.leiste-meldung:empty {
+  display: none;   /* kein leerer Abstand, wenn nichts dasteht */
+}
+
+.leiste-meldung.stimmt {
+  color: #1e5b3a;
+}
+
+.leiste-meldung.falsch {
+  color: #8c3125;
 }
 
 /* Das Schildchen mit dem Stern */

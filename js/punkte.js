@@ -3,22 +3,43 @@
    Wird von ALLEN Seiten gebraucht - darum eine
    eigene Datei, genau wie konfetti.js.
 
-   Gespeichert wird im localStorage. Das ist ein kleines
-   Notizheft, das der Browser für diese Seite führt.
-   Es bleibt erhalten, auch wenn man den Browser schliesst
-   oder den Computer ausschaltet.
+   NEU: Es gibt jetzt ein richtiges Konto mit Name UND
+   Passwort. Die Punkte liegen auf einem Server im
+   Internet. Darum sind sie an jedem Computer dieselben -
+   zu Hause, in der Schule, auf dem Handy.
 
-   ACHTUNG: Das Notizheft gehört zu DIESEM Browser auf
-   DIESEM Computer. Auf einem anderen Gerät fängt man
-   wieder bei null an. Für ein echtes Konto überall
-   bräuchte es einen Server.
+   Vorher lagen sie nur im localStorage. Das ist ein
+   kleines Notizheft, das der Browser für diese Seite
+   führt - und dieses Heft gehört zu EINEM Browser auf
+   EINEM Computer. Darum fing man woanders bei null an.
+
+   Das Notizheft gibt es weiterhin, aber es ist jetzt nur
+   noch die Abschrift. Der Server ist das Original.
+
+   Warum überhaupt eine Abschrift?
+   Weil eine Frage ans Internet immer einen Moment dauert.
+   Die Spiele sollen aber sofort weiterlaufen. Also:
+   zuerst in die Abschrift schreiben (das geht sofort),
+   dann im Hintergrund dem Server Bescheid geben.
    ============================================ */
 
-/* Unter diesen Namen wird gespeichert. */
+/* Unter diesen Namen wird in der Abschrift gespeichert. */
 const SCHLUESSEL_SPIELER = "lernwelt-spieler";
 const SCHLUESSEL_PUNKTE = "lernwelt-punkte-";
 const SCHLUESSEL_MUENZEN = "lernwelt-muenzen-";
 const SCHLUESSEL_GRATIS = "lernwelt-gratis-rennen";
+const SCHLUESSEL_TOKEN = "lernwelt-token";
+const SCHLUESSEL_WARTEN = "lernwelt-warteschlange";
+
+/* --- Wo der Server steht ---
+   Ist die Seite im Internet geöffnet (https), liegt der
+   Server gleich nebenan - dann genügt "/api".
+   Ist sie per Doppelklick geöffnet (file:), muss die
+   ganze Adresse hin, sonst weiss der Browser nicht wohin. */
+
+const SERVER = (location.protocol === "http:" || location.protocol === "https:")
+  ? "/api"
+  : "https://witty-water-0c6d8c31e.7.azurestaticapps.net/api";
 
 /* --- Der Code ---
    HIER darfst du den PIN ändern - und nur hier.
@@ -33,10 +54,182 @@ const PIN = "8590";
 
 const GRATIS_PRO_CODE = 5;
 
+/* ============================================
+   Mit dem Server reden
+   ============================================ */
+
+/* Schickt eine Frage an den Server und wartet auf die Antwort.
+
+   «async» heisst: dieser Befehl braucht vielleicht einen
+   Moment. «await» heisst: hier warten wir auf die Antwort.
+   Der Rest der Seite läuft solange normal weiter.
+
+   Der Text wird als "text/plain" geschickt. Das klingt
+   komisch für JSON, hat aber einen Grund: so fragt der
+   Browser nicht vorher noch einmal um Erlaubnis nach.
+   Das spart eine Runde und macht weniger Ärger. */
+
+async function serverFragen(befehl, daten) {
+
+  const antwort = await fetch(SERVER + "/" + befehl, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=UTF-8" },
+    body: JSON.stringify(daten)
+  });
+
+  let inhalt = {};
+  try {
+    inhalt = await antwort.json();
+  } catch (fehler) {
+    inhalt = {};
+  }
+
+  // ok ist false bei allem ab 400 - also bei jedem Problem.
+  if (antwort.ok === false) {
+    throw new Error(inhalt.fehler || "Der Server antwortet gerade nicht.");
+  }
+
+  return inhalt;
+}
+
+/* --- Der Ausweis ---
+   Beim Anmelden gibt der Server einen Ausweis (Token) aus.
+   Den legen wir ins Notizheft. Bei jeder weiteren Frage
+   zeigen wir ihn vor, statt das Passwort nochmal zu schicken. */
+
+function token() {
+  return localStorage.getItem(SCHLUESSEL_TOKEN);
+}
+
+/* --- Die Antwort des Servers in die Abschrift übertragen --- */
+
+function kontoUebernehmen(daten) {
+
+  localStorage.setItem(SCHLUESSEL_SPIELER, daten.name);
+  localStorage.setItem(SCHLUESSEL_PUNKTE + daten.name, daten.punkte);
+  localStorage.setItem(SCHLUESSEL_MUENZEN + daten.name, daten.muenzen);
+
+  if (daten.token) {
+    localStorage.setItem(SCHLUESSEL_TOKEN, daten.token);
+  }
+
+  // Die Rekorde kommen als kleine Liste: Spielname -> Bestwert.
+  for (const spiel in daten.rekorde) {
+    localStorage.setItem("lernwelt-rekord-" + spiel + "-" + daten.name,
+      daten.rekorde[spiel]);
+  }
+}
+
+/* ============================================
+   Die Warteschlange
+
+   Was passiert, wenn das Internet gerade weg ist?
+   Dann wäre der Punkt verloren. Darum legen wir jede
+   Veränderung zuerst auf einen Stapel. Klappt das
+   Schicken, ist der Stapel leer. Klappt es nicht,
+   bleibt sie liegen und wird beim nächsten Mal
+   nachgereicht.
+   ============================================ */
+
+function leererStapel() {
+  return { punkte: 0, muenzen: 0, rekorde: {} };
+}
+
+function stapelLesen() {
+  try {
+    const wert = localStorage.getItem(SCHLUESSEL_WARTEN);
+
+    if (wert === null) {
+      return leererStapel();
+    }
+    return JSON.parse(wert);
+  } catch (fehler) {
+    return leererStapel();
+  }
+}
+
+function stapelSchreiben(stapel) {
+  localStorage.setItem(SCHLUESSEL_WARTEN, JSON.stringify(stapel));
+}
+
+/* Etwas auf den Stapel legen. Liegt schon etwas da,
+   wird zusammengezählt - aus +1 und +1 wird +2. */
+
+function stapelDazu(mehr) {
+
+  const stapel = stapelLesen();
+
+  stapel.punkte = stapel.punkte + (mehr.punkte || 0);
+  stapel.muenzen = stapel.muenzen + (mehr.muenzen || 0);
+
+  const rekorde = mehr.rekorde || {};
+
+  for (const spiel in rekorde) {
+    if (rekorde[spiel] > (stapel.rekorde[spiel] || 0)) {
+      stapel.rekorde[spiel] = rekorde[spiel];
+    }
+  }
+
+  stapelSchreiben(stapel);
+}
+
+function stapelIstLeer(stapel) {
+  return stapel.punkte === 0 &&
+    stapel.muenzen === 0 &&
+    Object.keys(stapel.rekorde).length === 0;
+}
+
+/* Den Stapel abschicken.
+   Zuerst nehmen wir ihn weg (der Stapel ist wieder leer),
+   dann schicken wir. Geht es schief, legen wir ihn zurück.
+   So kann nichts doppelt gezählt werden. */
+
+function stapelSenden() {
+
+  if (token() === null) {
+    return;
+  }
+
+  const paket = stapelLesen();
+
+  if (stapelIstLeer(paket) === true) {
+    return;
+  }
+
+  stapelSchreiben(leererStapel());
+
+  serverFragen("aendern", {
+    token: token(),
+    punkte: paket.punkte,
+    muenzen: paket.muenzen,
+    rekorde: paket.rekorde
+  })
+    .then(function (daten) {
+      // Der Server hat das letzte Wort: seine Zahlen gelten.
+      kontoUebernehmen(daten);
+      leisteZeichnen();
+    })
+    .catch(function () {
+      // Nicht angekommen - zurück auf den Stapel.
+      stapelDazu(paket);
+    });
+}
+
+/* ============================================
+   Lesen aus der Abschrift
+   Diese Befehle antworten sofort, ohne Internet.
+   ============================================ */
+
 /* --- Wer ist gerade angemeldet? ---
    Gibt den Namen zurück, oder null wenn niemand da ist. */
 
 function angemeldeterSpieler() {
+
+  // Ohne Ausweis gilt man als nicht angemeldet - auch wenn
+  // der Name noch im Notizheft steht.
+  if (token() === null) {
+    return null;
+  }
   return localStorage.getItem(SCHLUESSEL_SPIELER);
 }
 
@@ -52,55 +245,6 @@ function punkteVon(name) {
 
   // Im Heft steht Text. Number macht daraus eine Zahl.
   return Number(wert);
-}
-
-/* --- Anmelden --- */
-
-function anmelden() {
-
-  const feld = document.getElementById("namensfeld");
-
-  // trim schneidet Leerschläge am Anfang und Ende weg.
-  // Die spitzen Klammern nehme ich raus, weil der Browser
-  // die als HTML lesen würde und die Seite kaputtginge.
-  const name = feld.value.trim().replace(/[<>]/g, "");
-
-  if (name === "") {
-    feld.focus();
-    return;
-  }
-
-  localStorage.setItem(SCHLUESSEL_SPIELER, name);
-  leisteZeichnen();
-}
-
-/* --- Abmelden ---
-   Löscht nur, WER angemeldet ist. Die Punkte bleiben
-   gespeichert und sind beim nächsten Anmelden wieder da. */
-
-function abmelden() {
-  localStorage.removeItem(SCHLUESSEL_SPIELER);
-  leisteZeichnen();
-}
-
-/* --- Punkte dazugeben ---
-   Gibt true zurück, wenn es geklappt hat, und false,
-   wenn niemand angemeldet ist. So kann jedes Spiel
-   selber entscheiden, was es dann anzeigt. */
-
-function punkteDazu(anzahl) {
-
-  const name = angemeldeterSpieler();
-
-  if (name === null) {
-    return false;
-  }
-
-  const neu = punkteVon(name) + anzahl;
-  localStorage.setItem(SCHLUESSEL_PUNKTE + name, neu);
-
-  leisteZeichnen();
-  return true;
 }
 
 /* --- Die Münzen ---
@@ -121,6 +265,155 @@ function muenzenVon(name) {
   return Number(wert);
 }
 
+/* ============================================
+   Anmelden, Konto erstellen, Abmelden
+   ============================================ */
+
+/* Holt Name und Passwort aus der Leiste und schaut sie grob an,
+   bevor wir überhaupt den Server fragen. */
+
+function eingabeHolen() {
+
+  const namensfeld = document.getElementById("namensfeld");
+  const passwortfeld = document.getElementById("passwortfeld");
+
+  // trim schneidet Leerschläge am Anfang und Ende weg.
+  const name = namensfeld.value.trim();
+  const passwort = passwortfeld.value;
+
+  if (name === "") {
+    meldungZeigen("Bitte gib deinen Namen ein.", "falsch");
+    namensfeld.focus();
+    return null;
+  }
+
+  if (passwort.length < 4) {
+    meldungZeigen("Das Passwort braucht mindestens 4 Zeichen.", "falsch");
+    passwortfeld.focus();
+    return null;
+  }
+
+  return { name: name, passwort: passwort };
+}
+
+/* Während wir auf den Server warten, sollen die Knöpfe
+   nicht nochmal gedrückt werden können. */
+
+function knoepfeSperren(gesperrt) {
+  const knoepfe = document.querySelectorAll("#spielerleiste .leiste-knopf");
+
+  for (const knopf of knoepfe) {
+    knopf.disabled = gesperrt;
+  }
+}
+
+/* --- Anmelden --- */
+
+async function anmelden() {
+
+  const eingabe = eingabeHolen();
+
+  if (eingabe === null) {
+    return;
+  }
+
+  meldungZeigen("Einen Moment...", "");
+  knoepfeSperren(true);
+
+  try {
+    const daten = await serverFragen("anmelden", eingabe);
+
+    kontoUebernehmen(daten);
+    leisteZeichnen();
+
+    // Falls noch etwas vom letzten Mal liegen geblieben ist.
+    stapelSenden();
+
+  } catch (fehler) {
+    knoepfeSperren(false);
+    meldungZeigen(fehler.message, "falsch");
+  }
+}
+
+/* --- Neues Konto erstellen ---
+   Hat man auf diesem Computer schon ohne Konto gespielt,
+   nehmen wir die Punkte gleich mit ins neue Konto. Sonst
+   wäre alles Gesammelte weg. */
+
+async function registrieren() {
+
+  const eingabe = eingabeHolen();
+
+  if (eingabe === null) {
+    return;
+  }
+
+  meldungZeigen("Einen Moment...", "");
+  knoepfeSperren(true);
+
+  try {
+    const daten = await serverFragen("registrieren", {
+      name: eingabe.name,
+      passwort: eingabe.passwort,
+      punkte: punkteVon(eingabe.name),
+      muenzen: muenzenVon(eingabe.name)
+    });
+
+    kontoUebernehmen(daten);
+    leisteZeichnen();
+    meldungZeigen("Konto angelegt. Merk dir das Passwort gut!", "stimmt");
+
+  } catch (fehler) {
+    knoepfeSperren(false);
+    meldungZeigen(fehler.message, "falsch");
+  }
+}
+
+/* --- Abmelden ---
+   Löscht den Ausweis aus diesem Browser. Auf dem Server
+   bleibt alles stehen - beim nächsten Anmelden ist es wieder da. */
+
+function abmelden() {
+
+  // Zuerst noch schnell abschicken, was liegen geblieben ist.
+  stapelSenden();
+
+  localStorage.removeItem(SCHLUESSEL_TOKEN);
+  localStorage.removeItem(SCHLUESSEL_SPIELER);
+  leisteZeichnen();
+}
+
+/* ============================================
+   Punkte und Münzen verändern
+
+   Diese drei Befehle antworten sofort mit true oder false.
+   Die Spiele merken also nichts davon, dass jetzt ein
+   Server dahintersteht - genau darum wurde es so gebaut.
+   ============================================ */
+
+/* --- Punkte dazugeben ---
+   Gibt true zurück, wenn es geklappt hat, und false,
+   wenn niemand angemeldet ist. So kann jedes Spiel
+   selber entscheiden, was es dann anzeigt. */
+
+function punkteDazu(anzahl) {
+
+  const name = angemeldeterSpieler();
+
+  if (name === null) {
+    return false;
+  }
+
+  const neu = punkteVon(name) + anzahl;
+  localStorage.setItem(SCHLUESSEL_PUNKTE + name, neu);
+
+  stapelDazu({ punkte: anzahl });
+  stapelSenden();
+
+  leisteZeichnen();
+  return true;
+}
+
 /* Gibt false zurück, wenn niemand angemeldet ist. Dann werden
    die Münzen nicht gespeichert - gesammelt werden dürfen sie
    trotzdem, sie stehen dann nur im Spiel selber. */
@@ -134,6 +427,9 @@ function muenzenDazu(anzahl) {
   }
 
   localStorage.setItem(SCHLUESSEL_MUENZEN + name, muenzenVon(name) + anzahl);
+
+  stapelDazu({ muenzen: anzahl });
+  stapelSenden();
 
   leisteZeichnen();
   return true;
@@ -168,13 +464,23 @@ function punkteAbziehen(anzahl) {
 
   localStorage.setItem(SCHLUESSEL_PUNKTE + name, jetzt - anzahl);
 
+  // Minus statt plus - sonst ist es genau derselbe Weg.
+  stapelDazu({ punkte: -anzahl });
+  stapelSenden();
+
   leisteZeichnen();
   return true;
 }
 
-/* --- Wie viele Gratis-Rennen sind noch übrig? ---
-   Steht im localStorage, genau wie die Punkte. Darum gilt die
-   Fünferkarte noch, wenn du von der Startseite ins Rennen gehst. */
+/* ============================================
+   Gratis-Runden
+
+   Die bleiben absichtlich im Browser und gehen NICHT
+   auf den Server. Begründung: eine Gratis-Runde gehört
+   zum Computer, an dem man den Code eingetippt hat -
+   nicht zum Konto. Sonst könnte man mit einem Code
+   auf allen Geräten gleichzeitig gratis spielen.
+   ============================================ */
 
 function gratisRennen() {
   const wert = localStorage.getItem(SCHLUESSEL_GRATIS);
@@ -198,10 +504,7 @@ function codeIstFrei() {
 /* --- Gratis-Runden dazuschreiben ---
    Zwei Stellen brauchen das: der richtige Code auf der Startseite
    und das Ziel in der Dachheldin. Darum ein eigener Befehl -
-   sonst müsste man dasselbe zweimal schreiben.
-
-   Braucht keine Anmeldung: die Gratis-Runden gehören nicht zu
-   einem Namen, sondern zum Browser. */
+   sonst müsste man dasselbe zweimal schreiben. */
 
 function gratisRundenDazu(anzahl) {
   localStorage.setItem(SCHLUESSEL_GRATIS, gratisRennen() + anzahl);
@@ -245,9 +548,12 @@ function codePruefen() {
   leisteZeichnen();
 }
 
-/* --- Bestleistung pro Spiel ---
+/* ============================================
+   Bestleistung pro Spiel
    Wird auch für Leute ohne Anmeldung gespeichert,
-   dann unter dem Namen «Gast». */
+   dann unter dem Namen «Gast» - der bleibt dann
+   aber nur auf diesem Computer.
+   ============================================ */
 
 function rekordVon(spiel) {
   let name = angemeldeterSpieler();
@@ -271,12 +577,39 @@ function rekordSpeichern(spiel, wert) {
   // Nur speichern, wenn es wirklich besser ist.
   if (wert > rekordVon(spiel)) {
     localStorage.setItem("lernwelt-rekord-" + spiel + "-" + name, wert);
+
+    // Angemeldeten Leuten reisen die Rekorde mit auf jeden Computer.
+    if (angemeldeterSpieler() !== null) {
+      const nachricht = {};
+      nachricht[spiel] = wert;
+
+      stapelDazu({ rekorde: nachricht });
+      stapelSenden();
+    }
+
     return true;
   }
   return false;
 }
 
-/* --- Die Leiste ganz oben zeichnen --- */
+/* ============================================
+   Die Leiste ganz oben
+   ============================================ */
+
+/* Schreibt einen Satz unten in die Leiste.
+   art ist "stimmt" (grün), "falsch" (rot) oder "" (grau). */
+
+function meldungZeigen(text, art) {
+
+  const meldung = document.getElementById("leistenmeldung");
+
+  if (meldung === null) {
+    return;
+  }
+
+  meldung.innerHTML = textSichern(text);
+  meldung.className = "leiste-meldung " + art;
+}
 
 function leisteZeichnen() {
 
@@ -293,19 +626,28 @@ function leisteZeichnen() {
 
   if (name === null) {
 
-    // Niemand angemeldet: Namensfeld zeigen
+    // Niemand angemeldet: Name und Passwort zeigen.
     leiste.innerHTML =
       '<span class="leiste-text">Wer spielt?</span>' +
-      '<input id="namensfeld" type="text" placeholder="Dein Name" maxlength="20">' +
+      '<input id="namensfeld" type="text" placeholder="Dein Name" ' +
+      'maxlength="20" autocomplete="username">' +
+      '<input id="passwortfeld" type="password" placeholder="Passwort" ' +
+      'maxlength="40" autocomplete="current-password">' +
       '<button class="leiste-knopf" onclick="anmelden()">Anmelden</button>' +
-      freiMarke;
+      '<button class="leiste-knopf leiste-zweit" onclick="registrieren()">' +
+      'Neu hier?</button>' +
+      freiMarke +
+      '<p class="leiste-meldung" id="leistenmeldung"></p>';
 
-    // Auch die Enter-Taste soll anmelden.
-    document.getElementById("namensfeld").onkeydown = function (taste) {
+    // Auch die Enter-Taste soll anmelden - in beiden Feldern.
+    const enterHorcher = function (taste) {
       if (taste.key === "Enter") {
         anmelden();
       }
     };
+
+    document.getElementById("namensfeld").onkeydown = enterHorcher;
+    document.getElementById("passwortfeld").onkeydown = enterHorcher;
 
   } else {
 
@@ -318,12 +660,21 @@ function leisteZeichnen() {
     }
 
     leiste.innerHTML =
-      '<span class="leiste-text">Hallo <strong>' + name + '</strong>!</span>' +
+      '<span class="leiste-text">Hallo <strong>' + textSichern(name) +
+      '</strong>!</span>' +
       '<span class="punkte-marke">&#11088; ' + punktzahl + wort + '</span>' +
       '<span class="muenzen-marke">&#129689; ' + muenzenVon(name) + '</span>' +
       freiMarke +
-      '<button class="leiste-knopf" onclick="abmelden()">Abmelden</button>';
+      '<button class="leiste-knopf" onclick="abmelden()">Abmelden</button>' +
+      '<p class="leiste-meldung" id="leistenmeldung"></p>';
   }
+}
+
+/* Die spitzen Klammern nehme ich raus, weil der Browser
+   die als HTML lesen würde und die Seite kaputtginge. */
+
+function textSichern(text) {
+  return String(text).replace(/[<>&]/g, "");
 }
 
 /* --- Die Leiste in die Seite einbauen ---
@@ -338,9 +689,42 @@ function leisteEinbauen() {
   leisteZeichnen();
 }
 
+/* --- Beim Laden der Seite beim Server nachfragen ---
+   Vielleicht hat man am anderen Computer gespielt. Dann
+   stimmt die Abschrift nicht mehr und wird hier berichtigt.
+
+   Läuft im Hintergrund: die Seite ist sofort da, die Zahlen
+   springen einen Wimpernschlag später auf den richtigen Wert. */
+
+function kontoAuffrischen() {
+
+  if (token() === null) {
+    return;
+  }
+
+  serverFragen("konto", { token: token() })
+    .then(function (daten) {
+      kontoUebernehmen(daten);
+      leisteZeichnen();
+
+      // Erst jetzt nachreichen, was liegen geblieben ist.
+      stapelSenden();
+    })
+    .catch(function (fehler) {
+
+      // Ist der Ausweis abgelaufen, muss man sich neu anmelden.
+      // Bei einem Internet-Problem lassen wir ihn stehen.
+      if (fehler.message.indexOf("neu anmelden") >= 0) {
+        localStorage.removeItem(SCHLUESSEL_TOKEN);
+        leisteZeichnen();
+      }
+    });
+}
+
 /* --- Los geht's --- */
 
 leisteEinbauen();
+kontoAuffrischen();
 
 /* Auch die Enter-Taste soll den Code prüfen.
    Das Feld gibt es nur auf der Startseite. Darum zuerst

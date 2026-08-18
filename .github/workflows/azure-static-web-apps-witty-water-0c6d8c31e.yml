@@ -40,10 +40,10 @@ jobs:
           action: "upload"
           ###### Repository/Build Configurations ######
           app_location: "/"        # index.html liegt im Wurzelverzeichnis
-          api_location: ""         # keine Azure Functions
+          api_location: "api"      # der Server-Teil: Konten, Punkte, Muenzen
           output_location: ""      # kein Build -> nichts wird generiert
           skip_app_build: true     # reines HTML/CSS/JS, Oryx komplett ueberspringen
-          skip_api_build: true
+          skip_api_build: false    # der api-Ordner braucht sein npm install
           github_id_token: ${{ steps.idtoken.outputs.result }}
           ###### End of Repository/Build Configurations ######
 

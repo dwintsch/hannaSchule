@@ -1,0 +1,6 @@
+# Was npm herunterlädt, gehört nicht ins Repository.
+# Der Server baut sich das beim Hochladen selber zusammen.
+node_modules/
+
+# Örtliche Einstellungen mit Passwörtern - NIE hochladen!
+api/local.settings.json

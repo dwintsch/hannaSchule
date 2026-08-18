@@ -36,8 +36,26 @@ C:\Projects\hannaSchule
 Dieser Ordner ist ein **git-Repository** und hängt an GitHub und Azure.
 
 - GitHub: `https://github.com/dwintsch/hannaSchule.git`, Branch **`main`**
-- Azure: **Static Web Apps**, Name `witty-water-0c6d8c31e`
+- Azure: **Static Web Apps**, Name `witty-water-0c6d8c31e`, Plan **Free**
 - Workflow: `.github/workflows/azure-static-web-apps-witty-water-0c6d8c31e.yml`
+- **Die Website läuft hier:**
+  `https://witty-water-0c6d8c31e.7.azurestaticapps.net/`
+
+Achtung bei der Adresse: die **`.7.`** in der Mitte gehört dazu (7 = Region
+Westeuropa). Ohne sie antwortet Azure mit 404. Hat mich einmal in die Irre
+geführt — ich musste 1 bis 7 durchprobieren.
+
+Prüfen, ob ein Deploy durch ist, geht ohne Browser:
+
+```powershell
+Invoke-WebRequest -Uri "https://witty-water-0c6d8c31e.7.azurestaticapps.net/blitz.html" -UseBasicParsing
+```
+
+HTTP 200 = Datei ist online, 404 = nicht da.
+
+**Erledigt am 18.08.2026:** Die Punkte liegen jetzt auf einem Server, nicht
+mehr nur im Browser. Konto mit Name **und Passwort**, überall derselbe
+Punktestand. Siehe Abschnitt «Der Server-Teil (api/)».
 
 **Wichtig:** `C:\Users\danie\mein-quiz` ist der **alte** Ordner. Dort wurde
 bis zum 18.08.2026 vormittags gearbeitet. Sein Inhalt wurde hierher kopiert.
@@ -61,8 +79,10 @@ Vor jedem Push nachfragen: es ist die einzige Aktion, die nach aussen geht.
 - `app_location: "/"` — die `index.html` liegt im Wurzelverzeichnis
 - `skip_app_build: true` und `skip_api_build: true` — reines HTML/CSS/JS,
   kein Build. Oryx (Azures Build-Werkzeug) wird komplett übersprungen.
-- `api_location: ""` — **noch keine** Azure Functions. Diese Zeile ist der
-  Ort, an dem ein Server-Teil später eingehängt würde (siehe «Login»).
+- `api_location: "api"` und `skip_api_build: false` — der Server-Teil im
+  Ordner `api/`. Für **ihn** läuft Oryx bewusst: er muss dort `npm install`
+  machen, weil `@azure/data-tables` gebraucht wird. Für die Website davor
+  bleibt Oryx abgeschaltet (`skip_app_build: true`).
 - Der Kommentar im Workflow warnt: ein `npm install` im Schritt «Get Id
   Token» legte eine `package.json` an, worauf Oryx fälschlich ein
   Node-Projekt vermutete. Darum dort **kein** npm.
@@ -95,6 +115,15 @@ mein-quiz/
 │   ├── blitz.css   ← nur Blitzrunde
 │   ├── rennen.css  ← nur Rennen
 │   └── dach.css    ← nur Dachheldin
+├── staticwebapp.config.json  ← sagt Azure: der Server-Teil ist Node 20
+├── api/            ← der Server-Teil (Azure Functions)
+│   ├── host.json
+│   ├── package.json      ← hier steht, welches Paket gebraucht wird
+│   ├── gemeinsam.js      ← Helfer für alle vier Befehle
+│   ├── registrieren/     ← neues Konto anlegen
+│   ├── anmelden/         ← Name + Passwort prüfen, Ausweis ausstellen
+│   ├── konto/            ← «wie steht es um mich?»
+│   └── aendern/          ← Punkte, Münzen und Rekorde nachführen
 └── js/
     ├── punkte.js   ← Anmelden + Punkte + Münzen + Code, auf ALLEN Seiten
     ├── konfetti.js ← wird von MEHREREN Spielen gebraucht
@@ -123,12 +152,21 @@ Zwei Sorten Spiele — das ist das Konzept (wie bei Anton):
 
 **Anmelden und Punkte** (`js/punkte.js`, CSS `#spielerleiste` in `grund.css`):
 
-Bewusst **Variante B**: Name eingeben, gespeichert im `localStorage` des
-Browsers. Kein Server, kein Passwort, keine Rangliste (von Hanna so gewählt).
-Ehrlich dazusagen: gilt nur für diesen Browser auf diesem Computer.
+Seit 18.08.2026 ein **echtes Konto**: Name **und Passwort**, gespeichert auf
+einem Server. Damit ist es egal, an welchem Computer man spielt — das war
+die ausdrückliche Anforderung. Keine Rangliste (von Hanna so gewählt).
 
-- Schlüssel: `lernwelt-spieler` (wer ist angemeldet) und
-  `lernwelt-punkte-<name>` (Punktestand pro Name).
+Der `localStorage` ist geblieben, aber nur noch als **Abschrift**. Der Server
+ist das Original. Grund: eine Frage ans Internet dauert einen Moment, die
+Spiele sollen aber sofort weiterlaufen. Also erst lokal schreiben, dann im
+Hintergrund dem Server Bescheid geben.
+
+- Schlüssel: `lernwelt-spieler` (wer ist angemeldet),
+  `lernwelt-punkte-<name>` (Abschrift), `lernwelt-token` (der Ausweis) und
+  `lernwelt-warteschlange` (was noch nicht beim Server angekommen ist).
+- **Ohne `lernwelt-token` gilt man als nicht angemeldet**, auch wenn der Name
+  noch dasteht. Das ist die einzige Stelle, an der `angemeldeterSpieler()`
+  anders funktioniert als früher.
 - Die Leiste steht in **keiner** HTML-Datei — `leisteEinbauen()` setzt sie
   oben in den Body. Neue Seiten brauchen nur `<script src="js/punkte.js">`.
 - Abmelden löscht nur, *wer* angemeldet ist. Die Punkte bleiben stehen.
@@ -140,6 +178,78 @@ Ehrlich dazusagen: gilt nur für diesen Browser auf diesem Computer.
   man trotzdem normal spielen.
 - Der eingegebene Name wird von `<` und `>` befreit, sonst würde er als
   HTML gelesen.
+- Die Leiste hat jetzt **zwei** Knöpfe: «Anmelden» und «Neu hier?»
+  (= Konto erstellen). Dazu eine Meldungszeile `.leiste-meldung`, die über
+  die ganze Breite geht (`flex-basis: 100%`).
+- Beim **Konto erstellen** werden die Punkte mitgenommen, die auf diesem
+  Computer schon unter demselben Namen herumliegen. Sonst wäre alles
+  Gesammelte auf einen Schlag weg.
+
+### Der Server-Teil (api/)
+
+Vier Azure Functions, alle im **klassischen Modell** (ein Ordner mit
+`function.json` + `index.js` pro Befehl). Bewusst nicht das neuere
+v4-Modell — das klassische läuft auf Static Web Apps garantiert.
+
+| Befehl | Was er tut |
+|---|---|
+| `registrieren` | neues Konto anlegen, Ausweis ausstellen |
+| `anmelden` | Name + Passwort prüfen, Ausweis ausstellen |
+| `konto` | aktuellen Stand abholen |
+| `aendern` | Punkte/Münzen dazu oder weg, Rekorde nachführen |
+
+**Wo die Konten liegen:** Azure **Table Storage**, Speicherkonto
+`hannalernwelt` (Ressourcengruppe `Hanna`, Region Schweiz Nord), Tabelle
+`spieler`. Eine Zeile pro Person, `RowKey` = Name in Kleinbuchstaben.
+Kostet praktisch nichts (Rappen im Monat).
+
+**Zwei Einstellungen** müssen bei der Static Web App gesetzt sein, sonst
+antwortet der Server mit 500:
+
+- `SPEICHER_VERBINDUNG` — der Verbindungstext zum Speicherkonto
+- `TOKEN_GEHEIMNIS` — womit die Ausweise unterschrieben werden
+
+Sie stehen **nirgends im Code** und dürfen nie ins Repository.
+
+**Das Passwort** wird nie im Klartext gespeichert, sondern nur sein
+Fingerabdruck (`crypto.scryptSync`) mit einem eigenen Zufalls-«Salz» pro
+Person. Verglichen wird mit `timingSafeEqual` — so verrät die Antwortzeit
+nicht, ab welchem Buchstaben es nicht mehr stimmt.
+
+**Der Ausweis (Token)** ist bewusst *stateless*: Inhalt ist
+`name|ablaufdatum`, dahinter eine HMAC-Unterschrift. Der Server muss sich
+also nichts merken — und man kann sich auf **beliebig vielen Geräten
+gleichzeitig** anmelden. Gültig ein Jahr.
+
+**Warum Veränderungen und keine Endstände** (wichtig!): Der Browser schickt
+«gib mir 1 Punkt dazu», nicht «ich habe jetzt 7». Sonst würde der Laptop den
+Stand des PCs überschreiben. `aendern` liest, rechnet, schreibt — und
+wiederholt das bis zu viermal, falls Azure mit `412` meldet, dass ein
+anderes Gerät schneller war (`etag`).
+
+**Die Warteschlange** in `punkte.js`: Jede Veränderung kommt zuerst auf einen
+Stapel im `localStorage`. Klappt das Schicken, ist der Stapel leer; klappt es
+nicht (Internet weg), bleibt sie liegen und wird beim nächsten Seitenaufruf
+nachgereicht. Darum geht kein Punkt verloren.
+
+**Kein Preflight:** Alle Anfragen sind `POST` mit `Content-Type: text/plain`
+und dem Ausweis **im Text**, nicht im Header. Das ist eine «einfache»
+Anfrage — der Browser fragt vorher nicht extra um Erlaubnis. Darum
+funktioniert das Anmelden auch, wenn man `index.html` per Doppelklick
+öffnet (`file://`). Genau dafür steht `SERVER` oben in `punkte.js` bei
+`file:` auf die volle Azure-Adresse.
+
+**Was NICHT auf den Server geht:** die Gratis-Runden. Die gehören zum
+Computer, an dem der Code eingetippt wurde, nicht zum Konto — sonst könnte
+man mit einem Code auf allen Geräten gleichzeitig gratis spielen.
+
+**Passwort vergessen** gibt es nicht. Es führt kein Weg zurück, weil nur der
+Fingerabdruck gespeichert ist. Zurücksetzen geht nur über das Azure-Portal
+(Zeile in der Tabelle löschen, dann neu registrieren).
+
+**Testen ohne Deploy:** Es gibt ein kleines Testskript, das die vier Befehle
+direkt gegen die echte Tabelle laufen lässt (17 Prüfungen, inkl. Aufräumen
+des Testkontos). Es braucht die beiden Einstellungen als Umgebungsvariablen.
 
 ### Das Rennen (rennen.html)
 
@@ -581,6 +691,10 @@ Rennen und Dachheldin (Belohnung), Anmelden mit Punktekonto, Münzen,
 Code-Feld für Gratis-Runden, Konfetti, Smileys, Pastell-Farbkonzept
 mit einer eigenen Farbe pro Spiel.
 
+**Neu am Nachmittag:** richtiges Konto mit **Name und Passwort** auf einem
+Server. Punkte, Münzen und Rekorde sind jetzt an jedem Computer dieselben.
+Siehe «Der Server-Teil (api/)».
+
 **Sicherungen** (in `C:\Users\danie\`):
 
 - `mein-quiz-sicherung-2026-08-18-0954.zip` ← aktuell: Dachheldin mit
@@ -611,8 +725,11 @@ ich hatte zuerst lange nach einer Sicherheitslücke gesucht, die es nie gab.
 - Warum es drei Dateien pro Spiel gibt (HTML / CSS / JavaScript)
 - Warum `grund.css`, `konfetti.js` und `punkte.js` geteilt werden
 - Das Farbkonzept: jede Farbe hat eine Bedeutung
-- Warum ein echtes Login einen Server bräuchte — und warum `type="password"`
+- Warum ein echtes Login einen Server braucht — und warum `type="password"`
   die Zahlen nur **versteckt**, nicht geheim macht
+- Warum ein Passwort nie im Klartext gespeichert wird, sondern nur sein
+  Fingerabdruck (und warum man daraus nicht zurückrechnen kann)
+- Warum der Browser «gib mir 1 dazu» schickt und nicht «ich habe jetzt 7»
 - Der gelenkte Zufall bei den Sternen («fühlte sich unfair an»)
 - Warum 15 richtige und 7 falsche Aussagen ein kaputtes Spiel wären
 - Der Fehler mit dem fehlenden `</fieldset>` und wie sie ihn gefunden hat
