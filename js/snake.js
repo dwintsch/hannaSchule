@@ -46,9 +46,16 @@ function gitterBauen() {
 
   gitter.innerHTML = "";
 
-  // Die Spaltenzahl kommt aus dem JavaScript, nicht aus dem CSS.
-  // So muss man «breite» nur an einem Ort ändern.
+  /* Spalten UND Zeilen kommen aus dem JavaScript, nicht aus dem
+     CSS. So muss man «breite» und «hoehe» nur an einem Ort ändern.
+
+     Wichtig ist vor allem, dass auch die ZEILEN festgelegt sind.
+     Ohne das richtet sich jede Zeile nach ihrem Inhalt - und dann
+     verschiebt sich das ganze Raster, sobald irgendwo ein Apfel
+     liegt. 1fr heisst: alle gleich gross, den Platz gerecht teilen. */
+
   gitter.style.gridTemplateColumns = "repeat(" + breite + ", 1fr)";
+  gitter.style.gridTemplateRows = "repeat(" + hoehe + ", 1fr)";
 
   for (let i = 0; i < breite * hoehe; i++) {
     const kaestchen = document.createElement("div");
@@ -68,16 +75,19 @@ function gitterBauen() {
 
    Beide sind nach RECHTS gezeichnet. Das Drehen macht das
    CSS über die Klassen nach-rechts / nach-unten / nach-links
-   / nach-oben. */
+   / nach-oben.
+
+   Alles bleibt innerhalb von 0 bis 20 - auch die Zungenspitzen.
+   Sonst würde die Zeichnung aus dem Kästchen hinausragen. */
 
 const KOPF_BILD =
   '<svg viewBox="0 0 20 20">' +
-  '<rect class="kopf-haut" x="1" y="2" width="16" height="16" rx="7" />' +
-  '<path class="zunge" d="M16 10 H18.6 M18.6 10 L20 8.4 M18.6 10 L20 11.6" />' +
-  '<circle class="auge" cx="12.4" cy="6.4" r="2" />' +
-  '<circle class="auge" cx="12.4" cy="13.6" r="2" />' +
-  '<circle class="pupille" cx="13.2" cy="6.4" r="0.9" />' +
-  '<circle class="pupille" cx="13.2" cy="13.6" r="0.9" />' +
+  '<rect class="kopf-haut" x="0.5" y="2.5" width="15" height="15" rx="6.5" />' +
+  '<path class="zunge" d="M14.6 10 H17.4 M17.4 10 L18.7 8.7 M17.4 10 L18.7 11.3" />' +
+  '<circle class="auge" cx="11.2" cy="6.6" r="1.9" />' +
+  '<circle class="auge" cx="11.2" cy="13.4" r="1.9" />' +
+  '<circle class="pupille" cx="12" cy="6.6" r="0.85" />' +
+  '<circle class="pupille" cx="12" cy="13.4" r="0.85" />' +
   '</svg>';
 
 /* Der Schwanz läuft spitz zu. Die breite Seite zeigt zum
@@ -85,7 +95,7 @@ const KOPF_BILD =
 
 const SCHWANZ_BILD =
   '<svg viewBox="0 0 20 20">' +
-  '<path class="schwanz-haut" d="M0 3.5 L19 10 L0 16.5 Z" />' +
+  '<path class="schwanz-haut" d="M0 3.5 L18.5 10 L0 16.5 Z" />' +
   '</svg>';
 
 /* --- Von Spalte und Zeile zur Kästchennummer ---

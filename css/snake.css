@@ -51,17 +51,37 @@ h1 {
   display: grid;
   width: 100%;
   height: 100%;
+
+  /* Wie viele Spalten und Zeilen es sind, setzt das JavaScript.
+     Beides mit 1fr - dadurch teilen sich alle Kästchen den Platz
+     zu gleichen Teilen und sind alle genau gleich gross.
+     Das Feld ist quadratisch, also sind es auch die Kästchen. */
 }
 
 /* Jedes Kästchen bekommt einen feinen Rand. So sieht man das
    Raster und kann besser abschätzen, wo die Schlange gleich
    hinkommt. box-sizing sorgt dafür, dass der Rand INNEN
-   gerechnet wird - sonst würde das Feld breiter als 15 Kästchen. */
+   gerechnet wird - sonst würde das Feld breiter als 15 Kästchen.
+
+   Die drei Zeilen darunter sorgen dafür, dass ALLE Kästchen
+   immer genau gleich gross bleiben und sich nichts verschiebt:
+
+   min-width und min-height auf 0: Kästchen in einem Gitter
+   dürfen sich normalerweise nicht kleiner machen als ihr
+   Inhalt. Ist der Apfel einmal ein Haar zu breit, würde sonst
+   die ganze Spalte breiter - und das Raster verrutscht.
+
+   overflow: hidden: was trotzdem zu gross ist, wird
+   abgeschnitten statt herausgeschoben. */
 
 .kaestchen {
   box-sizing: border-box;
   border: 1px solid #efe7ee;
   border-radius: 2px;
+
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
 /* --- Die Schlange ---
@@ -80,9 +100,6 @@ h1 {
   display: block;
   width: 100%;
   height: 100%;
-
-  /* Die Zunge darf über den Rand hinausschauen. */
-  overflow: visible;
 }
 
 /* --- Die Zeichnung drehen ---
@@ -132,11 +149,12 @@ h1 {
    ein Apfel muss weder gedreht noch umgefärbt werden. */
 
 .kaestchen.apfel {
-  font-size: 15px;
+  /* Etwas kleiner als das Kästchen (rund 20px), damit der
+     Apfel sicher hineinpasst und nichts aufbläht. */
+  font-size: 14px;
   line-height: 1;
-  text-align: center;
 
-  /* Der Apfel soll mitten im Kästchen sitzen. */
+  /* Mitten im Kästchen sitzen. */
   display: flex;
   align-items: center;
   justify-content: center;

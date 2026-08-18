@@ -838,6 +838,26 @@ gewünscht. Die Dateien heissen entsprechend `snake.*`.
   Raster sieht und abschätzen kann, wo die Schlange gleich hinkommt.
   Von Daniel gewünscht. `box-sizing: border-box` ist dabei Pflicht, sonst
   würde das Feld breiter als 15 Kästchen.
+- **Alle Kästchen bleiben immer genau gleich gross.** Dafür braucht es
+  vier Dinge zusammen — fehlt eines, verrutscht das Raster, sobald
+  irgendwo ein Apfel liegt:
+
+  1. Das JavaScript setzt **Spalten UND Zeilen** (`gridTemplateColumns`
+     *und* `gridTemplateRows`, beide `1fr`). Ohne die Zeilen richtet sich
+     jede Zeile nach ihrem Inhalt.
+  2. `min-width: 0` und `min-height: 0` am Kästchen. Gitter-Kästchen
+     dürfen sich sonst **nicht kleiner machen als ihr Inhalt** — ein
+     Apfel-Emoji, das ein Haar zu breit ist, würde die ganze Spalte
+     verbreitern. Das ist die Falle, auf die man hier hereinfällt.
+  3. `overflow: hidden` am Kästchen: was trotzdem zu gross ist, wird
+     abgeschnitten statt herausgeschoben.
+  4. `#feld` ist genau quadratisch (330×330, `border-box`). Innen bleiben
+     312px, geteilt durch 15 gibt 20,8px — in beiden Richtungen gleich.
+
+  Darum sind auch die zwei Zeichnungen so gezeichnet, dass **alles
+  zwischen 0 und 20 bleibt**, Zungenspitzen inbegriffen. Vorher stand
+  am SVG `overflow: visible`, damit die Zunge herausschauen durfte —
+  das ist wieder weg. Von Daniel eingefordert.
 - Start mit der **Leertaste** oder dem Knopf, dazu `tipptGerade()` wie beim
   Rennen. Vier Steuerknöpfe im Kreuz fürs Vorführen ohne Tastatur.
 - Rekord über `rekordSpeichern("snake", schlange.length)`.
