@@ -1,13 +1,13 @@
 /* ============================================
-   Gemeinsame Helfer für den Server-Teil
+   Gemeinsame Helfer für den Server-Teil (fünf Befehle)
 
    Diese Datei ist für den Server das, was punkte.js
-   für die Seiten ist: Sachen, die alle vier Befehle
-   brauchen, stehen nur hier - nicht viermal.
+   für die Seiten ist: Sachen, die alle fünf Befehle
+   brauchen, stehen nur hier - nicht fünfmal.
 
    Ein «Befehl des Servers» heisst bei Azure eine
    «Function». Jeder Ordner hier drin ist einer:
-   registrieren, anmelden, konto, aendern.
+   registrieren, anmelden, konto, aendern, rangliste.
    ============================================ */
 
 const crypto = require("crypto");

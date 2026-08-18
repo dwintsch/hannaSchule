@@ -135,6 +135,116 @@ button {
   font-weight: bold;
 }
 
+/* --- Die Rangliste am rechten Rand ---
+   position: fixed klebt den Kasten ans Fenster, nicht an die
+   Seite. Darum bleibt er stehen, auch wenn man scrollt - und
+   darum verschiebt er den Inhalt in der Mitte nicht.
+
+   z-index sagt, was vor was liegt. 40 ist weniger als die 50
+   vom Konfetti - so regnet es vor der Rangliste, nicht dahinter. */
+
+#rangliste {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  width: 220px;
+  z-index: 40;
+
+  /* Bei sehr vielen Zeilen soll der Kasten nicht aus dem
+     Fenster wachsen, sondern innen scrollen. */
+  max-height: calc(100vh - 36px);
+  overflow-y: auto;
+
+  /* box-sizing: das Polster wird in die 220px eingerechnet,
+     statt sie breiter zu machen. */
+  box-sizing: border-box;
+  padding: 14px 16px;
+
+  background-color: #f4f7f8;
+  border: 1px solid #e3e9eb;
+  border-radius: 14px;
+  font-size: 14px;
+  color: #16323d;
+}
+
+.rang-titel {
+  margin: 0 0 10px;
+  font-size: 15px;
+  text-align: center;
+  color: #a8760a;   /* Gold - passt zu Pokal und Medaillen */
+}
+
+.rang-liste {
+  list-style: none;   /* keine zweite Nummerierung: die Plaetze
+                         schreiben wir selber hin */
+  margin: 0;
+  padding: 0;
+}
+
+.rang-zeile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 7px;
+  border-radius: 8px;
+
+  /* Der Rahmen ist von Anfang an da, nur unsichtbar. Sonst
+     wuerde die eigene Zeile beim Einfaerben ploetzlich
+     2px hoeher und die Liste wuerde zucken. */
+  border: 1px solid transparent;
+}
+
+.rang-platz {
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;   /* die Medaille darf nie gequetscht werden */
+}
+
+.rang-name {
+  flex: 1;             /* nimmt den ganzen uebrigen Platz */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;   /* zu lange Namen enden mit ... */
+}
+
+.rang-punkte {
+  color: #8a6318;
+  font-weight: bold;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* Die eigene Zeile - damit man sich sofort findet. */
+.rang-zeile.ich {
+  background-color: #fdf3d3;
+  border-color: #e8c96b;
+  font-weight: bold;
+}
+
+.rang-hinweis {
+  margin: 0;
+  text-align: center;
+  font-size: 13px;
+  color: #6b7d84;
+}
+
+.rang-fuss {
+  margin: 8px 0 0;
+  text-align: center;
+  font-size: 12px;
+  color: #6b7d84;
+}
+
+/* Auf schmalen Bildschirmen wuerde die Rangliste ueber den
+   Inhalt fallen. Dort wird sie ausgeblendet - das Spiel in
+   der Mitte ist wichtiger als die Liste am Rand. */
+
+@media (max-width: 1100px) {
+  #rangliste {
+    display: none;
+  }
+}
+
 /* --- Konfetti ---
    Ein Schnipsel ist ein winziges buntes Rechteck.
    Farbe, Startpunkt und Tempo setzt das JavaScript.

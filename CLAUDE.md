@@ -119,13 +119,15 @@ mein-quiz/
 ├── api/            ← der Server-Teil (Azure Functions)
 │   ├── host.json
 │   ├── package.json      ← hier steht, welches Paket gebraucht wird
-│   ├── gemeinsam.js      ← Helfer für alle vier Befehle
+│   ├── gemeinsam.js      ← Helfer für alle fünf Befehle
 │   ├── registrieren/     ← neues Konto anlegen
 │   ├── anmelden/         ← Name + Passwort prüfen, Ausweis ausstellen
 │   ├── konto/            ← «wie steht es um mich?»
-│   └── aendern/          ← Punkte, Münzen und Rekorde nachführen
+│   ├── aendern/          ← Punkte, Münzen und Rekorde nachführen
+│   └── rangliste/        ← wer hat am meisten Punkte?
 └── js/
     ├── punkte.js   ← Anmelden + Punkte + Münzen + Code, auf ALLEN Seiten
+    ├── rangliste.js ← die Rangliste rechts, auf ALLEN Seiten
     ├── konfetti.js ← wird von MEHREREN Spielen gebraucht
     ├── quiz.js     ← die Befehle vom Quiz
     ├── memory.js   ← die Befehle vom Memory
@@ -154,7 +156,14 @@ Zwei Sorten Spiele — das ist das Konzept (wie bei Anton):
 
 Seit 18.08.2026 ein **echtes Konto**: Name **und Passwort**, gespeichert auf
 einem Server. Damit ist es egal, an welchem Computer man spielt — das war
-die ausdrückliche Anforderung. Keine Rangliste (von Hanna so gewählt).
+die ausdrückliche Anforderung.
+
+**Achtung, geänderter Entscheid:** Hier stand lange «keine Rangliste (von
+Hanna so gewählt)». Am 18.08.2026 hat Daniel eine gewünscht — damals gab es
+allerdings auch noch keinen Server, auf dem so etwas möglich gewesen wäre.
+Sie ist gebaut (siehe «Die Rangliste»), aber **mit Hanna noch nicht
+besprochen**. Falls sie sie nicht will: `js/rangliste.js`, den Block in
+`grund.css`, `api/rangliste/` und die sieben `<script>`-Zeilen entfernen.
 
 Der `localStorage` ist geblieben, aber nur noch als **Abschrift**. Der Server
 ist das Original. Grund: eine Frage ans Internet dauert einen Moment, die
@@ -207,7 +216,7 @@ Hintergrund dem Server Bescheid geben.
 
 ### Der Server-Teil (api/)
 
-Vier Azure Functions, alle im **klassischen Modell** (ein Ordner mit
+Fünf Azure Functions, alle im **klassischen Modell** (ein Ordner mit
 `function.json` + `index.js` pro Befehl). Bewusst nicht das neuere
 v4-Modell — das klassische läuft auf Static Web Apps garantiert.
 
@@ -217,6 +226,7 @@ v4-Modell — das klassische läuft auf Static Web Apps garantiert.
 | `anmelden` | Name + Passwort prüfen, Ausweis ausstellen |
 | `konto` | aktuellen Stand abholen |
 | `aendern` | Punkte/Münzen dazu oder weg, Rekorde nachführen |
+| `rangliste` | die zehn Besten, absteigend nach Punkten |
 
 **Wo die Konten liegen:** Azure **Table Storage**, Speicherkonto
 `hannalernwelt` (Ressourcengruppe `Hanna`, Region Schweiz Nord), Tabelle
@@ -270,6 +280,43 @@ Fingerabdruck gespeichert ist. Zurücksetzen geht nur über das Azure-Portal
 **Testen ohne Deploy:** Es gibt ein kleines Testskript, das die vier Befehle
 direkt gegen die echte Tabelle laufen lässt (17 Prüfungen, inkl. Aufräumen
 des Testkontos). Es braucht die beiden Einstellungen als Umgebungsvariablen.
+
+### Die Rangliste (rechter Rand)
+
+Ein Kasten, der am **rechten Fensterrand** klebt und die zehn Besten zeigt.
+Auf allen Seiten, gebaut von `js/rangliste.js`.
+
+- Der Kasten steht in **keiner** HTML-Datei — `ranglisteEinbauen()` hängt ihn
+  unten in den Body, genau wie `leisteEinbauen()` bei der Spielerleiste.
+  `position: fixed` klebt ihn ans Fenster; darum verschiebt er den Inhalt in
+  der Mitte **nicht**.
+- `rangliste.js` braucht `serverFragen()` und `token()` aus `punkte.js` und
+  muss darum **nach** ihm geladen werden. Steht das `<script>` davor, gibt es
+  eine Fehlermeldung. Die sieben HTML-Dateien haben dazu einen Kommentar.
+- Umgekehrt kennt `punkte.js` die Rangliste **nicht** fest: es ruft
+  `ranglisteAuffrischen()`, und das schaut zuerst mit `typeof … === "function"`
+  nach, ob es sie überhaupt gibt. So läuft `punkte.js` auch ohne. Derselbe
+  Trick wie beim Code-Feld ganz unten in der Datei.
+- Aufgefrischt wird sie beim Anmelden, beim Registrieren, beim Abmelden und
+  jedes Mal, wenn der Server eine Punkteänderung bestätigt hat.
+- **Kein Passwort verlässt je die Tabelle.** Der Server zählt in
+  `queryOptions.select` genau auf, welche Spalten geholt werden dürfen —
+  `salz` und `fingerabdruck` sind nicht dabei. Ein Test prüft das eigens.
+- Der Ausweis ist beim Abfragen **freiwillig**. Ist einer dabei, markiert der
+  Server die eigene Zeile mit `ich: true` (Klasse `.rang-zeile.ich`, gold
+  hinterlegt). Ohne Anmeldung sieht man die Liste trotzdem.
+- Sortiert wird nach Punkten, bei Gleichstand nach Münzen, dann nach Name —
+  der Name zuletzt, damit die Reihenfolge nicht bei jedem Aufruf anders ist.
+- Plätze 1–3 bekommen 🥇🥈🥉, ab Platz 4 die Zahl. `PLAETZE = 10` und
+  `HOECHSTENS = 500` (Notbremse beim Lesen) stehen zuoberst in
+  `api/rangliste/index.js`.
+- `.rang-zeile` hat von Anfang an einen **durchsichtigen** Rahmen. Sonst
+  würde die eigene Zeile beim Einfärben plötzlich 2px höher und die Liste
+  würde zucken.
+- **Unter 1100px Fensterbreite wird sie ausgeblendet** (`@media` in
+  `grund.css`). Sonst fiele sie über den Inhalt. Das Spiel in der Mitte ist
+  wichtiger als die Liste am Rand.
+- `z-index: 40` — weniger als die 50 vom Konfetti, damit es davor regnet.
 
 ### Das Rennen (rennen.html)
 

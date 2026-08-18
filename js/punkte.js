@@ -196,6 +196,21 @@ function stapelIstLeer(stapel) {
    dann schicken wir. Geht es schief, legen wir ihn zurück.
    So kann nichts doppelt gezählt werden. */
 
+/* --- Die Rangliste anstupsen ---
+   Haben sich Punkte geändert, stimmt die Rangliste rechts
+   nicht mehr. Es gibt sie aber nur, wenn js/rangliste.js
+   geladen ist. Darum zuerst nachschauen, ob es den Befehl
+   überhaupt gibt - genau wie beim Code-Feld ganz unten.
+
+   So bleiben die zwei Dateien unabhängig: punkte.js
+   funktioniert auch ohne Rangliste. */
+
+function ranglisteAuffrischen() {
+  if (typeof ranglisteLaden === "function") {
+    ranglisteLaden();
+  }
+}
+
 function stapelSenden() {
 
   if (token() === null) {
@@ -220,6 +235,7 @@ function stapelSenden() {
       // Der Server hat das letzte Wort: seine Zahlen gelten.
       kontoUebernehmen(daten);
       leisteZeichnen();
+      ranglisteAuffrischen();
     })
     .catch(function () {
       // Nicht angekommen - zurück auf den Stapel.
@@ -386,6 +402,10 @@ async function anmelden() {
     kontoUebernehmen(daten);
     leisteZeichnen();
 
+    // Jetzt weiss der Server, wer wir sind - die eigene Zeile
+    // in der Rangliste soll darum hervorgehoben werden.
+    ranglisteAuffrischen();
+
     // Falls noch etwas vom letzten Mal liegen geblieben ist.
     stapelSenden();
 
@@ -426,6 +446,7 @@ async function registrieren() {
     leistenModus = "anmelden";
 
     leisteZeichnen();
+    ranglisteAuffrischen();
     meldungZeigen("Konto angelegt. Merk dir das Passwort gut!", "stimmt");
 
   } catch (fehler) {
@@ -451,6 +472,9 @@ function abmelden() {
   leistenModus = "anmelden";
 
   leisteZeichnen();
+
+  // Die eigene Zeile ist jetzt nicht mehr die eigene.
+  ranglisteAuffrischen();
 }
 
 /* ============================================
