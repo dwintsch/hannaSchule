@@ -186,11 +186,11 @@
 
 /* Snake ist auch ein Belohnungsspiel: Pflaume liegt nah bei
    Lila und Flieder, damit die drei als Gruppe erkennbar bleiben. */
-.snake .symbol      { background-color: #f3e6f1; }
-.snake .spiel-titel { color: #8a4f7d; }
-.snake .spiel-pfeil { color: #8a4f7d; }
-.snake .marke       { background-color: #f3e6f1; color: #6b3a60; }
-.snake:hover        { border-color: #c9a3c4; }
+.snake .symbol      { background-color: #f7edf6; }
+.snake .spiel-titel { color: #9a5f90; }
+.snake .spiel-pfeil { color: #9a5f90; }
+.snake .marke       { background-color: #f7edf6; color: #7c4a74; }
+.snake:hover        { border-color: #dcbcd6; }
 
 /* --- Das Titelbild der Dachheldin ---
    Die Klassen fangen alle mit k- an (für «Kachel»). So können

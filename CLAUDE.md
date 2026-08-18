@@ -775,9 +775,13 @@ Lila, damit man beide noch als Belohnungsspiele erkennt.
 ### Snake (snake.html)
 
 Das dritte Belohnungsspiel, **kostet 1 Punkt**. Von Daniel am 18.08.2026
-aus vier Vorschlägen gewählt. Farbe: **Pflaume** (`#8a4f7d`) — bewusst nah
-bei Lila (Rennen) und Flieder (Dachheldin), damit die drei als Gruppe
-erkennbar bleiben.
+aus vier Vorschlägen gewählt. Farbe: **Pastell-Mauve** (`#9a5f90`) —
+bewusst nah bei Lila (Rennen) und Flieder (Dachheldin), damit die drei
+als Gruppe erkennbar bleiben.
+Zuerst war es ein kräftigeres Pflaume (`#8a4f7d`), am 18.08.2026 von
+Daniel aufgehellt. **Nicht weiter aufhellen:** `#9a5f90` hat auf Weiss
+noch rund 4,8:1 Kontrast — darunter wird die Überschrift schlecht lesbar.
+Pastell gilt für die Flächen, dunkel für die Schrift darauf.
 
 Heisst nach aussen **Snake**, nicht «Die Schlange» — so von Daniel
 gewünscht. Die Dateien heissen entsprechend `snake.*`.
@@ -1078,7 +1082,7 @@ Kontrast braucht (Überschriften, Zähler), und beim Konfetti.
 | Lila | `#7b5aa6` / `#5b3f87`, pastell `#ece3f7` / `#ddd2ee`, Rahmen `#b79ddb` | Rennen |
 | Flieder | `#5a63b8` / `#414a94`, pastell `#e3e5f7` / `#d4d7f0`, Rahmen `#a8aee0` | Dachheldin |
 | Petrolblau | `#1f6f8b` / `#155268`, pastell `#dceaf1`, Rahmen `#9dc4d6` | Kreuzworträtsel |
-| Pflaume | `#8a4f7d` / `#6b3a60`, pastell `#f3e6f1` / `#e6d3e3`, Rahmen `#c9a3c4` | Snake |
+| Pastell-Mauve | `#9a5f90` / `#7c4a74`, pastell `#f7edf6` / `#ecd9e9`, Rahmen `#dcbcd6` | Snake |
 | Münz-Bronze | `#f7e0cd` + Schrift `#8f5228` | `.muenzen-marke` in der Leiste |
 
 Jedes Spiel hat **eine** eigene Farbe, die es überall durchzieht: Überschrift,

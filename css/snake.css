@@ -2,14 +2,24 @@
    Snake
    Gilt NUR auf snake.html.
 
-   Die Farbe ist Pflaume. Sie liegt bewusst nah bei
+   Die Farbe ist Pastell-Mauve. Sie liegt bewusst nah bei
    Lila (Rennen) und Flieder (Dachheldin) - so sieht
    man auf einen Blick, dass die drei zusammengehören:
    es sind die Belohnungsspiele, die Punkte KOSTEN.
+
+   Zuerst war es ein kräftiges Pflaume. Auf Wunsch von
+   Daniel ist alles eine Stufe heller geworden.
+
+   Die Schrift #9a5f90 ist dabei mit Absicht nicht heller
+   geworden als das: auf Weiss ergibt sie noch einen
+   Kontrast von rund 4,8 zu 1. Wird sie blasser, kann man
+   die Überschrift nicht mehr gut lesen. Pastell gilt für
+   die FLÄCHEN, dunkel für die Schrift darauf - so steht
+   es auch im Farbkonzept in CLAUDE.md.
    ============================================ */
 
 h1 {
-  color: #8a4f7d;
+  color: #9a5f90;
 }
 
 .anleitung {
@@ -23,7 +33,7 @@ h1 {
 #anzeige {
   font-size: 17px;
   font-weight: bold;
-  color: #8a4f7d;
+  color: #9a5f90;
   margin-bottom: 12px;
 }
 
@@ -38,8 +48,8 @@ h1 {
   box-sizing: border-box;
   margin: 0 auto 15px;
 
-  background-color: #faf6f9;
-  border: 3px solid #c9a3c4;
+  background-color: #fdfafc;
+  border: 3px solid #dcbcd6;
   border-radius: 14px;
   padding: 6px;
 }
@@ -76,7 +86,7 @@ h1 {
 
 .kaestchen {
   box-sizing: border-box;
-  border: 1px solid #efe7ee;
+  border: 1px solid #f3e9f2;
   border-radius: 2px;
 
   min-width: 0;
@@ -194,12 +204,12 @@ h1 {
 
 #tafel strong {
   font-size: 20px;
-  color: #8a4f7d;
+  color: #9a5f90;
 }
 
 .tafelknopf {
-  background-color: #e6d3e3;
-  color: #6b3a60;
+  background-color: #ecd9e9;
+  color: #7c4a74;
   font-size: 16px;
   padding: 12px 22px;
   margin: 4px 0 0;
@@ -214,7 +224,7 @@ h1 {
 .tastenhinweis {
   margin-top: 4px;
   font-size: 13px;
-  color: #8a4f7d;
+  color: #9a5f90;
 }
 
 /* --- Die Steuerknöpfe unten ---
@@ -240,12 +250,12 @@ h1 {
   padding: 12px 0;
   margin: 0;
 
-  background-color: #f3e6f1;
-  color: #6b3a60;
+  background-color: #f7edf6;
+  color: #7c4a74;
   border-radius: 10px;
 }
 
 .neustart {
-  color: #8a4f7d;
-  border-color: #8a4f7d;
+  color: #9a5f90;
+  border-color: #9a5f90;
 }
