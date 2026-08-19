@@ -251,3 +251,14 @@ function knoepfeSperren() {
 buchstabenAufbauen();
 zeigeWort();
 zeigeFehler();
+
+/* --- Die Leertaste gibt ein neues Wort ---
+   Nur wenn die Runde vorbei ist. Woran erkennt man das?
+   Dann steht in #ende eine Schlussmeldung - vorher ist es
+   leer. */
+
+leertasteStartet(function () {
+  if (document.getElementById("ende").innerHTML !== "") {
+    location.reload();
+  }
+});

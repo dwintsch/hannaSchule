@@ -685,7 +685,16 @@ document.onkeydown = function (taste) {
     // angeklickten Knopf gleich nochmal drücken.
     taste.preventDefault();
 
-    springen();
+    /* Laeuft noch keine Runde? Dann STARTET die Leertaste -
+       genau wie beim Rennen und bei Snake. Erst waehrend der
+       Runde springt sie. Vorher konnte man die Dachheldin als
+       einziges Spiel nicht mit der Leertaste beginnen. */
+
+    if (laeuft === false) {
+      starten();
+    } else {
+      springen();
+    }
   }
 };
 

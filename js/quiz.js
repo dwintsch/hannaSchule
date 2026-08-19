@@ -170,3 +170,17 @@ function auswertung() {
 smileysEinbauen();
 zeigePunkte();
 zeigeFrage(1);
+
+/* --- Die Leertaste laedt das Quiz neu ---
+   Nur nach der Auswertung. Woran erkennt man die? Das leere
+   #ergebnis bekommt dann die Klasse «ergebnis-karte».
+   Mitten im Quiz wuerde ein Leerschlag sonst alle Antworten
+   wegwerfen. */
+
+leertasteStartet(function () {
+  const ergebnis = document.getElementById("ergebnis");
+
+  if (ergebnis.classList.contains("ergebnis-karte") === true) {
+    location.reload();
+  }
+});

@@ -309,3 +309,14 @@ document.onkeydown = function (taste) {
 
 knoepfeSperren(true);
 zeigeAnzeige();
+
+/* --- Die Leertaste startet ---
+   leertasteStartet() steht in js/punkte.js und kuemmert sich
+   darum, dass es nicht ausloest, waehrend jemand oben seinen
+   Namen eintippt. */
+
+leertasteStartet(function () {
+  if (laeuft === false) {
+    starten();
+  }
+});

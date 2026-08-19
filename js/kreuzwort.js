@@ -503,3 +503,13 @@ function meldung(text, art) {
 /* --- Los geht's --- */
 
 neuesSpiel();
+
+/* --- Die Leertaste gibt ein neues Raetsel ---
+   Aber NUR wenn das alte fertig ist. Sonst wuerde ein
+   Leerschlag mitten im Spiel alles Gefundene wegwischen. */
+
+leertasteStartet(function () {
+  if (fertig === true) {
+    neuesSpiel();
+  }
+});

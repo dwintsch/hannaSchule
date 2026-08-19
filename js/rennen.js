@@ -362,10 +362,8 @@ function nachRechts() {
    starten, statt einen Leerschlag zu machen - und die
    Pfeiltasten koennte man dort nicht mehr brauchen. */
 
-function tipptGerade() {
-  const wo = document.activeElement;
-  return wo !== null && wo.tagName === "INPUT";
-}
+/* tipptGerade() steht jetzt in punkte.js - alle Spiele
+   brauchen es. */
 
 document.onkeydown = function (taste) {
 

@@ -326,6 +326,37 @@ Fingerabdruck gespeichert ist. Zurücksetzen geht nur über das Azure-Portal
 direkt gegen die echte Tabelle laufen lässt (17 Prüfungen, inkl. Aufräumen
 des Testkontos). Es braucht die beiden Einstellungen als Umgebungsvariablen.
 
+### Die Leertaste startet überall (`leertasteStartet`)
+
+Von Daniel am 19.08.2026 gewünscht: **jedes** Spiel soll sich mit der
+Leertaste beginnen lassen. Der Befehl steht **einmal** in `punkte.js`,
+jedes Spiel sagt nur noch, was «beginnen» bei ihm heisst.
+
+| Spiel | was die Leertaste tut |
+|---|---|
+| Rennen, Snake | Runde starten (eigenes `onkeydown`, wegen der Pfeiltasten) |
+| Dachheldin | **erst** starten, während der Runde springen |
+| Blitzrunde | Runde starten |
+| Quiz, Memory, Hangman, Kreuzworträtsel | neue Runde — **nur wenn die alte fertig ist** |
+
+**Die wichtigste Regel dabei:** Bei den vier Spielen, die sofort losgehen,
+darf die Leertaste **mitten im Spiel nichts tun**. Sonst wischt ein
+versehentlicher Leerschlag alle Antworten oder alles Gefundene weg. Jedes
+prüft darum seinen eigenen Schlusszustand:
+`fertig`, `gefundenePaare === paare.length`, `#ende` ist nicht leer,
+`#ergebnis` hat die Klasse `ergebnis-karte`.
+
+- **`addEventListener` statt `document.onkeydown`:** Rennen, Snake und
+  Dachheldin benutzen `onkeydown` schon für die Pfeiltasten. Würde der
+  Helfer es auch benutzen, überschriebe eines das andere.
+- **`tipptGerade()`** stand vorher in `rennen.js` und `snake.js` je
+  einmal und in `dach.js` als dritte Variante. Jetzt einmal in
+  `punkte.js` — ein Test prüft, dass es nirgends sonst mehr steht.
+- Die **Dachheldin** liess sich als einziges Spiel gar nicht mit der
+  Leertaste starten: die sprang nur.
+- `taste.code === "Space"` wird zusätzlich zu `taste.key === " "`
+  gefragt, damit es in jedem Browser klappt.
+
 ### Der Schummel-Vorfall vom 18./19.08.2026
 
 Ein Arbeitskollege von Daniel hatte plötzlich **99'999 Punkte**. Statt zu

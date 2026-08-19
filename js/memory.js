@@ -276,3 +276,13 @@ function gewonnen() {
 
 spielAufbauen();
 zeigeVersuche();
+
+/* --- Die Leertaste gibt ein neues Spiel ---
+   Nur wenn alle Paare gefunden sind - sonst waere ein
+   versehentlicher Leerschlag mitten im Spiel aergerlich. */
+
+leertasteStartet(function () {
+  if (gefundenePaare === paare.length) {
+    location.reload();
+  }
+});

@@ -804,6 +804,53 @@ function rekordSpeichern(spiel, wert) {
    Die Leiste ganz oben
    ============================================ */
 
+/* --- Tippt gerade jemand in ein Feld? ---
+
+   Oben in der Leiste stehen Name und Passwort. Ohne diese
+   Frage wuerde die Leertaste im Passwortfeld ein Spiel
+   starten, statt einen Leerschlag zu machen.
+
+   Stand vorher in rennen.js und snake.js je einmal - jetzt
+   einmal hier, weil ihn alle Spiele brauchen. */
+
+function tipptGerade() {
+  const wo = document.activeElement;
+  return wo !== null && wo.tagName === "INPUT";
+}
+
+/* --- Die Leertaste als Startknopf ---
+
+   Auf JEDER Spielseite soll die Leertaste dasselbe tun:
+   eine Runde beginnen. Damit das nicht achtmal verschieden
+   geschrieben wird, steht es hier einmal. Jedes Spiel sagt
+   nur noch, was «beginnen» bei ihm heisst.
+
+   Warum addEventListener und nicht document.onkeydown?
+   Die Spiele mit Steuerung benutzen onkeydown schon fuer die
+   Pfeiltasten. Wuerde man es hier auch benutzen, wuerde das
+   eine das andere ueberschreiben. Mit addEventListener
+   koennen beide nebeneinander zuhoeren.
+
+   taste.code === "Space" fragt dasselbe nochmal anders -
+   beides, damit es in jedem Browser klappt. */
+
+function leertasteStartet(befehl) {
+
+  document.addEventListener("keydown", function (taste) {
+
+    const leertaste = taste.key === " " || taste.code === "Space";
+
+    if (leertaste === false || tipptGerade() === true) {
+      return;
+    }
+
+    // preventDefault: sonst scrollt die Seite UND ein Knopf,
+    // der gerade den Fokus hat, feuert gleich nochmal.
+    taste.preventDefault();
+    befehl();
+  });
+}
+
 /* --- Wo gibt es Punkte? ---
 
    Alle drei Belohnungsspiele sagen dasselbe, wenn das Geld

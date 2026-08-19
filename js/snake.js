@@ -398,10 +398,8 @@ function lenken(ds, dz) {
    sein Passwort? Dann gehören die Tasten dorthin und nicht
    ins Spiel. Genau wie beim Rennen. */
 
-function tipptGerade() {
-  const wo = document.activeElement;
-  return wo !== null && wo.tagName === "INPUT";
-}
+/* tipptGerade() steht jetzt in punkte.js - alle Spiele
+   brauchen es. */
 
 document.onkeydown = function (taste) {
 
