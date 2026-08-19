@@ -63,12 +63,12 @@ h1 {
   background-repeat: repeat-y;
 }
 
-/* --- Das Spitalbett --- */
+/* --- Der Krankenwagen --- */
 
 /* Der Kasten ist 100 Pixel breit - genau eine Spur.
    Die Zeichnung darin ist schmaler und steht mittig.
-   transition laesst das Bett weich zur Seite gleiten. */
-#bett {
+   transition laesst den Wagen weich zur Seite gleiten. */
+#wagen {
   position: absolute;
   bottom: 20px;
   left: 100px;
@@ -78,15 +78,15 @@ h1 {
   transition: left 0.12s;
 }
 
-.bett-bild {
+.wagen-bild {
   display: inline-block;
   vertical-align: bottom;
 }
 
-/* Mit Schutzschild leuchtet das Bett golden.
-   drop-shadow legt einen Schein um die Form des Bettes -
+/* Mit Schutzschild leuchtet der Wagen golden.
+   drop-shadow legt einen Schein um die Form des Wagens -
    nicht um den ganzen Kasten, wie box-shadow das taete. */
-#bett.geschuetzt {
+#wagen.geschuetzt {
   animation: leuchten 0.6s alternate infinite;
 }
 
@@ -110,16 +110,16 @@ h1 {
   display: none;
 }
 
-#bett.zusammenstoss .bett-bild {
+#wagen.zusammenstoss .wagen-bild {
   display: none;
 }
 
-#bett.zusammenstoss .knall {
+#wagen.zusammenstoss .knall {
   display: inline;
 }
 
 /* ============================================
-   HIER RICHTEST DU DAS BETT EIN
+   HIER RICHTEST DU DEN KRANKENWAGEN EIN
 
    Alle Farben der Zeichnung stehen hier beisammen.
    Aendere einen Wert, druecke Ctrl+S und im Browser F5 -
@@ -129,137 +129,82 @@ h1 {
    stroke = die Linie drumherum
    ============================================ */
 
-.bett-rahmen {
+.wagen-koerper {
   fill: #ffffff;
   stroke: #b79ddb;
   stroke-width: 2.5;
 }
 
-.bett-kopfteil {
-  fill: #b79ddb;
+.wagen-rad {
+  fill: #4a4550;
 }
 
-.bett-rad {
-  fill: #8c7aa8;
-}
-
-.bett-kissen {
-  fill: #f4f1fa;
-  stroke: #ddd2ee;
+.wagen-scheibe {
+  fill: #cfe3f0;
+  stroke: #9fbdd2;
   stroke-width: 1;
 }
 
-.bett-decke {
-  fill: #ddd2ee;
-  stroke: #b79ddb;
-  stroke-width: 2;
+/* Der blaue Streifen an der Seite. Zusammen mit dem
+   Blaulicht erkennt man den Wagen daran.
+
+   ABSICHTLICH KEIN ROTES KREUZ: das ist ein geschuetztes
+   Zeichen und darf nicht einfach als Verzierung benutzt
+   werden. Genau wie bei den Krankenhaeusern in der
+   Dachheldin, die darum ein weisses H tragen. */
+
+.wagen-streifen {
+  fill: #2f6fb5;
 }
 
-.bett-falte {
-  fill: none;
-  stroke: #b79ddb;
+.wagen-licht {
+  fill: #2f6fb5;
+}
+
+/* Das Blaulicht blinkt. alternate infinite heisst:
+   immer wieder hin und zurueck. */
+#wagen .wagen-licht {
+  animation: blaulicht 0.7s alternate infinite;
+}
+
+@keyframes blaulicht {
+  from { fill: #2f6fb5; }
+  to   { fill: #7fc4ff; }
+}
+
+/* ============================================
+   HIER FAERBST DU DIE HINDERNISSE
+   ============================================ */
+
+/* Die Zeichnungen im Hindernis-Kaestchen sollen mittig
+   sitzen und nicht groesser werden als 36 Pixel. */
+.ding-bild {
+  width: 36px;
+  height: 36px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.oel {
+  fill: #171719;
+}
+
+/* Der Glanz auf dem Oel - so sieht man, dass es nass ist. */
+.oel-glanz {
+  fill: #4b4b60;
+}
+
+.stein {
+  fill: #8b9098;
+  stroke: #6b7178;
   stroke-width: 1.5;
-  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.bett-haut {
-  fill: #f6d5b8;
-}
-
-.bett-haare {
-  fill: #6b4a32;
-}
-
-.bett-auge {
-  fill: #3a2a1c;
-}
-
-.bett-mund {
+/* Die Kanten im Stein. fill: none, weil es nur Striche sind. */
+.stein-kante {
   fill: none;
-  stroke: #b5705a;
-  stroke-width: 1;
+  stroke: #6b7178;
+  stroke-width: 1.2;
   stroke-linecap: round;
-}
-
-/* --- Hindernisse und Sterne --- */
-
-.ding {
-  position: absolute;
-  width: 100px;
-  text-align: center;
-  font-size: 34px;
-}
-
-/* --- Die Tafel über dem Spielfeld --- */
-
-/* Sie liegt über allem und zeigt Start- oder Schlussmeldung.
-   rgba mit 0.9 heisst: fast deckend, man sieht die
-   Strasse noch schwach durch. */
-#tafel {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  padding: 25px;
-
-  display: flex;
-  flex-direction: column;   /* alles untereinander */
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-
-  background-color: rgba(255, 255, 255, 0.9);
-  color: #16323d;
-  font-size: 16px;
-  line-height: 1.5;
-}
-
-/* Beim Spielen ist die Tafel weg. */
-#tafel.weg {
-  display: none;
-}
-
-#tafel strong {
-  font-size: 20px;
-  color: #7b5aa6;
-}
-
-.tafelknopf {
-  background-color: #ddd2ee;
-  color: #5b3f87;
-  font-size: 16px;
-  padding: 12px 22px;
-  margin: 4px 0 0;
-}
-
-.tafelknopf:disabled {
-  background-color: #eceff0;
-  color: #9aa7ad;
-  cursor: default;
-}
-
-/* --- Die Steuerknöpfe unten --- */
-
-#steuerung {
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-  margin-bottom: 15px;
-}
-
-.steuerknopf {
-  width: 80px;
-  font-size: 22px;
-  padding: 14px 0;
-  background-color: #ece3f7;
-  color: #5b3f87;
-}
-
-/* Der kleine Hinweis unter dem Startknopf auf der Tafel. */
-.tastenhinweis {
-  margin-top: 8px;
-  font-size: 13px;
-  color: #7b5aa6;
 }

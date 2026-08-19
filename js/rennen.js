@@ -10,9 +10,9 @@ const spurBreite = 100;    // eine Spur ist 100 Pixel breit
 const startTempo = 4;      // Pixel pro Takt am Anfang
 const taktLaenge = 20;     // Millisekunden pro Takt
 
-// Wo das Bett steht (von oben gemessen)
-const bettOben = 350;
-const bettUnten = 400;
+// Wo der Wagen steht (von oben gemessen)
+const wagenOben = 350;
+const wagenUnten = 400;
 
 /* --- Die Hindernisse ---
    Lauter Sachen aus dem Spital. Neue duerfen frei dazu:
@@ -21,10 +21,35 @@ const bettUnten = 400;
    «Du bist in EINE Spritze gefahren», aber «in EIN Pflaster».
    So braucht es keine Grammatik im Code. */
 
+/* Die zwei Hindernisse sind gezeichnet, keine Emojis. Fuer
+   einen Oelfleck gibt es naemlich gar kein Emoji, und einen
+   Stein gibt es erst in ganz neuen Schriften - auf aelteren
+   Geraeten waere er ein leeres Kaestchen.
+
+   Die Farben stehen in css/rennen.css unter
+   «HIER FAERBST DU DIE HINDERNISSE». */
+
+const OELFLECK =
+  '<svg class="ding-bild" viewBox="0 0 36 36">' +
+  '<path class="oel" d="M6 21 Q3 13 11 10 Q17 4 25 9 Q33 11 31 19' +
+  ' Q34 27 24 29 Q15 33 9 27 Q3 26 6 21 Z" />' +
+  '<ellipse class="oel-glanz" cx="14" cy="15" rx="4.5" ry="2.5" />' +
+  '</svg>';
+
+const STEIN =
+  '<svg class="ding-bild" viewBox="0 0 36 36">' +
+  '<path class="stein" d="M8 27 L4 17 L11 7 L22 5 L31 13 L32 24 L22 31 L12 31 Z" />' +
+  '<path class="stein-kante" d="M11 7 L18 16 L31 13 M18 16 L16 30" />' +
+  '</svg>';
+
+/* Neue duerfen frei dazu: ein Bild und wie es in der
+   Schlussmeldung heisst. Der Name steht schon im vierten
+   Fall da - «einen Stein» - dann braucht der Satz «Du bist
+   in ... gefahren» keine Grammatik im Code. */
+
 const hindernisse = [
-  { bild: "&#128137;", name: "eine Spritze" },
-  { bild: "&#128138;", name: "eine Tablette" },
-  { bild: "&#129657;", name: "ein Pflaster" }
+  { bild: OELFLECK, name: "einen Ölfleck" },
+  { bild: STEIN, name: "einen Stein" }
 ];
 
 /* --- Die Schubladen --- */
@@ -35,14 +60,14 @@ let spur = 1;            // 0 = links, 1 = mitte, 2 = rechts
 let strecke = 0;         // die Punktzahl im Spiel
 let tempo = startTempo;
 let versatz = 0;         // wie weit die Strasse verschoben ist
-let dinger = [];         // alle Hindernisse und Sterne
+let dinger = [];         // alle Hindernisse und Spritzen
 let uhr = null;          // der Takt
 let seitLetztem = 0;     // Takte seit dem letzten Hindernis
-let dingeOhneStern = 0;  // wie viele Hindernisse ohne Stern kamen
+let dingeOhneSpritze = 0;  // wie viele Hindernisse ohne Spritze kamen
 
 const feld = document.getElementById("rennen");
 const strasse = document.getElementById("strasse");
-const bett = document.getElementById("bett");
+const wagen = document.getElementById("wagen");
 const tafel = document.getElementById("tafel");
 
 /* --- Anzeige oben --- */
@@ -97,9 +122,9 @@ function zeigeStarttafel() {
 
   tafel.innerHTML =
     "<div><strong>Bereit?</strong></div>" +
-    "<div>Fahr um die Spitalsachen herum: Spritzen &#128137;, " +
-    "Tabletten &#128138; und Pflaster &#129657;." +
-    "<br>Ein Stern &#11088; gibt dir einen Schutzschild." +
+    "<div>Fahr um die Ölflecken und Steine herum." +
+    "<br>Sammle Spritzen &#128137; ein - jede gibt dir einen " +
+    "Schutzschild." +
     "<br>" + preis + "</div>" +
     '<button class="tafelknopf" onclick="starten()">Rennen starten</button>' +
     '<div class="tastenhinweis">oder einfach die Leertaste drücken</div>';
@@ -142,11 +167,11 @@ function starten() {
   tempo = startTempo;
   versatz = 0;
   seitLetztem = 0;
-  dingeOhneStern = 0;
+  dingeOhneSpritze = 0;
 
-  bett.style.left = spur * spurBreite + "px";
-  bett.classList.remove("zusammenstoss");   // den Knall wieder wegnehmen
-  bett.classList.remove("geschuetzt");
+  wagen.style.left = spur * spurBreite + "px";
+  wagen.classList.remove("zusammenstoss");   // den Knall wieder wegnehmen
+  wagen.classList.remove("geschuetzt");
   tafel.classList.add("weg");
 
   zeigeAnzeige();
@@ -178,7 +203,7 @@ function takt() {
   zeigeAnzeige();
 }
 
-/* --- Alle Hindernisse und Sterne bewegen --- */
+/* --- Alle Hindernisse und Spritzen bewegen --- */
 
 function hindernisseBewegen() {
 
@@ -192,20 +217,20 @@ function hindernisseBewegen() {
     ding.y = ding.y + tempo;
     ding.element.style.top = ding.y + "px";
 
-    // Berühren sich Bett und Ding?
+    // Berühren sich Wagen und Ding?
     const trifftSpur = ding.spur === spur;
-    const trifftHoehe = ding.y + 44 > bettOben && ding.y < bettUnten;
+    const trifftHoehe = ding.y + 44 > wagenOben && ding.y < wagenUnten;
 
     if (trifftSpur === true && trifftHoehe === true) {
 
-      if (ding.art === "stern") {
+      if (ding.art === "spritze") {
 
-        // Ein Stern gibt einen Schutzschild.
+        // Eine Spritze gibt einen Schutzschild.
         // Hat man schon einen, gibt es stattdessen Strecke -
-        // so ist der Stern nie umsonst.
+        // so ist die Spritze nie umsonst.
         if (schutz === false) {
           schutz = true;
-          bett.classList.add("geschuetzt");
+          wagen.classList.add("geschuetzt");
         } else {
           strecke = strecke + 50;
         }
@@ -218,7 +243,7 @@ function hindernisseBewegen() {
 
           // Der Schild wird verbraucht: einmal durchfahren.
           schutz = false;
-          bett.classList.remove("geschuetzt");
+          wagen.classList.remove("geschuetzt");
           wegnehmen(i);
 
         } else {
@@ -261,21 +286,22 @@ function vielleichtNeuesHindernis() {
 
   seitLetztem = 0;
 
-  // Etwa jedes vierte Ding ist ein Stern statt eines Hindernisses.
-  // 0.25 heisst 25 Prozent. Grössere Zahl = mehr Sterne.
+  // Etwa jedes vierte Ding ist eine Spritze statt eines
+  // Hindernisses. 0.25 heisst 25 Prozent. Groessere Zahl =
+  // mehr Spritzen.
   //
-  // Dazu eine Garantie: Sind vier Hindernisse ohne Stern
-  // gekommen, gibt es sicher einen. Sonst kann man bei Pech
-  // ein ganzes Rennen ohne Stern fahren - und genau das ist
+  // Dazu eine Garantie: Sind vier Hindernisse ohne Spritze
+  // gekommen, gibt es sicher eine. Sonst kann man bei Pech
+  // ein ganzes Rennen ohne Spritze fahren - und genau das ist
   // beim Testen passiert.
   let art = "hindernis";
   let bild = "";
   let name = "";
 
-  if (Math.random() < 0.25 || dingeOhneStern >= 4) {
-    art = "stern";
-    bild = "&#11088;";             // Stern
-    dingeOhneStern = 0;
+  if (Math.random() < 0.25 || dingeOhneSpritze >= 4) {
+    art = "spritze";
+    bild = "&#128137;";            // Spritze
+    dingeOhneSpritze = 0;
   } else {
 
     // Eines aus der Liste ganz oben, zufaellig ausgesucht.
@@ -286,7 +312,7 @@ function vielleichtNeuesHindernis() {
 
     bild = welches.bild;
     name = welches.name;
-    dingeOhneStern = dingeOhneStern + 1;
+    dingeOhneSpritze = dingeOhneSpritze + 1;
   }
 
   const neueSpur = Math.floor(Math.random() * 3);
@@ -310,7 +336,7 @@ function nachLinks() {
   }
   if (spur > 0) {
     spur = spur - 1;
-    bett.style.left = spur * spurBreite + "px";
+    wagen.style.left = spur * spurBreite + "px";
   }
 }
 
@@ -320,7 +346,7 @@ function nachRechts() {
   }
   if (spur < 2) {
     spur = spur + 1;
-    bett.style.left = spur * spurBreite + "px";
+    wagen.style.left = spur * spurBreite + "px";
   }
 }
 
@@ -379,7 +405,7 @@ function verloren(worein) {
 
   // Nur verstecken, nicht ueberschreiben - sonst waere die
   // Zeichnung weg und beim naechsten Start nicht mehr da.
-  bett.classList.add("zusammenstoss");
+  wagen.classList.add("zusammenstoss");
 
   const istRekord = rekordSpeichern("rennen", strecke);
 

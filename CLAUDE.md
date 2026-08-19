@@ -557,14 +557,20 @@ geladen ist.
 Belohnungsspiel im Stil von Subway Surfers, **kostet 1 Punkt pro Runde**
 (`kosten` in `rennen.js`).
 
-- Gespielt wird mit einem **Spitalbett** (`#bett`), von oben gesehen, mit
-  einer Patientin darauf. Es ist ein **`<svg>` direkt in `rennen.html`**,
-  kein Emoji — dieselbe Begründung wie bei der Dachheldin: ein Emoji liesse
-  sich nicht umfärben, und ein Bett mit Patientin gibt es als Emoji gar nicht.
-  Teile mit eigener Klasse: `.bett-rahmen` `.bett-kopfteil` `.bett-rad`
-  `.bett-kissen` `.bett-decke` `.bett-falte` `.bett-haut` `.bett-haare`
-  `.bett-auge` `.bett-mund`. Die Farben stehen gebündelt unter
-  «HIER RICHTEST DU DAS BETT EIN» in `rennen.css`.
+- Gespielt wird mit einem **Krankenwagen** (`#wagen`), von oben gesehen.
+  Es ist ein **`<svg>` direkt in `rennen.html`**, kein Emoji — dieselbe
+  Begründung wie überall: umfärben geht nur bei einer Zeichnung.
+  Teile mit eigener Klasse: `.wagen-koerper` `.wagen-rad` `.wagen-scheibe`
+  `.wagen-streifen` `.wagen-licht`. Die Farben stehen gebündelt unter
+  «HIER RICHTEST DU DEN KRANKENWAGEN EIN» in `rennen.css`.
+- Das **Blaulicht blinkt** per CSS-`animation` zwischen zwei Blautönen.
+  **Absichtlich kein rotes Kreuz** — geschütztes Zeichen. Erkennbar ist der
+  Wagen am Blaulicht und am blauen Streifen, genau wie die Krankenhäuser
+  bei der Dachheldin an ihrem weissen H.
+- War bis 19.08.2026 ein **Spitalbett mit Patientin**, davor ein Auto 🚗.
+  Jedes Mal mit umbenannt (`#auto` → `#bett` → `#wagen`): ein Name, der
+  lügt, ist schlimmer als eine grosse Umbenennung. Achtung beim
+  Suchen-und-Ersetzen: `margin: 0 auto` steht auch im CSS.
 - Beim Zusammenstoss wird die Zeichnung nur **versteckt**
   (`bett.classList.add("zusammenstoss")`, CSS blendet `.knall` 💥 ein).
   Vorher stand dort `bett.innerHTML = "…"` — das hätte das SVG zerstört.
@@ -589,19 +595,26 @@ Belohnungsspiel im Stil von Subway Surfers, **kostet 1 Punkt pro Runde**
   falsch, nur ist es niemandem aufgefallen.
 - `setInterval(takt, 20)` ist das Herz: 50 Takte pro Sekunde, jeder rückt
   alles ein Stück. Tempo steigt mit `strecke / 300`.
-- Hindernisse sind **Spital-Sachen**: Spritze 💉, Tablette 💊, Pflaster 🩹.
-  Sie stehen **nur** in der Liste `hindernisse` zuoberst in `rennen.js`,
-  jedes mit `bild` und `name`. Der Name steht schon im **vierten Fall**
-  da («eine Spritze», «ein Pflaster») — dann braucht die Schlussmeldung
-  «Du bist in … gefahren» keine Grammatik im Code. Neue dürfen frei dazu.
-  Vorher war es eine einzelne Baustelle 🚧.
-- Hindernis berührt = verloren. Stern ⭐ = **Schutzschild** 🛡 (`schutz`), damit
-  übersteht man genau ein Hindernis; das Bett pulsiert dann golden
-  (`#bett.geschuetzt`). Hat man schon einen Schild, gibt der Stern
-  stattdessen +50 Strecke — so ist er nie umsonst.
-- Sterne: 25 % Zufall **plus Garantie** — nach 4 Hindernissen ohne Stern
-  kommt sicher einer (`dingeOhneStern >= 4`). Ohne Garantie kam beim
-  Testen ein ganzes Rennen ohne einen einzigen Stern.
+- Hindernisse sind **Ölflecken und Steine**, beide als `<svg>` (`OELFLECK`
+  und `STEIN` zuoberst in `rennen.js`). Warum gezeichnet? Für einen
+  Ölfleck gibt es gar kein Emoji, und den Stein 🪨 gibt es erst in ganz
+  neuen Schriften — auf älteren Geräten wäre er ein leeres Kästchen.
+  Sie stehen **nur** in der Liste `hindernisse`, jedes mit `bild` und
+  `name`. Der Name steht schon im **vierten Fall** da («einen Stein») —
+  dann braucht die Schlussmeldung «Du bist in … gefahren» keine Grammatik
+  im Code. Neue dürfen frei dazu.
+  Vorher waren es Spital-Sachen (Spritze, Tablette, Pflaster), davor eine
+  einzelne Baustelle 🚧.
+- Hindernis berührt = verloren. **Spritze 💉 einsammeln** = Schutzschild 🛡
+  (`schutz`), damit übersteht man genau ein Hindernis; der Wagen pulsiert
+  dann golden (`#wagen.geschuetzt`). Hat man schon einen Schild, gibt die
+  Spritze stattdessen +50 Strecke — so ist sie nie umsonst.
+  Die Spritze **ist** ein Emoji: sie muss weder gedreht noch umgefärbt
+  werden. Bis 19.08.2026 war das ein Stern ⭐ — und die Spritze war
+  umgekehrt ein Hindernis.
+- Spritzen: 25 % Zufall **plus Garantie** — nach 4 Hindernissen ohne
+  Spritze kommt sicher eine (`dingeOhneSpritze >= 4`). Ohne Garantie kam
+  beim Testen ein ganzes Rennen ohne eine einzige.
 - Die Bewegungs-Illusion macht `background-position` von `#strasse` —
   ein wiederholtes Streifenmuster wird nach unten geschoben.
 - `hindernisseBewegen()` läuft die Liste **von hinten nach vorne** durch,
