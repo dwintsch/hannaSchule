@@ -103,6 +103,7 @@ mein-quiz/
 ├── blitz.html      ← die Blitzrunde (richtig/falsch auf Zeit)
 ├── suchsel.html  ← das Suchsel (Organe suchen)
 ├── skelett.html  ← das Skelett (Knochen antippen)
+├── latein.html   ← die Latein-Paare (zuordnen)
 ├── rennen.html     ← Belohnungsspiel, KOSTET Punkte
 ├── dach.html       ← Belohnungsspiel Dachheldin, KOSTET Punkte
 ├── snake.html      ← Belohnungsspiel Snake, KOSTET Punkte
@@ -118,6 +119,7 @@ mein-quiz/
 │   ├── blitz.css   ← nur Blitzrunde
 │   ├── suchsel.css ← nur Suchsel
 │   ├── skelett.css ← nur Skelett
+│   ├── latein.css  ← nur Latein-Paare
 │   ├── rennen.css  ← nur Rennen
 │   ├── dach.css    ← nur Dachheldin
 │   └── snake.css   ← nur Snake
@@ -141,7 +143,9 @@ mein-quiz/
     ├── galgen.js   ← die Befehle vom Hangman
     ├── blitz.js    ← die Befehle von der Blitzrunde
     ├── suchsel.js ← die Befehle vom Suchsel
+    ├── knochenliste.js ← die 22 Knochen. Skelett UND Latein-Paare
     ├── skelett.js  ← die Befehle vom Skelett
+    ├── latein.js   ← die Befehle von den Latein-Paaren
     ├── rennen.js   ← die Befehle vom Rennen
     ├── dach.js     ← die Befehle von der Dachheldin
     └── snake.js    ← die Befehle von Snake
@@ -151,7 +155,7 @@ Zwei Sorten Spiele — das ist das Konzept (wie bei Anton):
 
 | Sorte | Spiele | Punkte |
 |---|---|---|
-| **Lernspiele** | Quiz, Memory, Hangman, Blitzrunde, Suchsel, Skelett | **verdienen** |
+| **Lernspiele** | Quiz, Memory, Hangman, Blitzrunde, Suchsel, Skelett, Latein-Paare | **verdienen** |
 | **Belohnung** | Rennen, Dachheldin, Snake | **kosten** |
 
 **Drei Sorten Zahlen — nicht verwechseln:**
@@ -214,7 +218,7 @@ Hintergrund dem Server Bescheid geben.
   Blitzrunde ab `zielPunkte` richtigen **1**,
   Hangman gewonnen **2**, Suchsel alle Wörter gefunden **1**,
   Skelett alle Knochen angeschaut **1** (oder im Test-Modus
-  8 von 10 richtig **1**).
+  8 von 10 richtig **1**), Latein-Paare alle 8 Paare **1**.
   Jedes Mal neu, nicht nur beim ersten Mal.
 - **`lernspieleHinweis()`** liefert den Satz «Spiel zuerst ein Lernspiel:
   …», den alle drei Belohnungsspiele zeigen, wenn die Punkte nicht
@@ -963,6 +967,76 @@ aber das ist Hannas Entscheid, nicht meiner.
   Besonders anschauen: Schlüsselbein und Becken werden je nach Buch
   verschieden eingeordnet.
 
+### Latein-Paare (latein.html)
+
+Zwei Spalten: links die **lateinischen** Fachwörter, rechts die
+**deutschen** Knochennamen — beide durcheinander. Wer ein Paar
+zusammenbringt, wird es los. Von Daniel am 19.08.2026 gewünscht.
+Farbe: **Braun** (`#7a5230`).
+
+- **Warum Braun?** Rot und Grün waren tabu: in diesem Spiel bedeuten sie
+  «falsch» und «richtig». Wäre eines davon auch die Spielfarbe, könnte
+  man die Rückmeldung nicht mehr davon unterscheiden. Das ist der Grund,
+  warum hier nicht wie sonst einfach die nächste freie Farbe genommen
+  wurde.
+- **Die Wörter kommen aus `js/knochenliste.js`** — derselben Liste, aus
+  der auch das Skelett lebt. Siehe «Die gemeinsame Knochenliste».
+- **8 Paare pro Runde** (`anzahlPaare`), zufällig aus den 22 Knochen
+  gezogen. Darum ist jede Runde anders, auch hintereinander gespielt.
+  Ein Test spielt 20 Runden und verlangt mehr als 15 verschiedene
+  Knochen.
+- **Beide Spalten werden getrennt gemischt.** Würde nur eine gemischt,
+  stünde das erste Wort links immer neben seinem Partner rechts — und das
+  wäre kein Rätsel mehr. Ein Test spielt 30 Runden und verlangt, dass die
+  zwei Reihenfolgen fast nie gleich sind.
+- **`mischen()` kopiert die Liste** (`slice`), bevor es tauscht. Ohne die
+  Kopie würde die echte Knochenliste durcheinandergebracht — und das
+  Skelett bekäme davon etwas ab, weil es dieselbe Liste benutzt. Ein Test
+  prüft eigens, dass `knochen` nachher noch 22 Einträge hat und immer
+  noch mit dem Schädel anfängt.
+- **Die Reihenfolge der zwei Klicks ist egal.** Es gibt zwei Schubladen,
+  `gewaehltLatein` und `gewaehltDeutsch`; geprüft wird, sobald beide
+  gefüllt sind. Nochmal auf dasselbe Wort tippen hebt die Wahl wieder
+  auf — ohne das säse man fest, wenn man sich vertippt hat.
+- **`blockiert`** sperrt das Klicken, solange Grün oder Rot zu sehen ist —
+  derselbe Riegel wie beim Memory.
+- Ein gefundenes Paar bekommt `display: none`. Damit ist auch sein Platz
+  weg, und die übrigen Wörter rücken **von selber** zusammen. Das
+  JavaScript muss nichts umsortieren.
+- **Punkt: 1, wenn alle Paare weg sind.** Fehlgriffe werden gezählt und
+  angezeigt, kosten aber nichts — genau wie die Versuche beim Memory.
+  Wer ohne einen einzigen Fehlgriff durchkommt, wird dafür gelobt.
+- Die zwei Spalten bleiben auch auf dem Handy **nebeneinander**
+  (`flex-wrap` ist aus): das Spiel lebt davon, dass man beide Seiten
+  gleichzeitig sieht. Schmaler werden dürfen sie, dafür braucht `.spalte`
+  ein `min-width: 0` — sonst wird eine Flex-Spalte nie schmaler als ihr
+  längstes Wort.
+
+**Noch offen:** Gespielt wird nur mit Knochen. Dieselbe Mechanik würde
+für jede Wortliste taugen (Abkürzungen, Organe) — dann müsste `latein.js`
+seine Liste aber von aussen bekommen statt `knochen` fest zu benutzen.
+
+### Die gemeinsame Knochenliste (js/knochenliste.js)
+
+Die 22 Knochen mit `schluessel`, `deutsch`, `latein` und `art` stehen
+seit dem 19.08.2026 in einer **eigenen Datei**. Vorher standen sie
+zuoberst in `js/skelett.js`.
+
+Grund: die Latein-Paare brauchen dieselben Wörter. Stünde die Liste in
+einem der beiden Spiele, müsste das andere sie abschreiben — und zwei
+Abschriften laufen früher oder später auseinander. Genau dieselbe
+Begründung wie bei `grund.css`, `konfetti.js` und `punkte.js`: was
+mehrere brauchen, steht einmal.
+
+- **Die Datei muss VOR `skelett.js` und VOR `latein.js` geladen werden.**
+  Steht das `<script>` danach, kennen die den Namen `knochen` noch nicht.
+  In beiden HTML-Dateien steht dazu ein Kommentar — dieselbe Falle wie
+  bei `rangliste.js` nach `punkte.js`.
+- Wer einen Knochen ergänzt, ergänzt ihn damit in **beiden** Spielen.
+  Fürs Skelett braucht er zusätzlich ein `data-knochen` in der Zeichnung —
+  ein Test prüft, dass Liste und Zeichnung genau dieselben Namen kennen.
+  Für die Latein-Paare genügt der Listeneintrag.
+
 ### Suchsel (suchsel.html)
 
 Organe in einem 12×12-Gitter suchen. Von Daniel am 18.08.2026 gewünscht;
@@ -1579,6 +1653,7 @@ Kontrast braucht (Überschriften, Zähler), und beim Konfetti.
 | Petrolblau | `#1f6f8b` / `#155268`, pastell `#dceaf1`, Rahmen `#9dc4d6` | Suchsel |
 | Grün | `#3f7d4f` / `#2d5c39`, pastell `#e4f2e8`, Rahmen `#8fcfa3` | Skelett |
 | Pastell-Mauve | `#9a5f90` / `#7c4a74`, pastell `#f7edf6` / `#ecd9e9`, Rahmen `#dcbcd6` | Snake |
+| Braun | `#7a5230` / `#5a3b21`, pastell `#f5ece0`, Rahmen `#c9a97e` | Latein-Paare |
 | Münz-Bronze | `#f7e0cd` + Schrift `#8f5228` | `.muenzen-marke` in der Leiste |
 
 Jedes Spiel hat **eine** eigene Farbe, die es überall durchzieht: Überschrift,

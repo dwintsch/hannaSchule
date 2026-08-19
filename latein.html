@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+
+    <!-- Ohne diese Zeile tut ein Handy so, als waere sein Bildschirm
+         980 Pixel breit, und zoomt die Seite winzig heraus.
+         width=device-width heisst: nimm die echte Breite. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Latein-Paare</title>
+
+    <!-- grund.css gilt auf allen Seiten, latein.css nur hier. -->
+    <link rel="stylesheet" href="css/grund.css">
+    <link rel="stylesheet" href="css/latein.css">
+  </head>
+<!-- Die Klasse sagt, ob jemand angemeldet ist. js/punkte.js stellt sie
+     richtig; das CSS blendet danach ein und aus. So ist von Anfang an
+     nichts zu sehen, was man noch nicht sehen darf. -->
+<body class="nicht-angemeldet">
+
+  <p class="zurueck-zur-startseite"><a href="index.html">&#8592; Zur Startseite</a></p>
+
+  <h1>Latein-Paare</h1>
+
+  <p class="anleitung">
+    Links stehen die <strong>lateinischen</strong> Fachw&ouml;rter, rechts
+    die <strong>deutschen</strong> Knochennamen &ndash; aber durcheinander.
+    Tippe ein Wort links und das passende rechts an. Stimmt es, verschwinden
+    beide.<br>
+    Wenn alle Paare weg sind, gibt es einen Punkt.
+  </p>
+
+  <p id="anzeige"></p>
+
+  <!-- Die zwei Spalten. Beide werden vom JavaScript gefuellt -
+       im HTML stehen sie leer, weil sich der Inhalt bei jeder
+       Runde aendert. -->
+  <div id="paarfeld">
+    <div class="spalte" id="spalte-latein"></div>
+    <div class="spalte" id="spalte-deutsch"></div>
+  </div>
+
+  <p id="ergebnis"></p>
+
+  <button class="neustart" onclick="neuesSpiel()">Neue Runde</button>
+
+  <script src="js/punkte.js"></script>
+
+  <!-- rangliste.js NACH punkte.js: es braucht serverFragen() und token() von dort. -->
+  <script src="js/rangliste.js"></script>
+
+  <script src="js/konfetti.js"></script>
+
+  <!-- knochenliste.js VOR latein.js: dort steht die Liste mit den
+       Namen auf Deutsch und Latein. Dieselbe Liste benutzt auch
+       das Skelett. -->
+  <script src="js/knochenliste.js"></script>
+  <script src="js/latein.js"></script>
+
+</body>
+</html>

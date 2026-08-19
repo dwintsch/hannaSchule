@@ -863,7 +863,7 @@ function leertasteStartet(befehl) {
 
 function lernspieleHinweis() {
   return "Spiel zuerst ein Lernspiel: Quiz, Memory, Hangman, " +
-    "Blitzrunde, Suchsel oder Skelett!";
+    "Blitzrunde, Suchsel, Skelett oder Latein-Paare!";
 }
 
 /* --- «1 Punkt» oder «2 Punkte»? ---

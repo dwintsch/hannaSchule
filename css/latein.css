@@ -1,0 +1,176 @@
+/* ============================================
+   Latein-Paare
+   Gilt NUR auf latein.html.
+
+   Die Farbe des Spiels ist Braun (#7a5230). Warum ausgerechnet
+   Braun? Rot und Grün waren tabu: in diesem Spiel bedeuten sie
+   «falsch» und «richtig». Wäre eines davon auch die Spielfarbe,
+   könnte man die Rückmeldung nicht mehr davon unterscheiden.
+   Siehe Farbtabelle in CLAUDE.md.
+   ============================================ */
+
+h1 {
+  color: #7a5230;
+}
+
+.anleitung {
+  max-width: 520px;
+  margin: 0 auto 15px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #16323d;
+}
+
+#anzeige {
+  font-size: 17px;
+  font-weight: bold;
+  color: #7a5230;
+  margin-bottom: 14px;
+}
+
+/* --- Die zwei Spalten ---
+   Links Latein, rechts Deutsch. Auf einem schmalen Bildschirm
+   bleiben sie nebeneinander (dafür ist flex-wrap AUS): das
+   Spiel lebt davon, dass man beide Seiten gleichzeitig sieht.
+   Schmaler werden dürfen sie. */
+
+#paarfeld {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+
+  max-width: min(560px, 100%);
+  margin: 0 auto 18px;
+}
+
+.spalte {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  flex: 1;
+  min-width: 0;   /* sonst wird die Spalte nie schmaler als ihr längstes Wort */
+}
+
+/* --- Ein Wort --- */
+
+.wort {
+  display: block;
+  width: 100%;
+  padding: 12px 8px;
+  box-sizing: border-box;
+
+  background-color: #f5ece0;
+  border: 2px solid #c9a97e;
+  border-radius: 10px;
+
+  font-size: 16px;
+  font-family: inherit;
+  color: #16323d;
+  cursor: pointer;
+
+  /* Auf dem Handy: kein Doppeltipp-Zoom, kein Markieren beim
+     Draufhalten, kein graues Rechteck beim Antippen. */
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Die lateinischen kursiv, so wie in Fachbüchern. */
+.wort.latein {
+  font-style: italic;
+}
+
+/* Nur wo es eine Maus gibt - auf dem Handy bliebe der
+   Hover-Zustand nach dem Antippen kleben, und dann sähe ein
+   Wort «gewählt» aus, obwohl es das nicht ist. */
+
+@media (hover: hover) {
+  .wort:hover {
+    background-color: #ecdcc8;
+  }
+}
+
+/* --- Gewählt ---
+   Braun gefüllt, damit man sieht, worauf man wartet. */
+
+.wort.gewaehlt {
+  background-color: #7a5230;
+  border-color: #5a3b21;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* --- Richtig und falsch ---
+   Dieselben Pastelltöne wie im Quiz, beim Hangman und beim
+   Skelett: richtig und falsch sollen überall gleich aussehen.
+
+   Sie stehen NACH .gewaehlt, sonst würde ein angetipptes Wort
+   «gewählt» aussehen statt richtig oder falsch. */
+
+.wort.richtig {
+  background-color: #bfe6cd;
+  border-color: #1e5b3a;
+  color: #1e5b3a;
+  font-weight: bold;
+}
+
+.wort.falsch {
+  background-color: #f7cfc9;
+  border-color: #8c3125;
+  color: #8c3125;
+  font-weight: bold;
+}
+
+/* --- Weg ---
+   Ein gefundenes Paar verschwindet. display: none nimmt ihm
+   auch den Platz weg, darum rücken die übrigen Wörter von
+   selber zusammen - dafür muss das JavaScript nichts
+   umsortieren. */
+
+.wort.weg {
+  display: none;
+}
+
+/* --- Die Schlussmeldung --- */
+
+#ergebnis {
+  min-height: 24px;
+  margin: 0 auto 14px;
+  font-size: 16px;
+}
+
+/* Erst am Schluss wird ein Rahmen sichtbar. Vorher stünde
+   sonst ein leerer Kasten da - derselbe Trick wie im Quiz. */
+.ergebnis-karte {
+  max-width: 460px;
+  padding: 16px 20px;
+  background-color: #f5ece0;
+  border: 2px solid #c9a97e;
+  border-radius: 14px;
+  color: #5a3b21;
+  font-weight: bold;
+}
+
+.neustart {
+  color: #7a5230;
+  border-color: #7a5230;
+}
+
+/* --- Auf dem Handy ---
+   Weniger Polster und kleinere Schrift, damit beide Spalten
+   nebeneinander Platz haben. */
+
+@media (max-width: 560px) {
+  .wort {
+    padding: 10px 5px;
+    font-size: 14px;
+  }
+
+  #paarfeld {
+    gap: 8px;
+  }
+
+  .spalte {
+    gap: 7px;
+  }
+}

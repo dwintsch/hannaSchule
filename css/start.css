@@ -173,6 +173,14 @@
 .skelett .marke       { background-color: #e4f2e8; color: #2d5c39; }
 .skelett:hover        { border-color: #8fcfa3; }
 
+/* Latein-Paare: Braun. Rot und Gruen waren tabu - die bedeuten
+   in diesem Spiel "falsch" und "richtig". */
+.latein .symbol       { background-color: #f5ece0; }
+.latein .spiel-titel  { color: #7a5230; }
+.latein .spiel-pfeil  { color: #7a5230; }
+.latein .marke        { background-color: #f5ece0; color: #5a3b21; }
+.latein:hover         { border-color: #c9a97e; }
+
 /* Die Belohnungsspiele in Pastell-Lila - so sieht man sofort,
    dass sie zu einer anderen Gruppe gehören. */
 .rennen .symbol      { background-color: #ece3f7; }

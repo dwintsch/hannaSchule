@@ -44,25 +44,37 @@
          einzige Flaeche - eine Zeichnung besteht aus lauter
          einzelnen Teilen.
 
-         DIE MASSE SIND NICHT GERATEN.
-         Das Bild ist 620 hoch, das entspricht der ganzen
-         Koerpergroesse. Alles andere ist danach gerechnet:
+         DIE MASSE SIND NICHT GERATEN, SONDERN GEMESSEN.
+         Vorlage war images/Skelet Bild.jpg (liegt bewusst
+         nicht im Repository - fremde Zeichnung). Das Bild
+         wurde zeilenweise nach Knochenpixeln abgesucht.
+         Daraus kamen diese Marken, alles Anteile der
+         Koerpergroesse:
 
-           Kopf         620 / 7,5 = 83   (Kunst-Anatomie:
-                                          7 bis 7,5 Kopfhoehen)
-           Beckenmitte  bei der Haelfte, also 310
-           Femur        rund 25 % der Groesse (Literatur: 27 %)
-           Tibia        rund 21 %            (Literatur: 24 %)
-           Humerus      rund 16 %            (Literatur: 17 %)
-           Elle         rund 14 %
-           Femur zu Tibia  1,21 - genau das Verhaeltnis aus
-                           der anatomischen Literatur
-           Fingerspitzen reichen bis Mitte Oberschenkel
+           Kopf am breitesten  0.050
+           Kinn                0.140
+           Schluesselbein      0.195
+           Rippen              0.203 bis 0.395
+           Ellbogen            0.367
+           Becken oben         0.415
+           Hueftgelenk         0.500
+           Fingerspitzen       0.590
+           Knie                0.720
+           Knoechel            0.950
+
+         Der Koerper ist hier 620 hoch und beginnt bei y=8 -
+         jede Marke oben ist mal 620 gerechnet. Ein Test
+         rechnet vier davon aus den Zahlen im SVG nach.
 
          Und: ZWOELF Rippenpaare, nicht fuenf wie im ersten
          Anlauf. Davon gehen 1-7 zum Brustbein (echte Rippen),
          8-10 enden davor (falsche Rippen), 11-12 sind kurz
-         und frei (fluctuantes).
+         und frei.
+
+         Gezeichnet ist nur die LINKE Haelfte. Die rechte ist
+         dieselbe Gruppe, mit transform an der Mittellinie
+         umgeklappt - so koennen die zwei Seiten nie
+         auseinanderlaufen.
 
          Jeder Knochen traegt data-knochen="...". Das
          JavaScript liest daran ab, welcher gemeint ist.
@@ -384,6 +396,9 @@
 
   <!-- konfetti.js VOR skelett.js: skelett.js ruft konfetti(). -->
   <script src="js/konfetti.js"></script>
+  <!-- knochenliste.js VOR skelett.js: dort steht die Liste, die
+       auch die Latein-Paare brauchen. -->
+  <script src="js/knochenliste.js"></script>
   <script src="js/skelett.js"></script>
 </body>
 </html>
