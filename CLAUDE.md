@@ -92,7 +92,7 @@ Vor jedem Push nachfragen: es ist die einzige Aktion, die nach aussen geht.
 ## Technisches
 
 Aus dem Quiz ist eine **Lernwelt** geworden: eine Startseite, von der aus
-acht Spiele erreichbar sind.
+neun Spiele erreichbar sind.
 
 ```
 mein-quiz/
@@ -102,6 +102,7 @@ mein-quiz/
 ├── galgen.html     ← das Hangman
 ├── blitz.html      ← die Blitzrunde (richtig/falsch auf Zeit)
 ├── suchsel.html  ← das Suchsel (Organe suchen)
+├── skelett.html  ← das Skelett (Knochen antippen)
 ├── rennen.html     ← Belohnungsspiel, KOSTET Punkte
 ├── dach.html       ← Belohnungsspiel Dachheldin, KOSTET Punkte
 ├── snake.html      ← Belohnungsspiel Snake, KOSTET Punkte
@@ -116,6 +117,7 @@ mein-quiz/
 │   ├── galgen.css  ← nur Hangman
 │   ├── blitz.css   ← nur Blitzrunde
 │   ├── suchsel.css ← nur Suchsel
+│   ├── skelett.css ← nur Skelett
 │   ├── rennen.css  ← nur Rennen
 │   ├── dach.css    ← nur Dachheldin
 │   └── snake.css   ← nur Snake
@@ -139,6 +141,7 @@ mein-quiz/
     ├── galgen.js   ← die Befehle vom Hangman
     ├── blitz.js    ← die Befehle von der Blitzrunde
     ├── suchsel.js ← die Befehle vom Suchsel
+    ├── skelett.js  ← die Befehle vom Skelett
     ├── rennen.js   ← die Befehle vom Rennen
     ├── dach.js     ← die Befehle von der Dachheldin
     └── snake.js    ← die Befehle von Snake
@@ -148,7 +151,7 @@ Zwei Sorten Spiele — das ist das Konzept (wie bei Anton):
 
 | Sorte | Spiele | Punkte |
 |---|---|---|
-| **Lernspiele** | Quiz, Memory, Hangman, Blitzrunde, Suchsel | **verdienen** |
+| **Lernspiele** | Quiz, Memory, Hangman, Blitzrunde, Suchsel, Skelett | **verdienen** |
 | **Belohnung** | Rennen, Dachheldin, Snake | **kosten** |
 
 **Drei Sorten Zahlen — nicht verwechseln:**
@@ -209,7 +212,8 @@ Hintergrund dem Server Bescheid geben.
   kommt, könnte den Bonus zweimal bekommen. Bei diesem Projekt egal.
 - Punkte: Quiz mit ≥ `anzahlFragen - 2` richtigen **1**, Memory gelöst **1**,
   Blitzrunde ab `zielPunkte` richtigen **1**,
-  Hangman gewonnen **2**, Suchsel alle Wörter gefunden **1**.
+  Hangman gewonnen **2**, Suchsel alle Wörter gefunden **1**,
+  Skelett alle Knochen angeschaut **1**.
   Jedes Mal neu, nicht nur beim ersten Mal.
 - **`lernspieleHinweis()`** liefert den Satz «Spiel zuerst ein Lernspiel:
   …», den alle drei Belohnungsspiele zeigen, wenn die Punkte nicht
@@ -787,6 +791,47 @@ stillschweigend nur der Deckel an.
   dazu (Daniel). Der Verlauf zeigt: sie
   präzisiert gerne schrittweise — kleine Schritte anbieten, nicht alles
   auf einmal fertig bauen wollen.
+
+### Das Skelett (skelett.html)
+
+Ein Skelett von vorne, jeder Knochen anklickbar. Wer einen antippt, sieht
+seinen Namen auf **Deutsch**, auf **Latein** und die **Knochenart**.
+Von Daniel am 19.08.2026 gewünscht. Farbe: **Grün** (`#3f7d4f`) — die
+einzige, die in der Palette noch frei war.
+
+- **17 Knochen**, alle in der Liste `knochen` zuoberst in `js/skelett.js`,
+  jeder mit `schluessel`, `deutsch`, `latein` und `art`.
+- **Alle fünf Knochenarten kommen vor** — Röhrenknochen, Plattknochen,
+  kurze Knochen, unregelmässige Knochen und das Sesambein. Das ist
+  Absicht: so sieht man an einem Skelett, was die Einteilung bedeutet.
+  Ein Test prüft, dass keine Art fehlt.
+- **Die Zeichnung ist ein `<svg>` direkt in `skelett.html`.** Warum kein
+  Bild? Weil jeder Knochen einzeln anklickbar sein muss — ein Foto ist
+  eine einzige Fläche.
+- Jeder Knochen trägt **`data-knochen="…"`**. Teile, die es zweimal gibt
+  (Arme, Beine) oder zehnmal (Rippen), tragen **denselben** Namen — darum
+  leuchten beim Antippen automatisch alle zusammen auf. Ein Test prüft,
+  dass Zeichnung und Liste genau dieselben Namen kennen: kein Knochen im
+  Bild ohne Eintrag, kein Eintrag ohne Bild.
+- **`addEventListener` statt `teil.onclick = …`**: Bei gewöhnlichen
+  Knöpfen ginge beides, bei Teilen einer Zeichnung ist
+  `addEventListener` der verlässliche Weg. Der erste Anlauf mit `onclick`
+  fiel im Test durch.
+- Die weisse Tafel mit schwarzer Schrift steht **immer** da, auch wenn
+  noch nichts gewählt ist — sonst springt das Bild beim ersten Antippen.
+- `tabindex="0"` an jedem Knochen macht sie mit der Tabulatortaste
+  erreichbar, **Enter** wählt aus. Die Leertaste absichtlich **nicht** —
+  die ist auf allen Seiten für «neue Runde» reserviert.
+- **Punkte: 1, wenn man alle angeschaut hat.** Das Spiel hat sonst kein
+  Ende — die Regel ist von mir gewählt, weil jedes Lernspiel eine
+  Bedingung braucht. Leicht zu ändern über `belohnung`.
+- Schon angeschaute Knochen bleiben blassgrün. `.gewaehlt` steht im CSS
+  **nach** `.gesehen`, sonst sähe ein angeschauter Knochen angeschaut aus
+  statt gewählt — dieselbe Falle wie beim Suchsel.
+- **Die Anatomie ist noch nicht von Hanna durchgesehen.** Die Einteilung
+  der Knochenarten ist Lehrbuchstoff, aber sie kennt ihn besser als ich.
+  Besonders anschauen: Schlüsselbein und Becken werden je nach Buch
+  verschieden eingeordnet.
 
 ### Suchsel (suchsel.html)
 
@@ -1402,6 +1447,7 @@ Kontrast braucht (Überschriften, Zähler), und beim Konfetti.
 | Lila | `#7b5aa6` / `#5b3f87`, pastell `#ece3f7` / `#ddd2ee`, Rahmen `#b79ddb` | Rennen |
 | Flieder | `#5a63b8` / `#414a94`, pastell `#e3e5f7` / `#d4d7f0`, Rahmen `#a8aee0` | Dachheldin |
 | Petrolblau | `#1f6f8b` / `#155268`, pastell `#dceaf1`, Rahmen `#9dc4d6` | Suchsel |
+| Grün | `#3f7d4f` / `#2d5c39`, pastell `#e4f2e8`, Rahmen `#8fcfa3` | Skelett |
 | Pastell-Mauve | `#9a5f90` / `#7c4a74`, pastell `#f7edf6` / `#ecd9e9`, Rahmen `#dcbcd6` | Snake |
 | Münz-Bronze | `#f7e0cd` + Schrift `#8f5228` | `.muenzen-marke` in der Leiste |
 
