@@ -243,13 +243,14 @@ Hintergrund dem Server Bescheid geben.
 - Dazu eine Meldungszeile `.leiste-meldung`, die über die ganze Breite geht
   (`flex-basis: 100%`) und mit `:empty { display: none }` verschwindet,
   solange nichts dasteht.
-- Beim **Konto erstellen** werden die Punkte mitgenommen, die auf diesem
-  Computer schon unter demselben Namen herumliegen. Sonst wäre alles
-  Gesammelte auf einen Schlag weg.
+- Beim **Konto erstellen** fängt man seit 19.08.2026 immer bei **null**
+  an. Vorher wurden die Punkte übernommen, die lokal unter demselben
+  Namen lagen — genau das war das Schummel-Loch, siehe «Der
+  Schummel-Vorfall vom 18./19.08.2026».
 
 ### Der Server-Teil (api/)
 
-Fünf Azure Functions, alle im **klassischen Modell** (ein Ordner mit
+Sechs Azure Functions, alle im **klassischen Modell** (ein Ordner mit
 `function.json` + `index.js` pro Befehl). Bewusst nicht das neuere
 v4-Modell — das klassische läuft auf Static Web Apps garantiert.
 
@@ -260,19 +261,22 @@ v4-Modell — das klassische läuft auf Static Web Apps garantiert.
 | `konto` | aktuellen Stand abholen |
 | `aendern` | Punkte/Münzen dazu oder weg, Rekorde nachführen |
 | `rangliste` | die zehn Besten, absteigend nach Punkten |
+| `code` | den Code aus dem Code-Feld prüfen und die Punkte gutschreiben |
 
 **Wo die Konten liegen:** Azure **Table Storage**, Speicherkonto
 `hannalernwelt` (Ressourcengruppe `Hanna`, Region Schweiz Nord), Tabelle
 `spieler`. Eine Zeile pro Person, `RowKey` = Name in Kleinbuchstaben.
 Kostet praktisch nichts (Rappen im Monat).
 
-**Zwei Einstellungen** müssen bei der Static Web App gesetzt sein, sonst
-antwortet der Server mit 500:
+**Drei Einstellungen** müssen bei der Static Web App gesetzt sein:
 
 - `SPEICHER_VERBINDUNG` — der Verbindungstext zum Speicherkonto
 - `TOKEN_GEHEIMNIS` — womit die Ausweise unterschrieben werden
+- `CODE_PIN` — der Code fürs Code-Feld (seit 19.08.2026)
 
 Sie stehen **nirgends im Code** und dürfen nie ins Repository.
+Fehlen die ersten zwei, antwortet der Server mit 500. Fehlt `CODE_PIN`,
+antwortet nur das Code-Feld mit 503 — **bewusst zu und nicht offen**.
 
 **Das Passwort** wird nie im Klartext gespeichert, sondern nur sein
 Fingerabdruck (`crypto.scryptSync`) mit einem eigenen Zufalls-«Salz» pro
@@ -315,6 +319,51 @@ Fingerabdruck gespeichert ist. Zurücksetzen geht nur über das Azure-Portal
 **Testen ohne Deploy:** Es gibt ein kleines Testskript, das die vier Befehle
 direkt gegen die echte Tabelle laufen lässt (17 Prüfungen, inkl. Aufräumen
 des Testkontos). Es braucht die beiden Einstellungen als Umgebungsvariablen.
+
+### Der Schummel-Vorfall vom 18./19.08.2026
+
+Ein Arbeitskollege von Daniel hatte plötzlich **99'999 Punkte**. Statt zu
+raten, habe ich zuerst die Tabelle angeschaut: das Konto hatte 99'999
+Punkte, **0 Münzen** und war um 13:22 Uhr angelegt worden. Kein Mensch
+spielt sich Punkte zusammen, ohne dabei eine einzige Münze zu bekommen.
+
+**Der Weg war `registrieren`.** Dieser Befehl nahm beim Anlegen einen
+Punktestand vom Browser entgegen — gedacht, damit vor der Anmeldung
+Gesammeltes nicht verloren geht. Ein einziger Aufruf mit
+`{"name": "...", "passwort": "...", "punkte": 99999}` genügte.
+Der Deckel lag damals bei 100'000, daher die krumme Zahl.
+
+**Die Regel, die daraus folgt:** Der Browser darf sagen, was er *getan*
+hat («gib mir 1 Punkt dazu»), aber nie, wie viel er *hat*. Alles, was
+nach «ich habe jetzt X» aussieht, ist ein Loch.
+
+**Was dagegen gemacht wurde:**
+
+| Loch | Vorher | Jetzt |
+|---|---|---|
+| `registrieren` nimmt Punkte an | bis 100'000 geschenkt | **fängt immer bei 0 an** |
+| `aendern` nimmt jede Zahl | bis 1'000'000 pro Aufruf | **höchstens 50** (Münzen 1000) |
+| beliebig oft wiederholen | unbegrenzt | **20 Gutschriften pro Minute** |
+| der PIN stand in `punkte.js` | für jeden lesbar | **nur noch auf dem Server** |
+| Code durchprobieren | 10'000 Versuche in Sekunden | **5 Versuche pro Minute** |
+
+**Die Bremse** (`bremsePruefen()` in `gemeinsam.js`) merkt sich an der
+Zeile der Person, wann die aktuelle Minute angefangen hat und wie viele
+Versuche darin kamen. Der Parameter `feld` gibt den Anfang der zwei
+Spaltennamen an — so laufen zwei Bremsen nebeneinander
+(`punkteFenster*` und `codeFenster*`). Ohne das würde fleissiges Spielen
+das Code-Feld blockieren.
+
+Gebremst wird nur, wer Punkte **bekommt**. Bezahlen darf man jederzeit —
+das kostet ja.
+
+**Ehrlich dazusagen — das ist keine Mauer.** Der Browser gehört dem
+Spieler. Wer seinen Ausweis nimmt und selber `aendern` aufruft, bekommt
+weiterhin Punkte. Aber statt einer Million auf einen Schlag sind es 50,
+höchstens 20-mal pro Minute — für 99'999 Punkte bräuchte es jetzt rund
+**anderthalb Stunden Dauerfeuer** statt eines einzigen Aufrufs. Ein
+echter Riegel ginge nur, wenn der Server nachprüfen könnte, ob wirklich
+gespielt wurde. Dafür müsste die ganze Spiellogik auf den Server.
 
 ### Erst anmelden, dann spielen
 
@@ -590,16 +639,28 @@ stillschweigend nur der Deckel an.
 2. Die Punkte liegen auf dem Server, gelten also auf **allen** Geräten.
    Nur die Gratis-Runden bleiben am Browser.
 
-- `PIN` und `GRATIS_PRO_CODE` stehen zuoberst in `js/punkte.js`.
-  Aktuell `"8590"` und `5`. Nur dort ändern.
+- **Der Code steht seit 19.08.2026 NICHT mehr im Browser.** Er wird auf
+  dem Server geprüft (`api/code`), und zwar gegen die Einstellung
+  `CODE_PIN` bei der Static Web App. Ändern also nur noch dort.
+  Vorher stand er als `const PIN = "8590"` in `js/punkte.js` — und diese
+  Datei kann jeder öffnen, ein Rechtsklick genügt.
+  **Der alte Code 8590 ist verbrannt**: er steht in der git-Geschichte.
+- `GRATIS_PRO_CODE` (= 5) steht weiterhin in `js/punkte.js`. Die
+  Gratis-Runden gehören zum Browser, die darf er selber vergeben.
+- Wie viele Punkte der Code gibt, entscheidet der **Server**:
+  `PUNKTE_PRO_CODE` zuoberst in `api/code/index.js`.
+- `codePruefen()` ist darum **async** geworden. Die Gratis-Runden gibt es
+  erst, wenn der Server ja gesagt hat — sonst holte man sie sich mit
+  einem falschen Code.
 - Gespeichert als **Zahl** unter `lernwelt-gratis-rennen`, nicht als «ja».
   `punkteAbziehen()` knipst pro Start eine Runde ab (Fünferkarte).
   Ist der Schlüssel bei 0, kostet es wieder Punkte.
 - `codeIstFrei()` ist nur `gratisRennen() > 0` — ein Einzeiler, damit die
   Spiele nicht überall `> 0` schreiben müssen.
 - `type="password"` versteckt die Eingabe, `autocomplete="off"` verhindert
-  Chromes «Passwort speichern?». **Ehrlich dazusagen:** versteckt ≠ geheim,
-  der PIN steht im Klartext in `punkte.js`.
+  Chromes «Passwort speichern?». Dass versteckt nicht geheim heisst, gilt
+  weiterhin — der Unterschied ist, dass der Code jetzt gar nicht mehr im
+  Browser steht.
 - Das Feld ist mit `opacity: 0.6` blass und wird bei `:hover` /
   `:focus-within` deutlich. Vorher stand 0.3 — da hat Hanna es nicht
   gefunden. Nicht wieder blasser machen.

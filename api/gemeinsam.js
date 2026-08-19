@@ -1,13 +1,13 @@
 /* ============================================
-   Gemeinsame Helfer für den Server-Teil (fünf Befehle)
+   Gemeinsame Helfer für den Server-Teil (sechs Befehle)
 
    Diese Datei ist für den Server das, was punkte.js
-   für die Seiten ist: Sachen, die alle fünf Befehle
-   brauchen, stehen nur hier - nicht fünfmal.
+   für die Seiten ist: Sachen, die alle sechs Befehle
+   brauchen, stehen nur hier - nicht sechsmal.
 
    Ein «Befehl des Servers» heisst bei Azure eine
    «Function». Jeder Ordner hier drin ist einer:
-   registrieren, anmelden, konto, aendern, rangliste.
+   registrieren, anmelden, konto, aendern, rangliste, code.
    ============================================ */
 
 const crypto = require("crypto");
@@ -143,6 +143,66 @@ function tokenPruefen(token) {
   return stueck[0];
 }
 
+/* ============================================
+   Die Bremse
+
+   Der Browser gehört dem Spieler. Er kann uns also alles
+   schicken, was er will - «gib mir 50 Punkte» genauso wie
+   «ich habe ein Quiz gelöst». Dagegen hilft kein Trick im
+   JavaScript: was im Browser läuft, kann man ändern.
+
+   Was hilft, ist eine Bremse: Wie viele Punkte-Gutschriften
+   darf ein Konto pro Minute schicken? Ein Mensch schafft
+   vielleicht zwei oder drei. Wer 20 pro Minute schickt,
+   spielt nicht mehr - der lässt ein Programm laufen.
+
+   Das macht Schummeln nicht unmöglich. Es macht es langsam:
+   Aus «einmal klicken» wird «stundenlang zuschauen».
+
+   Gemerkt wird das direkt an der Zeile der Person. «feld» ist
+   der Anfang der zwei Spaltennamen, damit mehrere Bremsen
+   nebeneinander laufen können - eine für die Punkte, eine
+   fürs Code-Feld. Sonst würde fleissiges Spielen das
+   Code-Feld blockieren.
+
+     <feld>Start   = wann die aktuelle Minute angefangen hat
+     <feld>Zaehler = wie viele Versuche darin schon kamen
+   ============================================ */
+
+const FENSTER_MS = 60 * 1000;
+
+/* Gibt die neuen Zählerstände zurück - oder null, wenn es
+   zu schnell ging. Der Aufrufer schreibt sie an die Zeile:
+
+     Object.assign(zeile, stand);
+*/
+
+function bremsePruefen(zeile, hoechstens, feld) {
+
+  const startFeld = feld + "Start";
+  const zaehlerFeld = feld + "Zaehler";
+
+  const jetzt = Date.now();
+
+  let start = Number(zeile[startFeld]) || 0;
+  let zaehler = Number(zeile[zaehlerFeld]) || 0;
+
+  // Ist die Minute vorbei, fängt eine neue an.
+  if (jetzt - start > FENSTER_MS) {
+    start = jetzt;
+    zaehler = 0;
+  }
+
+  if (zaehler >= hoechstens) {
+    return null;
+  }
+
+  const stand = {};
+  stand[startFeld] = start;
+  stand[zaehlerFeld] = zaehler + 1;
+  return stand;
+}
+
 /* --- Die Antwort ---
    Jede Antwort braucht denselben Kopf. Der Stern bei
    Allow-Origin heisst: die Seite darf auch dann fragen,
@@ -223,6 +283,7 @@ function kontoAntwort(zeile, token) {
 
 module.exports = {
   FACH,
+  bremsePruefen,
   tabelleHolen,
   nameOrdnen,
   schluesselVon,

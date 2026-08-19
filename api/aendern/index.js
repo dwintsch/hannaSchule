@@ -18,29 +18,46 @@ const g = require("../gemeinsam");
    könnte jemand eine unsinnige Zahl schicken und die Tabelle
    damit unbrauchbar machen.
 
-   Der Deckel lag zuerst bei 500. Seit das Code-Feld eine
-   Million Punkte auf einmal vergibt, muss er so hoch sein -
-   sonst käme beim Server nur 500 an, und die Million wäre
-   beim nächsten Seitenaufruf wieder weg.
+   Der Deckel stand zwischendurch bei 1000000, weil das
+   Code-Feld die Million über diesen Befehl schickte. Seit der
+   Code auf dem Server geprüft wird (api/code), braucht der
+   Browser das nicht mehr - und der Deckel darf wieder
+   dorthin, wo er hingehört.
 
-   Ehrlich dazu: Das ist keine Sicherung gegen Schummeln. Wer
-   will, kann dem Server sowieso schicken was er mag - der
-   Browser gehört ja ihm. Es ist nur eine Notbremse gegen
-   kaputte Zahlen. */
+   Wie hoch ist richtig? Das grösste, was ein einzelnes Spiel
+   gibt, sind 2 Punkte. Dazu kann die Warteschlange mehrere
+   Runden auf einmal nachreichen, wenn das Internet weg war.
+   50 ist also grosszügig und trotzdem 20000-mal kleiner als
+   vorher.
 
-const HOECHSTE_VERAENDERUNG = 1000000;
+   Bei den Münzen darf es mehr sein: der Eintausch schickt
+   -100 pro Punkt, und in einer langen Runde sammelt man
+   einige.
 
-function veraenderungOrdnen(wert) {
+   Ehrlich dazu: Das ist keine Mauer gegen Schummeln. Wer
+   will, kann dem Server schicken was er mag - der Browser
+   gehört ja ihm. Aber statt einer Million auf einen Schlag
+   gibt es jetzt 50, und die Bremse in gemeinsam.js begrenzt,
+   wie oft das geht. */
+
+const HOECHSTE_PUNKTE = 50;
+const HOECHSTE_MUENZEN = 1000;
+
+/* Wie viele Punkte-Gutschriften pro Minute und Konto.
+   Wer schneller ist, spielt nicht mehr selber. */
+const GUTSCHRIFTEN_PRO_MINUTE = 20;
+
+function veraenderungOrdnen(wert, deckel) {
   const zahl = Math.floor(Number(wert));
 
   if (isNaN(zahl)) {
     return 0;
   }
-  if (zahl > HOECHSTE_VERAENDERUNG) {
-    return HOECHSTE_VERAENDERUNG;
+  if (zahl > deckel) {
+    return deckel;
   }
-  if (zahl < -HOECHSTE_VERAENDERUNG) {
-    return -HOECHSTE_VERAENDERUNG;
+  if (zahl < -deckel) {
+    return -deckel;
   }
   return zahl;
 }
@@ -60,8 +77,8 @@ module.exports = async function (context, req) {
     return;
   }
 
-  const punkteDazu = veraenderungOrdnen(inhalt.punkte);
-  const muenzenDazu = veraenderungOrdnen(inhalt.muenzen);
+  const punkteDazu = veraenderungOrdnen(inhalt.punkte, HOECHSTE_PUNKTE);
+  const muenzenDazu = veraenderungOrdnen(inhalt.muenzen, HOECHSTE_MUENZEN);
 
   let neueRekorde = {};
   if (inhalt.rekorde !== null && typeof inhalt.rekorde === "object") {
@@ -91,6 +108,22 @@ module.exports = async function (context, req) {
     if (zeile === null) {
       context.res = g.fehlerAntwort(401, "Bitte neu anmelden.");
       return;
+    }
+
+    /* Die Bremse gilt nur, wenn jemand Punkte BEKOMMT.
+       Bezahlen darf man so oft man will - das kostet ja. */
+
+    if (punkteDazu > 0) {
+
+      const stand = g.bremsePruefen(zeile, GUTSCHRIFTEN_PRO_MINUTE, "punkteFenster");
+
+      if (stand === null) {
+        context.res = g.fehlerAntwort(429,
+          "Das ging zu schnell. Warte einen Moment.");
+        return;
+      }
+
+      Object.assign(zeile, stand);
     }
 
     // Punkte dürfen nie unter null fallen.

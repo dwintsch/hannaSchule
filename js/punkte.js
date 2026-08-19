@@ -42,27 +42,24 @@ const SERVER = (location.protocol === "http:" || location.protocol === "https:")
   : "https://witty-water-0c6d8c31e.7.azurestaticapps.net/api";
 
 /* --- Der Code ---
-   HIER darfst du den PIN ändern - und nur hier.
-   Es dürfen auch Buchstaben sein. Dann bitte klein schreiben:
-   die Eingabe wird sowieso in Kleinbuchstaben umgewandelt,
-   damit GROSS oder klein keine Rolle spielt. */
 
-const PIN = "8590";
+   Hier steht er NICHT MEHR. Bis zum 19.08.2026 stand an
+   dieser Stelle `const PIN = "..."` - und diese Datei kann
+   jeder öffnen, ein Rechtsklick auf die Seite genügt.
 
-/* Wie viele Gratis-Rennen ein Code freischaltet.
+   Der Code wird jetzt auf dem SERVER geprüft (api/code).
+   Der Browser schickt nur, was jemand eingetippt hat, und
+   bekommt ja oder nein zurück. Auch wie viele Punkte es
+   gibt, entscheidet der Server.
+
+   Ändern kann man den Code darum nur noch bei der Static
+   Web App, unter der Einstellung CODE_PIN. */
+
+/* Wie viele Gratis-Rennen ein richtiger Code freischaltet.
+   Die gehören zum Browser, darum stehen sie hier.
    Hier darfst du drehen: 3, 10 - was du willst. */
 
 const GRATIS_PRO_CODE = 5;
-
-/* Und wie viele Punkte es dazu gibt.
-
-   ACHTUNG beim Ändern: Der Server nimmt höchstens
-   HOECHSTE_VERAENDERUNG (= 1000000) auf einmal entgegen.
-   Steht hier eine grössere Zahl, kommt beim Server nur der
-   Deckel an - im Browser stünde kurz mehr, und beim nächsten
-   Seitenaufruf wäre es wieder weg. Siehe api/aendern. */
-
-const PUNKTE_PRO_CODE = 1000000;
 
 /* --- Münzen eintauschen ---
    Sobald so viele Münzen beisammen sind, werden sie
@@ -441,9 +438,12 @@ async function anmelden() {
 }
 
 /* --- Neues Konto erstellen ---
-   Hat man auf diesem Computer schon ohne Konto gespielt,
-   nehmen wir die Punkte gleich mit ins neue Konto. Sonst
-   wäre alles Gesammelte weg. */
+   Ein neues Konto fängt immer bei null an.
+
+   Früher durfte der Browser dabei einen Punktestand
+   mitschicken, damit vor der Anmeldung Gesammeltes nicht
+   verloren geht. Das war leider auch der bequemste Weg zum
+   Schummeln - siehe api/registrieren. */
 
 async function registrieren() {
 
@@ -457,11 +457,14 @@ async function registrieren() {
   knoepfeSperren(true);
 
   try {
+    /* Nur Name und Passwort. Punkte schicken wir NICHT mehr
+       mit - der Server würde sie sowieso nicht annehmen.
+       Siehe api/registrieren: genau darüber hat sich am
+       18.08.2026 jemand ein Konto mit 99999 Punkten gebaut. */
+
     const daten = await serverFragen("registrieren", {
       name: eingabe.name,
-      passwort: eingabe.passwort,
-      punkte: punkteVon(eingabe.name),
-      muenzen: muenzenVon(eingabe.name)
+      passwort: eingabe.passwort
     });
 
     kontoUebernehmen(daten);
@@ -702,51 +705,55 @@ function gratisRundenDazu(anzahl) {
 
 /* --- Der Code wurde eingegeben ---
    Wird vom OK-Knopf unten in der Ecke der Startseite gerufen.
-   Stimmt er, gibt es fünf Gratis-Rennen dazu. Jeder Start
-   knipst dann eines davon ab. */
 
-function codePruefen() {
+   async, weil wir jetzt den SERVER fragen müssen - und das
+   dauert einen Moment. Vorher stand die Antwort hier in der
+   Datei, und genau das war das Problem: wer die Datei öffnete,
+   kannte den Code.
+
+   Die Gratis-Runden gibt es erst, wenn der Server ja gesagt
+   hat. Sonst könnte man sie sich mit einem falschen Code holen. */
+
+async function codePruefen() {
 
   const feld = document.getElementById("codefeld");
   const meldung = document.getElementById("codemeldung");
-
-  // trim schneidet Leerschläge weg. toLowerCase macht aus
-  // «Hallo» ein «hallo» - bei Zahlen ändert es nichts, aber wenn
-  // du den PIN mal in ein Wort änderst, ist GROSS/klein dann egal.
-  const eingabe = feld.value.trim().toLowerCase();
 
   // Beide Farben zuerst wegnehmen, sonst bleibt die alte kleben.
   meldung.classList.remove("stimmt");
   meldung.classList.remove("falsch");
 
-  if (eingabe !== PIN) {
-    meldung.innerHTML = "Falscher Code.";
+  if (token() === null) {
+    meldung.innerHTML = "Melde dich zuerst an.";
     meldung.classList.add("falsch");
     return;
   }
 
-  // Der Code stimmt: Runden UND Punkte dazuschreiben.
-  // Erst dazuschreiben, dann anzeigen - sonst wären die
-  // Zahlen noch die alten.
-  gratisRundenDazu(GRATIS_PRO_CODE);
+  meldung.innerHTML = "Einen Moment ...";
 
-  // punkteDazu sagt selber, ob es geklappt hat. Ohne
-  // Anmeldung gibt es keine Punkte - dann bleiben
-  // wenigstens die Gratis-Runden.
-  const punkteKamen = punkteDazu(PUNKTE_PRO_CODE);
+  try {
+    const daten = await serverFragen("code", {
+      token: token(),
+      code: feld.value
+    });
 
-  let text = "Stimmt! Du hast " + gratisRennen() + " Gratis-Runden.";
+    // Der Server hat ja gesagt und die Punkte schon
+    // gutgeschrieben. Wir übernehmen nur seinen Stand.
+    kontoUebernehmen(daten);
+    gratisRundenDazu(GRATIS_PRO_CODE);
 
-  if (punkteKamen === true) {
-    text = text + "<br>Und " + PUNKTE_PRO_CODE +
-      punkteWort(PUNKTE_PRO_CODE) + " dazu!";
+    meldung.innerHTML = "Stimmt! Du hast " + gratisRennen() +
+      " Gratis-Runden.<br>Und " + daten.punkte + " Punkte auf dem Konto!";
+    meldung.classList.add("stimmt");
+
+    feld.value = "";
+    leisteZeichnen();
+    ranglisteAuffrischen();
+
+  } catch (fehler) {
+    meldung.innerHTML = textSichern(fehler.message);
+    meldung.classList.add("falsch");
   }
-
-  meldung.innerHTML = text;
-  meldung.classList.add("stimmt");
-
-  feld.value = "";
-  leisteZeichnen();
 }
 
 /* ============================================

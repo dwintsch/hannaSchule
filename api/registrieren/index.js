@@ -2,27 +2,25 @@
    Befehl 1: registrieren
    Ein neues Konto anlegen.
 
-   Der Browser schickt: name, passwort und - falls
-   auf diesem Computer schon Punkte herumliegen -
-   auch die, damit nichts verloren geht.
+   Der Browser schickt NUR name und passwort.
+
+   WARUM KEINE PUNKTE MEHR:
+   Früher durfte der Browser beim Anlegen gleich einen
+   Punktestand mitschicken. Gedacht war das, damit Punkte
+   nicht verloren gehen, die vor der Anmeldung auf diesem
+   Computer gesammelt wurden.
+
+   Am 18.08.2026 hat jemand genau das ausgenutzt: ein Konto
+   anlegen und «punkte: 99999» mitschicken - fertig war der
+   erste Platz, mit einem einzigen Aufruf und ohne ein
+   einziges Spiel.
+
+   Ein neues Konto fängt darum jetzt IMMER bei null an.
+   Das ist die Regel: Der Browser darf sagen, was er GETAN
+   hat, aber nie, wie viel er HAT.
    ============================================ */
 
 const g = require("../gemeinsam");
-
-/* Damit niemand mit einer erfundenen Riesenzahl ankommt. */
-function zahlOrdnen(wert) {
-  const zahl = Math.floor(Number(wert));
-
-  if (isNaN(zahl) || zahl < 0) {
-    return 0;
-  }
-  // So hoch wie der Deckel in «aendern» - sonst gingen die
-  // Punkte aus dem Code-Feld beim Registrieren verloren.
-  if (zahl > 1000000) {
-    return 1000000;
-  }
-  return zahl;
-}
 
 module.exports = async function (context, req) {
 
@@ -55,8 +53,9 @@ module.exports = async function (context, req) {
     anzeigeName: name,
     salz: salz,
     fingerabdruck: g.fingerabdruck(inhalt.passwort, salz),
-    punkte: zahlOrdnen(inhalt.punkte),
-    muenzen: zahlOrdnen(inhalt.muenzen),
+    // Immer bei null anfangen - siehe oben.
+    punkte: 0,
+    muenzen: 0,
     rekorde: "{}"
   };
 
