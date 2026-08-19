@@ -1444,8 +1444,29 @@ Reihenfolge auf der Seite: `.kopf` · `#anleitung` · `#willkommen` ·
 Nur die `.fusszeile` ist immer da — alles andere hängt am Anmeldestand,
 siehe «Erst anmelden, dann spielen».
 
-Design: **breite Kacheln untereinander** (von Hanna gewählt), max. 500px breit,
-mittig. Jede Kachel: rundes Symbol · Titel · Erklärungssatz · Marke · Pfeil.
+Design: **breite Kacheln** (von Hanna gewählt). Jede Kachel: rundes Symbol ·
+Titel · Erklärungssatz · Marke · Pfeil.
+
+**Die sieben Lernspiele stehen in zwei Spalten**, die drei Belohnungsspiele
+untereinander. Von Daniel am 19.08.2026 gewünscht: sieben Kacheln
+untereinander wurden zu lang zum Scrollen.
+
+- Der erste der zwei `.spiele`-Blöcke trägt dazu die Klasse `lernspiele`.
+- **`grid` statt `flex`.** In einem Gitter sind alle Kacheln einer Zeile
+  automatisch gleich hoch. Mit flex wäre jede so hoch wie ihr eigener
+  Text, und die Reihe sähe zerrupft aus.
+- Die Kacheln bringen ihren eigenen `margin-bottom` mit — im Gitter macht
+  das den Abstand doppelt. Darum dort auf 0.
+- **Unter 700px wieder EINE Spalte.** Ausdrückliche Ansage von Daniel: auf
+  dem Handy soll es bleiben wie vorher. Zwei Spalten hiessen dort Kacheln
+  von 160px Breite — da passt der Erklärungssatz nicht mehr hinein.
+- Die Einrutsch-Verzögerung (`nth-child`) ging nur bis 4 — ab der fünften
+  Kachel kamen alle gleichzeitig herein. Jetzt bis 7.
+
+**Jedes Spiel hat sein eigenes Symbol.** Beim Dazubauen der Latein-Paare
+bekamen die dasselbe 🔤 wie das Suchsel — auf einen Blick verwechselt man
+die zwei dann. Jetzt 🔗 (Kette = zwei Dinge verbinden). Ein Test prüft, dass
+kein Symbol zweimal vorkommt; die Gegenprobe wurde gemacht.
 
 Darüber ein Kopfbereich `.kopf`: **pastelliger, halbdurchsichtiger**
 Farbverlauf (Mint → Hellblau, `rgba(..., 0.5)`) mit dunkler Schrift.
@@ -1653,7 +1674,7 @@ Kontrast braucht (Überschriften, Zähler), und beim Konfetti.
 | Petrolblau | `#1f6f8b` / `#155268`, pastell `#dceaf1`, Rahmen `#9dc4d6` | Suchsel |
 | Grün | `#3f7d4f` / `#2d5c39`, pastell `#e4f2e8`, Rahmen `#8fcfa3` | Skelett |
 | Pastell-Mauve | `#9a5f90` / `#7c4a74`, pastell `#f7edf6` / `#ecd9e9`, Rahmen `#dcbcd6` | Snake |
-| Braun | `#7a5230` / `#5a3b21`, pastell `#f5ece0`, Rahmen `#c9a97e` | Latein-Paare |
+| Braun | `#7a5230` / `#5a3b21`, pastell `#f7efe4` / `#e7d3b8`, Rahmen `#c9a97e` | Latein-Paare |
 | Münz-Bronze | `#f7e0cd` + Schrift `#8f5228` | `.muenzen-marke` in der Leiste |
 
 Jedes Spiel hat **eine** eigene Farbe, die es überall durchzieht: Überschrift,
@@ -1664,6 +1685,47 @@ Startseite. Beim Umfärben eines Spiels also immer beide Dateien anschauen:
 Achtung beim Umfärben mit Suchen-und-Ersetzen: Rennen und Dachheldin hatten
 einmal **dieselben** Hex-Werte. In `start.css` stehen beide Blöcke direkt
 untereinander — dort nur den richtigen Block ändern, nicht global ersetzen.
+
+### Nachprüfen, ob wirklich alles pastell ist
+
+Am 19.08.2026 hat Daniel den Grundsatz nochmals eingefordert. Statt zu
+schauen habe ich **gemessen**: ein kleines Skript lädt jede der elf Seiten
+im Browser, liest von **jedem** Element die tatsächlich gerechnete
+Hintergrundfarbe (`getComputedStyle`) und rechnet ihre Helligkeit aus
+(`0.2126·R + 0.7152·G + 0.0722·B`, so wie das Auge sie sieht). Alles unter
+0,62 ist keine Pastellfläche mehr.
+
+**Warum die gerechnete Farbe und nicht das CSS?** Nur so fällt auf, wenn
+ein Knopf still die Grundfarbe aus `grund.css` erbt, weil sein Spiel ihm
+keine eigene gibt. Genau das war der letzte Treffer.
+
+Gefunden und behoben wurden:
+
+| Wo | vorher | jetzt |
+|---|---|---|
+| `button` in `grund.css` | volles Türkis `#2a9d8f`, weisse Schrift | pastell `#cfe9e4`, dunkle Schrift |
+| `.wort.gewaehlt` (Latein-Paare) | volles Braun, weisse Schrift | pastell `#e7d3b8`, dunkle Schrift |
+| `.modusknopf.an` (Skelett) | volles Grün, weisse Schrift | pastell `#cfe8d9`, dunkle Schrift |
+| `.feld.gewaehlt` (Suchsel) | volles Petrolblau, weisse Schrift | pastell `#9dc4d6`, dunkle Schrift |
+
+Die Regel aus `grund.css` war noch aus der Zeit **vor** dem
+Pastell-Entscheid und wurde von fast jedem Spiel überschrieben — übrig
+blieb nur der OK-Knopf beim Code-Feld. Der stach dafür heraus.
+
+**Wenn eine Fläche pastell wird, reicht die Farbe allein nicht mehr**, um
+«gewählt» zu zeigen. Darum kommen jetzt jedes Mal drei Dinge zusammen:
+dunklerer Pastellton, kräftigerer Rand und Fettschrift.
+
+**Zwei Treffer sind absichtlich geblieben:**
+
+- Der **Schlangenkörper** (`#5aa85f`) — das ist eine Spielfigur, keine
+  Bedienfläche, und das Grün hat Daniel ausdrücklich so gewollt.
+- Die **Umrisse** der Zeichnungen (Skelett, Heldin, Krankenwagen). Ein
+  Strich ist keine Fläche.
+
+Das Skript liegt bei den Tests als `farben-pruefen.js` und
+`pruefseite.js`. Beim Dazubauen eines Spiels lohnt es sich, es einmal
+laufen zu lassen.
 
 Pastellgrün und Pastellrot sind in Quiz und Hangman **absichtlich identisch** —
 richtig und falsch sollen überall gleich aussehen. Wer eine davon ändert,

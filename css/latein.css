@@ -59,7 +59,9 @@ h1 {
   padding: 12px 8px;
   box-sizing: border-box;
 
-  background-color: #f5ece0;
+  /* Etwas kühler als Hangman-Pfirsich (#fde8d7): die zwei
+     Kacheln liegen auf der Startseite nebeneinander. */
+  background-color: #f7efe4;
   border: 2px solid #c9a97e;
   border-radius: 10px;
 
@@ -86,17 +88,23 @@ h1 {
 
 @media (hover: hover) {
   .wort:hover {
-    background-color: #ecdcc8;
+    background-color: #f0e4d2;
   }
 }
 
 /* --- Gewählt ---
-   Braun gefüllt, damit man sieht, worauf man wartet. */
+   Erkennbar an drei Dingen zusammen: dunklerer Pastellton,
+   kräftiger Rand und Fettschrift.
+
+   Zuerst war das Feld satt braun mit weisser Schrift. Das war
+   deutlich, verstiess aber gegen den Grundsatz «alle Flächen
+   pastell, Schrift darauf dunkel» - siehe Farbtabelle in
+   CLAUDE.md. Von Daniel am 19.08.2026 eingefordert. */
 
 .wort.gewaehlt {
-  background-color: #7a5230;
-  border-color: #5a3b21;
-  color: #ffffff;
+  background-color: #e7d3b8;
+  border-color: #7a5230;
+  color: #5a3b21;
   font-weight: bold;
 }
 
@@ -144,7 +152,7 @@ h1 {
 .ergebnis-karte {
   max-width: 460px;
   padding: 16px 20px;
-  background-color: #f5ece0;
+  background-color: #f7efe4;
   border: 2px solid #c9a97e;
   border-radius: 14px;
   color: #5a3b21;

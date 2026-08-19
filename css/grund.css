@@ -15,9 +15,16 @@ h1 {
   color: #2a9d8f;
 }
 
+/* Die Grundform für alle Knöpfe. Fast jedes Spiel gibt seinen
+   Knöpfen eine eigene Farbe; das hier gilt für die, die keine
+   bekommen. Bis 19.08.2026 stand hier volles Türkis mit weisser
+   Schrift - noch aus der Zeit vor dem Pastell-Entscheid. Übrig
+   war damit nur noch der OK-Knopf beim Code-Feld, aber der
+   stach heraus. Grundsatz: Fläche pastell, Schrift dunkel. */
+
 button {
-  background-color: #2a9d8f;
-  color: white;
+  background-color: #cfe9e4;
+  color: #1d6b62;
   border: none;
   border-radius: 10px;
   padding: 15px 25px;

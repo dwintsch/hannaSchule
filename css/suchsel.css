@@ -81,11 +81,15 @@ h1 {
   }
 }
 
-/* Der erste angeklickte Buchstabe. */
+/* Der erste angeklickte Buchstabe.
+   Pastell mit dunkler Schrift, nicht satt gefüllt - derselbe
+   Grundsatz wie überall. War bis 19.08.2026 volles Petrolblau
+   mit weisser Schrift. */
 .feld.gewaehlt {
-  background-color: #1f6f8b;
+  background-color: #9dc4d6;
   border-color: #155268;
-  color: #ffffff;
+  color: #155268;
+  font-weight: bold;
 }
 
 /* Ein gefundenes Wort bleibt stehen.

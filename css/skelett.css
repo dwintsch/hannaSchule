@@ -273,9 +273,13 @@ h1 {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Der Knopf, der gerade gilt: pastellgrün gefüllt, dunkle
+   Schrift, kräftiger Rand. Vorher satt grün mit weisser
+   Schrift - das verstiess gegen «alle Flächen pastell». */
 .modusknopf.an {
-  background-color: #3f7d4f;
-  color: #ffffff;
+  background-color: #cfe8d9;
+  border-color: #2d5c39;
+  color: #2d5c39;
 }
 
 @media (hover: hover) {
@@ -283,7 +287,7 @@ h1 {
     background-color: #e4f2e8;
   }
   .modusknopf.an:hover {
-    background-color: #2d5c39;
+    background-color: #bcdfc9;
   }
 }
 

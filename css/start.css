@@ -212,10 +212,10 @@
 
 /* Latein-Paare: Braun. Rot und Gruen waren tabu - die bedeuten
    in diesem Spiel "falsch" und "richtig". */
-.latein .symbol       { background-color: #f5ece0; }
+.latein .symbol       { background-color: #f0e4d2; }
 .latein .spiel-titel  { color: #7a5230; }
 .latein .spiel-pfeil  { color: #7a5230; }
-.latein .marke        { background-color: #f5ece0; color: #5a3b21; }
+.latein .marke        { background-color: #f0e4d2; color: #5a3b21; }
 .latein:hover         { border-color: #c9a97e; }
 
 /* Die Belohnungsspiele in Pastell-Lila - so sieht man sofort,
