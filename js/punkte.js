@@ -41,26 +41,20 @@ const SERVER = (location.protocol === "http:" || location.protocol === "https:")
   ? "/api"
   : "https://witty-water-0c6d8c31e.7.azurestaticapps.net/api";
 
-/* --- Der Code ---
+/* --- Das Code-Feld gibt es nicht mehr ---
 
-   Hier steht er NICHT MEHR. Bis zum 19.08.2026 stand an
-   dieser Stelle `const PIN = "..."` - und diese Datei kann
-   jeder öffnen, ein Rechtsklick auf die Seite genügt.
+   Bis zum 19.08.2026 stand unten rechts auf der Startseite
+   ein Feld: wer den Code kannte, bekam Punkte und
+   Gratis-Runden. Von Daniel entfernt.
 
-   Der Code wird jetzt auf dem SERVER geprüft (api/code).
-   Der Browser schickt nur, was jemand eingetippt hat, und
-   bekommt ja oder nein zurück. Auch wie viele Punkte es
-   gibt, entscheidet der Server.
+   Weg sind: das Feld, der Befehl codePruefen(), das CSS
+   dazu und der Server-Befehl api/code.
 
-   Ändern kann man den Code darum nur noch bei der Static
-   Web App, unter der Einstellung CODE_PIN. */
-
-/* Wie viele Gratis-Rennen ein richtiger Code freischaltet.
-   Die gehören zum Browser, darum stehen sie hier.
-   Von Daniel am 19.08.2026 von 5 auf 100 gesetzt.
-   Hier darfst du drehen. */
-
-const GRATIS_PRO_CODE = 100;
+   GEBLIEBEN sind die Gratis-Runden selber. Die Dachheldin
+   schenkt beim Ziel eine, und die drei Belohnungsspiele
+   rechnen damit - siehe gratisRundenDazu() weiter unten.
+   Seit das Code-Feld weg ist, ist die Dachheldin die
+   EINZIGE Quelle fuer Gratis-Runden. */
 
 /* --- Münzen eintauschen ---
    Sobald so viele Münzen beisammen sind, werden sie
@@ -704,58 +698,6 @@ function gratisRundenDazu(anzahl) {
   leisteZeichnen();
 }
 
-/* --- Der Code wurde eingegeben ---
-   Wird vom OK-Knopf unten in der Ecke der Startseite gerufen.
-
-   async, weil wir jetzt den SERVER fragen müssen - und das
-   dauert einen Moment. Vorher stand die Antwort hier in der
-   Datei, und genau das war das Problem: wer die Datei öffnete,
-   kannte den Code.
-
-   Die Gratis-Runden gibt es erst, wenn der Server ja gesagt
-   hat. Sonst könnte man sie sich mit einem falschen Code holen. */
-
-async function codePruefen() {
-
-  const feld = document.getElementById("codefeld");
-  const meldung = document.getElementById("codemeldung");
-
-  // Beide Farben zuerst wegnehmen, sonst bleibt die alte kleben.
-  meldung.classList.remove("stimmt");
-  meldung.classList.remove("falsch");
-
-  if (token() === null) {
-    meldung.innerHTML = "Melde dich zuerst an.";
-    meldung.classList.add("falsch");
-    return;
-  }
-
-  meldung.innerHTML = "Einen Moment...";
-
-  try {
-    const daten = await serverFragen("code", {
-      token: token(),
-      code: feld.value
-    });
-
-    // Der Server hat ja gesagt und die Punkte schon
-    // gutgeschrieben. Wir übernehmen nur seinen Stand.
-    kontoUebernehmen(daten);
-    gratisRundenDazu(GRATIS_PRO_CODE);
-
-    meldung.innerHTML = "Stimmt! Du hast " + gratisRennen() +
-      " Gratis-Runden.<br>Und " + daten.punkte + " Punkte auf dem Konto!";
-    meldung.classList.add("stimmt");
-
-    feld.value = "";
-    leisteZeichnen();
-    ranglisteAuffrischen();
-
-  } catch (fehler) {
-    meldung.innerHTML = textSichern(fehler.message);
-    meldung.classList.add("falsch");
-  }
-}
 
 /* ============================================
    Bestleistung pro Spiel
@@ -1091,17 +1033,3 @@ function kontoAuffrischen() {
 leisteEinbauen();
 kontoAuffrischen();
 
-/* Auch die Enter-Taste soll den Code prüfen.
-   Das Feld gibt es nur auf der Startseite. Darum zuerst
-   nachschauen, ob es überhaupt da ist - sonst gäbe es auf
-   allen anderen Seiten eine Fehlermeldung. */
-
-const codefeld = document.getElementById("codefeld");
-
-if (codefeld !== null) {
-  codefeld.onkeydown = function (taste) {
-    if (taste.key === "Enter") {
-      codePruefen();
-    }
-  };
-}

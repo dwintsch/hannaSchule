@@ -367,14 +367,6 @@ input {
     min-width: 0;
   }
 
-  #geheimfeld {
-    position: static;
-    max-width: 100%;
-    margin: 24px auto 0;
-    justify-content: center;
-    opacity: 1;
-  }
-
   /* Auf dem Handy ist die HOEHE knapp. Spielfeld und
      Steuerknoepfe muessen zusammen auf den Bildschirm passen,
      sonst tippt man unten auf einen Knopf und sieht oben

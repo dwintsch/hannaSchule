@@ -96,7 +96,7 @@ neun Spiele erreichbar sind.
 
 ```
 mein-quiz/
-├── index.html      ← Startseite mit den Spiel-Kacheln + Code-Feld
+├── index.html      ← Startseite mit den Spiel-Kacheln
 ├── quiz.html       ← das Quiz (hiess früher index.html)
 ├── memory.html     ← das Abkürzungs-Memory
 ├── galgen.html     ← das Hangman
@@ -112,7 +112,7 @@ mein-quiz/
 │   │                  .neustart, .zurueck-zur-startseite,
 │   │                  #spielerleiste, .punkte-marke, .muenzen-marke,
 │   │                  .frei-marke, .konfetti)
-│   ├── start.css   ← nur Startseite (inkl. #geheimfeld)
+│   ├── start.css   ← nur Startseite
 │   ├── quiz.css    ← nur Quiz
 │   ├── memory.css  ← nur Memory
 │   ├── galgen.css  ← nur Hangman
@@ -164,7 +164,7 @@ Zwei Sorten Spiele — das ist das Konzept (wie bei Anton):
 |---|---|---|
 | **Punkte** ⭐ | Lernspiele | bezahlen die Belohnungsspiele |
 | **Münzen** 🪙 | nur in der Dachheldin | je 100 werden **gegen 1 Punkt eingetauscht** und sind dann weg |
-| **Gratis-Runden** 🔓 | Code-Feld auf der Startseite | ersetzen die Punkte |
+| **Gratis-Runden** 🔓 | nur die Dachheldin (Ziel erreicht) | ersetzen die Punkte |
 
 **Anmelden und Punkte** (`js/punkte.js`, CSS `#spielerleiste` in `grund.css`):
 
@@ -265,7 +265,7 @@ Hintergrund dem Server Bescheid geben.
 
 ### Der Server-Teil (api/)
 
-Sechs Azure Functions, alle im **klassischen Modell** (ein Ordner mit
+Fünf Azure Functions, alle im **klassischen Modell** (ein Ordner mit
 `function.json` + `index.js` pro Befehl). Bewusst nicht das neuere
 v4-Modell — das klassische läuft auf Static Web Apps garantiert.
 
@@ -276,22 +276,22 @@ v4-Modell — das klassische läuft auf Static Web Apps garantiert.
 | `konto` | aktuellen Stand abholen |
 | `aendern` | Punkte/Münzen dazu oder weg, Rekorde nachführen |
 | `rangliste` | die zehn Besten, absteigend nach Punkten |
-| `code` | den Code aus dem Code-Feld prüfen und die Punkte gutschreiben |
 
 **Wo die Konten liegen:** Azure **Table Storage**, Speicherkonto
 `hannalernwelt` (Ressourcengruppe `Hanna`, Region Schweiz Nord), Tabelle
 `spieler`. Eine Zeile pro Person, `RowKey` = Name in Kleinbuchstaben.
 Kostet praktisch nichts (Rappen im Monat).
 
-**Drei Einstellungen** müssen bei der Static Web App gesetzt sein:
+**Zwei Einstellungen** müssen bei der Static Web App gesetzt sein:
 
 - `SPEICHER_VERBINDUNG` — der Verbindungstext zum Speicherkonto
 - `TOKEN_GEHEIMNIS` — womit die Ausweise unterschrieben werden
-- `CODE_PIN` — der Code fürs Code-Feld (seit 19.08.2026)
 
 Sie stehen **nirgends im Code** und dürfen nie ins Repository.
-Fehlen die ersten zwei, antwortet der Server mit 500. Fehlt `CODE_PIN`,
-antwortet nur das Code-Feld mit 503 — **bewusst zu und nicht offen**.
+Fehlen sie, antwortet der Server mit 500.
+
+(`CODE_PIN` gab es bis zum 19.08.2026 als dritte — sie gehörte zum
+Code-Feld und wird nicht mehr gelesen.)
 
 **Das Passwort** wird nie im Klartext gespeichert, sondern nur sein
 Fingerabdruck (`crypto.scryptSync`) mit einem eigenen Zufalls-«Salz» pro
@@ -401,7 +401,9 @@ Zeile der Person, wann die aktuelle Minute angefangen hat und wie viele
 Versuche darin kamen. Der Parameter `feld` gibt den Anfang der zwei
 Spaltennamen an — so laufen zwei Bremsen nebeneinander
 (`punkteFenster*` und `codeFenster*`). Ohne das würde fleissiges Spielen
-das Code-Feld blockieren.
+das Code-Feld blockieren. Das Code-Feld ist inzwischen weg, die
+Bremse mit dem Feld-Parameter bleibt aber sinnvoll: sie trennt
+verschiedene Zwecke sauber voneinander.
 
 Gebremst wird, wer etwas **bekommt** — Punkte, Münzen oder einen Rekord.
 Bezahlen darf man jederzeit, das kostet ja.
@@ -430,8 +432,8 @@ gespielt wurde. Dafür müsste die ganze Spiellogik auf den Server.
 ### Erst anmelden, dann spielen
 
 Ohne Anmeldung sieht man auf der Startseite nur den Kopf, die Anleitung und
-den Kasten «Melde dich zuerst oben an». Die Spielkacheln, das Code-Feld und
-die Rangliste sind weg.
+den Kasten «Melde dich zuerst oben an». Die Spielkacheln und die Rangliste
+sind weg.
 
 **Wie das gemacht ist — bewusst ohne eigene JavaScript-Datei:**
 
@@ -440,7 +442,6 @@ die Rangliste sind weg.
 
 ```css
 body.nicht-angemeldet #spielbereich { display: none; }
-body.nicht-angemeldet #geheimfeld   { display: none; }
 body.nicht-angemeldet #rangliste    { display: none; }   /* in grund.css */
 body.angemeldet       .kopf         { display: none; }
 body.angemeldet       #anleitung    { display: none; }
@@ -536,7 +537,8 @@ Nichtangemeldete eine Liste, in der man selber nicht vorkommen konnte.
 - Umgekehrt kennt `punkte.js` die Rangliste **nicht** fest: es ruft
   `ranglisteAuffrischen()`, und das schaut zuerst mit `typeof … === "function"`
   nach, ob es sie überhaupt gibt. So läuft `punkte.js` auch ohne. Derselbe
-  Trick wie beim Code-Feld ganz unten in der Datei.
+  Trick, den bis zum 19.08.2026 auch das Code-Feld ganz unten in der
+  Datei benutzt hat.
 - Aufgefrischt wird sie beim Anmelden, beim Registrieren, beim Abmelden und
   jedes Mal, wenn der Server eine Punkteänderung bestätigt hat.
 - **Kein Passwort verlässt je die Tabelle.** Der Server zählt in
@@ -744,66 +746,57 @@ Gegenprobe gemacht: Zeile entfernt → Test rot mit «rennen.js sucht
 #strasse», Zeile zurück → grün. Ein Test, den man nicht scheitern gesehen
 hat, ist keiner.
 
-### Das Code-Feld (index.html unten rechts, `#geheimfeld`)
+### Das Code-Feld — am 19.08.2026 ENTFERNT
 
-Ein kleines Feld unten in der Ecke der Startseite. Wer den PIN kennt,
-bekommt **100 Gratis-Runden** für die Belohnungsspiele **und 100 Punkte**.
-Beides zusammen, jedes Mal wieder. Von Daniel am 18.08.2026 gewünscht.
+Unten rechts auf der Startseite stand ein kleines Feld. Wer den PIN
+kannte, bekam Gratis-Runden und Punkte. **Von Daniel entfernt.**
 
-**Die Zahlen sind am 19.08.2026 von Daniel geändert worden:**
+Der Verlauf in Kürze: erst Enter-Cheat, dann ein Feld statt Enter, dann
+PIN, dann Ziffern verstecken, dann fünf Gratis-Runden (alles Hanna), dann
+eine Million Punkte dazu (Daniel), dann der Code auf den Server, dann auf
+100 Punkte und 100 Runden gesenkt — und am selben Tag ganz weg.
 
-| | vorher | jetzt |
-|---|---|---|
-| Punkte (`PUNKTE_PRO_CODE` in `api/code/index.js`) | 1'000'000 | **100** |
-| Gratis-Runden (`GRATIS_PRO_CODE` in `js/punkte.js`) | 5 | **100** |
+**Warum es gut ist, dass es weg ist:** Mit der Million stand man dauerhaft
+auf Platz 1 der Rangliste, und die war damit wertlos. Und ein Feld, das
+Punkte verschenkt, hebelt jedes Lernspiel aus — wozu noch Quiz spielen.
 
-Kurz davor stand die Frage im Raum, das Feld ganz zu löschen. Es bleibt —
-aber die Million ist weg, und das ist gut so: mit einer Million stand man
-**dauerhaft auf Platz 1** der Rangliste, und die war damit wertlos.
-100 Punkte reichen für 100 Runden in einem Belohnungsspiel und verschieben
-die Rangliste kaum.
+**Was gelöscht wurde:**
 
-**Hier stand einmal, `api/aendern` müsse den Deckel mitheben. Das stimmt
-nicht** (und stimmte schon länger nicht mehr): `api/code` schreibt die
-Zeile in der Tabelle **selber** — lesen, dazuzählen, schreiben. Es geht
-gar nicht über `aendern`, und dessen Deckel von 50 Punkten pro Aufruf gilt
-hier nie. Die Konstante `HOECHSTE_VERAENDERUNG` gibt es auch nicht mehr.
+| Wo | Was |
+|---|---|
+| `index.html` | der Block `#geheimfeld` mit Feld, Knopf und Meldung |
+| `css/start.css` | der ganze Abschnitt dazu, plus `.fusszeile { margin-bottom }` |
+| `css/grund.css` | die Handy-Regel im `@media`-Block |
+| `js/punkte.js` | `codePruefen()`, `GRATIS_PRO_CODE`, die Enter-Taste |
+| `api/code/` | der ganze Ordner |
 
-**Zu wissen:** Die Punkte liegen auf dem Server, gelten also auf **allen**
-Geräten. Nur die Gratis-Runden bleiben am Browser, an dem der Code
-eingetippt wurde.
+**Was ABSICHTLICH geblieben ist: die Gratis-Runden.** `gratisRennen()`,
+`codeIstFrei()`, `gratisRundenDazu()` und `punkteAbziehen()` stehen
+weiterhin in `js/punkte.js`, und die drei Belohnungsspiele rechnen damit.
 
-- **Der Code steht seit 19.08.2026 NICHT mehr im Browser.** Er wird auf
-  dem Server geprüft (`api/code`), und zwar gegen die Einstellung
-  `CODE_PIN` bei der Static Web App. Ändern also nur noch dort.
-  Vorher stand er als `const PIN = "8590"` in `js/punkte.js` — und diese
-  Datei kann jeder öffnen, ein Rechtsklick genügt.
-  **Der alte Code 8590 ist verbrannt**: er steht in der git-Geschichte.
-- `GRATIS_PRO_CODE` (= 100) steht weiterhin in `js/punkte.js`. Die
-  Gratis-Runden gehören zum Browser, die darf er selber vergeben.
-- Wie viele Punkte der Code gibt, entscheidet der **Server**:
-  `PUNKTE_PRO_CODE` zuoberst in `api/code/index.js`.
-- `codePruefen()` ist darum **async** geworden. Die Gratis-Runden gibt es
-  erst, wenn der Server ja gesagt hat — sonst holte man sie sich mit
-  einem falschen Code.
 - Gespeichert als **Zahl** unter `lernwelt-gratis-rennen`, nicht als «ja».
-  `punkteAbziehen()` knipst pro Start eine Runde ab (Fünferkarte).
-  Ist der Schlüssel bei 0, kostet es wieder Punkte.
+  `punkteAbziehen()` knipst pro Start eine Runde ab (wie eine
+  Fünferkarte). Ist der Schlüssel bei 0, kostet es wieder Punkte.
 - `codeIstFrei()` ist nur `gratisRennen() > 0` — ein Einzeiler, damit die
   Spiele nicht überall `> 0` schreiben müssen.
-- `type="password"` versteckt die Eingabe, `autocomplete="off"` verhindert
-  Chromes «Passwort speichern?». Dass versteckt nicht geheim heisst, gilt
-  weiterhin — der Unterschied ist, dass der Code jetzt gar nicht mehr im
-  Browser steht.
-- Das Feld ist mit `opacity: 0.6` blass und wird bei `:hover` /
-  `:focus-within` deutlich. Vorher stand 0.3 — da hat Hanna es nicht
-  gefunden. Nicht wieder blasser machen.
-- Wünsche in dieser Reihenfolge: erst Enter-Cheat, dann Feld statt Enter,
-  dann «Code» statt «Geheimcode», dann PIN 8590, dann Ziffern verstecken,
-  dann fünf Runden statt einer (alles Hanna), dann eine Million Punkte
-  dazu (Daniel). Der Verlauf zeigt: sie
-  präzisiert gerne schrittweise — kleine Schritte anbieten, nicht alles
-  auf einmal fertig bauen wollen.
+- **Seit das Feld weg ist, ist die Dachheldin die EINZIGE Quelle** für
+  Gratis-Runden: wer das Ziel bei Strecke 800 erreicht, bekommt eine.
+  Ein Test prüft das eigens — fiele die auch weg, wäre die ganze Mechanik
+  tot und könnte mit raus.
+- Beim **Abmelden** werden sie weiterhin gelöscht, damit sie nicht an die
+  nächste Person am selben Computer weitergehen.
+
+**Die Einstellung `CODE_PIN`** bei der Static Web App wird nicht mehr
+gelesen. Sie darf stehen bleiben (schadet nichts) oder gelöscht werden:
+
+```powershell
+az staticwebapp appsettings delete --name hanna --resource-group Hanna --setting-names CODE_PIN
+```
+
+**Der alte Code 8590 bleibt verbrannt** — er steht in der git-Geschichte.
+Ein Test prüft, dass er in keiner Datei mehr auftaucht, die der Browser
+lädt. `test-code.js` heisst weiterhin so, prüft jetzt aber das Gegenteil
+von früher: dass nichts davon zurückkommt.
 
 ### Das Skelett (skelett.html)
 
@@ -1384,8 +1377,8 @@ Von Daniel am 18.08.2026 gewünscht. Vier Dinge waren nötig:
 3. **Ein `@media (max-width: 560px)`-Block** in `grund.css`: das Polster
    am Body schrumpft von 40px auf 10px (auf einem 360px-Bildschirm frisst
    40px links und rechts fast ein Viertel der Breite), die Überschrift
-   wird kleiner, und das Code-Feld klebt nicht mehr fix in der Ecke —
-   sonst würde es die Rangliste zudecken, die dort ja jetzt steht.
+   wird kleiner. (Hier stand auch eine Regel fürs Code-Feld, damit es die
+   Rangliste nicht zudeckt — das Feld ist am 19.08.2026 entfernt worden.)
 4. **Die Spielfelder** benutzen `min(…px, 100%)` statt fester Breiten:
    Snake 330, Dachheldin 440, Suchsel 372. Rennen (300px) passt
    auch so. Bei Snake hält zusätzlich `aspect-ratio: 1 / 1` das Feld
@@ -1455,8 +1448,8 @@ Steuerknöpfe, die Dachheldin über den Sprungknopf.
 ### Startseite (index.html)
 
 Reihenfolge auf der Seite: `.kopf` · `#anleitung` · `#willkommen` ·
-`#spielbereich` (beide `.spiele`-Blöcke) · `.fusszeile` · `#machertext` ·
-`#geheimfeld`.
+`#spielbereich` (beide `.spiele`-Blöcke) · `.fusszeile` · `#machertext`.
+(Ganz unten stand bis zum 19.08.2026 noch `#geheimfeld`, das Code-Feld.)
 Nur die `.fusszeile` ist immer da — alles andere hängt am Anmeldestand,
 siehe «Erst anmelden, dann spielen».
 
@@ -1727,6 +1720,8 @@ Gefunden und behoben wurden:
 Die Regel aus `grund.css` war noch aus der Zeit **vor** dem
 Pastell-Entscheid und wurde von fast jedem Spiel überschrieben — übrig
 blieb nur der OK-Knopf beim Code-Feld. Der stach dafür heraus.
+(Das Feld ist inzwischen weg; die Regel bleibt trotzdem pastell,
+damit ein künftiger Knopf ohne eigene Farbe richtig aussieht.)
 
 **Wenn eine Fläche pastell wird, reicht die Farbe allein nicht mehr**, um
 «gewählt» zu zeigen. Darum kommen jetzt jedes Mal drei Dinge zusammen:
@@ -1786,7 +1781,7 @@ zum Abschliessen.
 **Fertig und spielbar:** Startseite, Quiz (10 Fragen), Memory (8 Paare),
 Hangman (55 Wörter, 9 Fehler), Blitzrunde (30 Aussagen in 60 Sekunden),
 Rennen und Dachheldin (Belohnung), Anmelden mit Punktekonto, Münzen,
-Code-Feld für Gratis-Runden, Konfetti, Smileys, Pastell-Farbkonzept
+Konfetti, Smileys, Pastell-Farbkonzept
 mit einer eigenen Farbe pro Spiel.
 
 **Neu am Nachmittag:** richtiges Konto mit **Name und Passwort** auf einem

@@ -374,82 +374,6 @@
   color: #9aa7ad;
 }
 
-/* ===== Das Code-Feld unten in der Ecke =====
-
-   position: fixed heisst: es klebt am Fensterrand fest und
-   bleibt beim Scrollen immer unten rechts stehen.
-   Genau wie das Konfetti in grund.css.
-
-   Es ist absichtlich blass (opacity: 0.6). Erst wenn man mit
-   der Maus hinzeigt oder hineinklickt, wird es richtig sichtbar -
-   ein geheimer Code soll ja nicht jedem ins Auge springen. */
-
-#geheimfeld {
-  position: fixed;
-  right: 14px;
-  bottom: 14px;
-
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
-  max-width: 210px;
-
-  padding: 8px 10px;
-  background-color: #f4f7f8;
-  border: 1px solid #e3e9eb;
-  border-radius: 12px;
-
-  opacity: 0.6;
-  transition: opacity 0.25s;
-}
-
-/* :hover = Maus zeigt darauf.
-   :focus-within = irgendetwas darin ist gerade angeklickt. */
-#geheimfeld:hover,
-#geheimfeld:focus-within {
-  opacity: 1;
-}
-
-#codefeld {
-  width: 105px;
-  padding: 6px 9px;
-
-  /* Die Punkte stehen etwas weiter auseinander -
-     so kann man sie beim Tippen besser zählen. */
-  letter-spacing: 3px;
-  font-family: Arial;
-  font-size: 13px;
-  color: #16323d;
-  border: 1px solid #cdd8dc;
-  border-radius: 7px;
-}
-
-/* Der OK-Knopf. Kleiner als die grossen Knöpfe in grund.css. */
-#geheimfeld button {
-  font-size: 13px;
-  padding: 6px 13px;
-  margin: 0;
-}
-
-/* Die Antwortzeile. width: 100% heisst: sie nimmt eine
-   ganze Zeile für sich, also unter dem Feld und dem Knopf. */
-#codemeldung {
-  width: 100%;
-  margin: 5px 0 0;
-  font-size: 12px;
-  text-align: right;
-}
-
-#codemeldung.stimmt { color: #1e5b3a; }
-#codemeldung.falsch { color: #8c3125; }
-
-/* Damit das Feld die Fusszeile nicht überdeckt. */
-.fusszeile {
-  margin-bottom: 60px;
-}
-
 /* ============================================
    Anmelden, bevor es losgeht
 
@@ -458,9 +382,8 @@
    blenden danach ein und aus - mehr braucht es nicht.
    ============================================ */
 
-/* Nicht angemeldet: keine Spiele, kein Code-Feld. */
-body.nicht-angemeldet #spielbereich,
-body.nicht-angemeldet #geheimfeld {
+/* Nicht angemeldet: keine Spiele. */
+body.nicht-angemeldet #spielbereich {
   display: none;
 }
 
