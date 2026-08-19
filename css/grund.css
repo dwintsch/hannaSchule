@@ -48,6 +48,29 @@ button {
    hier in grund.css und nicht bei jedem Spiel einzeln.
    ============================================ */
 
+/* Das Doppeltipp-Zoomen gilt fuer die GANZE Seite, nicht nur
+   fuer die Knoepfe. Sonst zoomt es weiterhin, sobald man
+   zweimal auf den Text oder auf eine freie Stelle tippt -
+   und mitten im Spiel trifft man oft daneben.
+
+   touch-action wird zwar nicht vererbt, aber der Browser
+   schaut beim Tippen die ganze Kette nach oben an. Steht es
+   also an html und body, gilt es ueberall darin.
+
+   WICHTIG: «manipulation» nimmt NUR das Doppeltipp-Zoomen weg.
+   Scrollen geht weiter, und mit zwei Fingern kann man immer
+   noch heranzoomen. Das soll auch so bleiben - wer schlecht
+   sieht, muss vergroessern koennen. Genau darum steht in der
+   viewport-Zeile auch KEIN «user-scalable=no». */
+
+html,
+body {
+  touch-action: manipulation;
+}
+
+/* Knoepfe und Spielfelder zusaetzlich: kein Markieren,
+   kein graues Aufblitzen beim Tippen. */
+
 button,
 .feld,
 .karte,

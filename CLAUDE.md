@@ -1086,7 +1086,18 @@ einem Handy jedes Spiel unbrauchbar, und alle drei sind eine Zeile CSS:
 | Draufhalten **markiert den Text** im Knopf und öffnet das Ausschneiden-Menü | `user-select: none` |
 | Jeder Tipp lässt ein **graues Rechteck** aufblitzen | `-webkit-tap-highlight-color: transparent` |
 
-Sie stehen in `grund.css` und gelten für alle Knöpfe und Spielfelder.
+`touch-action` steht an **`html` und `body`**, gilt also für die ganze
+Seite. Zuerst hing es nur an den Knöpfen — und dann zoomte es weiterhin,
+sobald man daneben auf den Text oder eine freie Stelle tippte. Mitten im
+Spiel trifft man oft daneben. Vererbt wird `touch-action` zwar nicht, aber
+der Browser schaut beim Tippen die ganze Kette nach oben an.
+
+**`manipulation` nimmt nur das Doppeltipp-Zoomen weg.** Scrollen geht
+weiter, und mit zwei Fingern kann man weiterhin heranzoomen — das soll so
+bleiben, wer schlecht sieht muss vergrössern können. Darum steht in der
+`viewport`-Zeile bewusst **kein** `user-scalable=no`. Ein Test prüft das.
+
+Die anderen zwei Regeln stehen bei den Knöpfen und Spielfeldern.
 **Eingabefelder sind ausgenommen** (`user-select: auto`) — dort muss man
 markieren können.
 
