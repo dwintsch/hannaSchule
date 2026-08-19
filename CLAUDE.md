@@ -828,6 +828,11 @@ einzige, die in der Palette noch frei war.
 - Schon angeschaute Knochen bleiben blassgrün. `.gewaehlt` steht im CSS
   **nach** `.gesehen`, sonst sähe ein angeschauter Knochen angeschaut aus
   statt gewählt — dieselbe Falle wie beim Suchsel.
+- **Woher die Masse kommen:** Ich kann keine Bilder anschauen, also auch
+  keine Zeichnung abpausen. Stattdessen habe ich die Proportionen
+  nachgeschlagen (Kopfhöhen-Regel, Knochenlängen in Prozent der
+  Körpergrösse, Femur-Tibia-Verhältnis, Rippenzahl) und danach gezeichnet.
+  Kein fremdes Bild kopiert — das wäre auch urheberrechtlich heikel.
 - **Die Anatomie ist noch nicht von Hanna durchgesehen.** Die Einteilung
   der Knochenarten ist Lehrbuchstoff, aber sie kennt ihn besser als ich.
   Besonders anschauen: Schlüsselbein und Becken werden je nach Buch

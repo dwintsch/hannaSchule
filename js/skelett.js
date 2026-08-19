@@ -37,6 +37,9 @@ const knochen = [
   { schluessel: "wirbelsaeule", deutsch: "Wirbelsäule",
     latein: "Columna vertebralis", art: "unregelmässige Knochen" },
 
+  { schluessel: "kreuzbein", deutsch: "Kreuzbein",
+    latein: "Os sacrum", art: "unregelmässiger Knochen" },
+
   { schluessel: "schluesselbein", deutsch: "Schlüsselbein",
     latein: "Clavicula", art: "Röhrenknochen" },
 
@@ -61,7 +64,13 @@ const knochen = [
   { schluessel: "handwurzelknochen", deutsch: "Handwurzelknochen",
     latein: "Ossa carpi", art: "kurze Knochen" },
 
-  { schluessel: "becken", deutsch: "Becken",
+  { schluessel: "mittelhandknochen", deutsch: "Mittelhandknochen",
+    latein: "Ossa metacarpi", art: "Röhrenknochen" },
+
+  { schluessel: "fingerknochen", deutsch: "Fingerknochen",
+    latein: "Phalanges manus", art: "Röhrenknochen" },
+
+  { schluessel: "becken", deutsch: "Hüftbein",
     latein: "Os coxae", art: "Plattknochen" },
 
   { schluessel: "oberschenkelknochen", deutsch: "Oberschenkelknochen",
@@ -77,7 +86,13 @@ const knochen = [
     latein: "Fibula", art: "Röhrenknochen" },
 
   { schluessel: "fusswurzelknochen", deutsch: "Fusswurzelknochen",
-    latein: "Ossa tarsi", art: "kurze Knochen" }
+    latein: "Ossa tarsi", art: "kurze Knochen" },
+
+  { schluessel: "mittelfussknochen", deutsch: "Mittelfussknochen",
+    latein: "Ossa metatarsi", art: "Röhrenknochen" },
+
+  { schluessel: "zehenknochen", deutsch: "Zehenknochen",
+    latein: "Phalanges pedis", art: "Röhrenknochen" }
 ];
 
 /* --- Einstellungen. Hier darfst du drehen. --- */
