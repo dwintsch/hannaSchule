@@ -57,9 +57,10 @@ const SERVER = (location.protocol === "http:" || location.protocol === "https:")
 
 /* Wie viele Gratis-Rennen ein richtiger Code freischaltet.
    Die gehören zum Browser, darum stehen sie hier.
-   Hier darfst du drehen: 3, 10 - was du willst. */
+   Von Daniel am 19.08.2026 von 5 auf 100 gesetzt.
+   Hier darfst du drehen. */
 
-const GRATIS_PRO_CODE = 5;
+const GRATIS_PRO_CODE = 100;
 
 /* --- Münzen eintauschen ---
    Sobald so viele Münzen beisammen sind, werden sie

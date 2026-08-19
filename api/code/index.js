@@ -23,8 +23,13 @@
 
 const g = require("../gemeinsam");
 
-/* Wie viele Punkte der Code gibt. */
-const PUNKTE_PRO_CODE = 1000000;
+/* Wie viele Punkte der Code gibt.
+   War bis 19.08.2026 eine Million - von Daniel auf 100
+   gesenkt. Mit einer Million stand man dauerhaft auf Platz 1
+   der Rangliste, und die war damit wertlos. 100 Punkte
+   reichen fuer 100 Runden in einem Belohnungsspiel und
+   veraendern die Rangliste kaum. */
+const PUNKTE_PRO_CODE = 100;
 
 /* Wie viele Versuche pro Minute und Konto.
    Bei 5 pro Minute bräuchte man für 10000 Möglichkeiten

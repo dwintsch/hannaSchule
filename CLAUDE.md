@@ -747,23 +747,31 @@ hat, ist keiner.
 ### Das Code-Feld (index.html unten rechts, `#geheimfeld`)
 
 Ein kleines Feld unten in der Ecke der Startseite. Wer den PIN kennt,
-bekommt **fünf Gratis-Runden** für die Belohnungsspiele **und
-1'000'000 Punkte** (`PUNKTE_PRO_CODE`). Beides zusammen, jedes Mal wieder.
-Von Daniel am 18.08.2026 so gewünscht.
+bekommt **100 Gratis-Runden** für die Belohnungsspiele **und 100 Punkte**.
+Beides zusammen, jedes Mal wieder. Von Daniel am 18.08.2026 gewünscht.
 
-**Die Falle dabei:** `api/aendern` deckelte jede Veränderung auf **500**.
-Die Million wäre also im Browser kurz erschienen und beim nächsten
-Seitenaufruf wieder verschwunden, weil `kontoAuffrischen()` den Stand vom
-Server holt. Darum steht der Deckel jetzt bei `HOECHSTE_VERAENDERUNG`
-(= 1'000'000), und `registrieren` deckelt gleich hoch. **Wer
-`PUNKTE_PRO_CODE` erhöht, muss den Deckel mit erhöhen** — sonst kommt
-stillschweigend nur der Deckel an.
+**Die Zahlen sind am 19.08.2026 von Daniel geändert worden:**
 
-**Zwei Nebenwirkungen, die man wissen muss:**
+| | vorher | jetzt |
+|---|---|---|
+| Punkte (`PUNKTE_PRO_CODE` in `api/code/index.js`) | 1'000'000 | **100** |
+| Gratis-Runden (`GRATIS_PRO_CODE` in `js/punkte.js`) | 5 | **100** |
 
-1. Wer den Code eingibt, steht **dauerhaft auf Platz 1** der Rangliste.
-2. Die Punkte liegen auf dem Server, gelten also auf **allen** Geräten.
-   Nur die Gratis-Runden bleiben am Browser.
+Kurz davor stand die Frage im Raum, das Feld ganz zu löschen. Es bleibt —
+aber die Million ist weg, und das ist gut so: mit einer Million stand man
+**dauerhaft auf Platz 1** der Rangliste, und die war damit wertlos.
+100 Punkte reichen für 100 Runden in einem Belohnungsspiel und verschieben
+die Rangliste kaum.
+
+**Hier stand einmal, `api/aendern` müsse den Deckel mitheben. Das stimmt
+nicht** (und stimmte schon länger nicht mehr): `api/code` schreibt die
+Zeile in der Tabelle **selber** — lesen, dazuzählen, schreiben. Es geht
+gar nicht über `aendern`, und dessen Deckel von 50 Punkten pro Aufruf gilt
+hier nie. Die Konstante `HOECHSTE_VERAENDERUNG` gibt es auch nicht mehr.
+
+**Zu wissen:** Die Punkte liegen auf dem Server, gelten also auf **allen**
+Geräten. Nur die Gratis-Runden bleiben am Browser, an dem der Code
+eingetippt wurde.
 
 - **Der Code steht seit 19.08.2026 NICHT mehr im Browser.** Er wird auf
   dem Server geprüft (`api/code`), und zwar gegen die Einstellung
@@ -771,7 +779,7 @@ stillschweigend nur der Deckel an.
   Vorher stand er als `const PIN = "8590"` in `js/punkte.js` — und diese
   Datei kann jeder öffnen, ein Rechtsklick genügt.
   **Der alte Code 8590 ist verbrannt**: er steht in der git-Geschichte.
-- `GRATIS_PRO_CODE` (= 5) steht weiterhin in `js/punkte.js`. Die
+- `GRATIS_PRO_CODE` (= 100) steht weiterhin in `js/punkte.js`. Die
   Gratis-Runden gehören zum Browser, die darf er selber vergeben.
 - Wie viele Punkte der Code gibt, entscheidet der **Server**:
   `PUNKTE_PRO_CODE` zuoberst in `api/code/index.js`.
