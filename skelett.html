@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+
+    <!-- Ohne diese Zeile tut ein Handy so, als waere sein Bildschirm
+         980 Pixel breit, und zoomt die Seite winzig heraus.
+         width=device-width heisst: nimm die echte Breite. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Das Skelett</title>
+
+    <!-- grund.css gilt auf allen Seiten, skelett.css nur hier. -->
+    <link rel="stylesheet" href="css/grund.css">
+    <link rel="stylesheet" href="css/skelett.css">
+  </head>
+<!-- Die Klasse sagt, ob jemand angemeldet ist. js/punkte.js stellt sie
+     richtig; das CSS blendet danach ein und aus. So ist von Anfang an
+     nichts zu sehen, was man noch nicht sehen darf. -->
+<body class="nicht-angemeldet">
+
+  <p class="zurueck-zur-startseite"><a href="index.html">&#8592; Zur Startseite</a></p>
+
+  <h1>Das Skelett</h1>
+
+  <p class="anleitung">
+    Tippe einen Knochen an. Dann siehst du seinen Namen auf
+    <strong>Deutsch</strong> und auf <strong>Latein</strong> &ndash; und zu
+    welcher <strong>Art</strong> er geh&ouml;rt.<br>
+    Schau dir alle an, dann gibt es einen Punkt.
+  </p>
+
+  <p id="anzeige"></p>
+
+  <div id="skelettbereich">
+
+    <!-- Das Skelett von vorne.
+
+         Warum gezeichnet und kein Bild? Weil jeder Knochen einzeln
+         anklickbar sein muss. Ein Foto ist eine einzige Flaeche -
+         eine Zeichnung besteht aus lauter einzelnen Teilen.
+
+         Jeder Knochen traegt data-knochen="...". Das JavaScript
+         liest daran ab, welcher gemeint ist. Knochen, die es
+         zweimal gibt (links und rechts), tragen denselben Namen -
+         darum leuchten beim Antippen auch beide auf.
+
+         tabindex="0" macht sie mit der Tabulatortaste erreichbar. -->
+
+    <svg id="skelett" viewBox="0 0 200 470" role="img"
+         aria-label="Skelett von vorne, Knochen zum Antippen">
+
+      <!-- ===== Kopf ===== -->
+      <ellipse class="knochen" data-knochen="schaedel" tabindex="0"
+               cx="100" cy="34" rx="23" ry="27" />
+      <path class="knochen" data-knochen="unterkiefer" tabindex="0"
+            d="M80 50 Q100 70 120 50 L120 57 Q100 79 80 57 Z" />
+
+      <!-- ===== Rumpf ===== -->
+      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0"
+            x="94" y="62" width="12" height="188" rx="4" />
+
+      <path class="knochen strich" data-knochen="schluesselbein" tabindex="0"
+            d="M70 86 Q84 79 95 86" />
+      <path class="knochen strich" data-knochen="schluesselbein" tabindex="0"
+            d="M130 86 Q116 79 105 86" />
+
+      <path class="knochen" data-knochen="schulterblatt" tabindex="0"
+            d="M62 90 L88 95 L82 120 L64 114 Z" />
+      <path class="knochen" data-knochen="schulterblatt" tabindex="0"
+            d="M138 90 L112 95 L118 120 L136 114 Z" />
+
+      <rect class="knochen" data-knochen="brustbein" tabindex="0"
+            x="93" y="94" width="14" height="50" rx="5" />
+
+      <!-- Fuenf Rippenpaare -->
+      <path class="knochen strich" data-knochen="rippen" tabindex="0"
+            d="M92 102 Q66 106 63 126" />
+      <path class="knochen strich" data-knochen="rippen" tabindex="0"
+            d="M92 114 Q64 118 61 140" />
+      <path class="knochen strich" data-knochen="rippen" tabindex="0"
+            d="M92 126 Q64 130 62 152" />
+      <path class="knochen strich" data-knochen="rippen" tabindex="0"
+            d="M92 138 Q66 142 66 163" />
+      <path class="knochen strich" data-knochen="rippen" tabindex="0"
+            d="M93 150 Q70 154 71 172" />
+
+      <path class="knochen strich" data-knochen="rippen" tabindex="0"
+            d="M108 102 Q134 106 137 126" />
+      <path class="knochen strich" data-knochen="rippen" tabindex="0"
+            d="M108 114 Q136 118 139 140" />
+      <path class="knochen strich" data-knochen="rippen" tabindex="0"
+            d="M108 126 Q136 130 138 152" />
+      <path class="knochen strich" data-knochen="rippen" tabindex="0"
+            d="M108 138 Q134 142 134 163" />
+      <path class="knochen strich" data-knochen="rippen" tabindex="0"
+            d="M107 150 Q130 154 129 172" />
+
+      <!-- ===== Arme ===== -->
+      <rect class="knochen" data-knochen="oberarmknochen" tabindex="0"
+            x="49" y="98" width="12" height="90" rx="6" />
+      <rect class="knochen" data-knochen="oberarmknochen" tabindex="0"
+            x="139" y="98" width="12" height="90" rx="6" />
+
+      <rect class="knochen" data-knochen="speiche" tabindex="0"
+            x="44" y="192" width="9" height="78" rx="4" />
+      <rect class="knochen" data-knochen="speiche" tabindex="0"
+            x="147" y="192" width="9" height="78" rx="4" />
+
+      <rect class="knochen" data-knochen="elle" tabindex="0"
+            x="56" y="192" width="9" height="82" rx="4" />
+      <rect class="knochen" data-knochen="elle" tabindex="0"
+            x="135" y="192" width="9" height="82" rx="4" />
+
+      <rect class="knochen" data-knochen="handwurzelknochen" tabindex="0"
+            x="43" y="278" width="23" height="13" rx="6" />
+      <rect class="knochen" data-knochen="handwurzelknochen" tabindex="0"
+            x="134" y="278" width="23" height="13" rx="6" />
+
+      <!-- ===== Becken und Beine ===== -->
+      <path class="knochen" data-knochen="becken" tabindex="0"
+            d="M68 250 Q58 288 82 298 L100 290 L118 298 Q142 288 132 250 Z" />
+
+      <rect class="knochen" data-knochen="oberschenkelknochen" tabindex="0"
+            x="74" y="300" width="14" height="86" rx="7" />
+      <rect class="knochen" data-knochen="oberschenkelknochen" tabindex="0"
+            x="112" y="300" width="14" height="86" rx="7" />
+
+      <circle class="knochen" data-knochen="kniescheibe" tabindex="0"
+              cx="81" cy="393" r="8" />
+      <circle class="knochen" data-knochen="kniescheibe" tabindex="0"
+              cx="119" cy="393" r="8" />
+
+      <rect class="knochen" data-knochen="schienbein" tabindex="0"
+            x="76" y="402" width="12" height="52" rx="5" />
+      <rect class="knochen" data-knochen="schienbein" tabindex="0"
+            x="112" y="402" width="12" height="52" rx="5" />
+
+      <rect class="knochen" data-knochen="wadenbein" tabindex="0"
+            x="66" y="404" width="8" height="48" rx="4" />
+      <rect class="knochen" data-knochen="wadenbein" tabindex="0"
+            x="126" y="404" width="8" height="48" rx="4" />
+
+      <rect class="knochen" data-knochen="fusswurzelknochen" tabindex="0"
+            x="64" y="456" width="27" height="12" rx="5" />
+      <rect class="knochen" data-knochen="fusswurzelknochen" tabindex="0"
+            x="109" y="456" width="27" height="12" rx="5" />
+
+    </svg>
+
+    <!-- Die weisse Tafel mit den Namen. Sie steht immer da, damit
+         das Bild nicht springt, sobald man etwas antippt. -->
+    <div id="knochentafel">
+      <p id="tafel-hinweis">Tippe einen Knochen an.</p>
+
+      <div id="tafel-inhalt">
+        <p id="knochen-deutsch"></p>
+        <p id="knochen-latein"></p>
+        <p id="knochen-art"></p>
+      </div>
+    </div>
+
+  </div>
+
+  <p id="ergebnis"></p>
+
+  <button class="neustart" onclick="neuesSpiel()">Von vorne</button>
+
+  <script src="js/punkte.js"></script>
+
+  <!-- rangliste.js NACH punkte.js: es braucht serverFragen() und token() von dort. -->
+  <script src="js/rangliste.js"></script>
+
+  <!-- konfetti.js VOR skelett.js: skelett.js ruft konfetti(). -->
+  <script src="js/konfetti.js"></script>
+  <script src="js/skelett.js"></script>
+</body>
+</html>

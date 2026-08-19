@@ -167,6 +167,12 @@
 .suchsel .marke       { background-color: #dceaf1; color: #155268; }
 .suchsel:hover        { border-color: #9dc4d6; }
 
+.skelett .symbol      { background-color: #e4f2e8; }
+.skelett .spiel-titel { color: #3f7d4f; }
+.skelett .spiel-pfeil { color: #3f7d4f; }
+.skelett .marke       { background-color: #e4f2e8; color: #2d5c39; }
+.skelett:hover        { border-color: #8fcfa3; }
+
 /* Die Belohnungsspiele in Pastell-Lila - so sieht man sofort,
    dass sie zu einer anderen Gruppe gehören. */
 .rennen .symbol      { background-color: #ece3f7; }
