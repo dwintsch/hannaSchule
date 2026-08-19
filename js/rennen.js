@@ -300,7 +300,11 @@ function vielleichtNeuesHindernis() {
 
   if (Math.random() < 0.25 || dingeOhneSpritze >= 4) {
     art = "spritze";
-    bild = "&#128137;";            // Spritze
+    /* Die Spritze steckt in einem eigenen Kaestchen. Nur so
+       kann das CSS einen Rand darum ziehen - der Kasten
+       drumherum (.ding) ist naemlich 100 Pixel breit, also
+       eine ganze Spur. Ein Rand daran waere ein Riesenrahmen. */
+    bild = '<span class="spritze-ring">&#128137;</span>';
     dingeOhneSpritze = 0;
   } else {
 

@@ -222,6 +222,25 @@ h1 {
   font-size: 34px;
 }
 
+/* --- Der Rand um die Spritze ---
+   Damit man auf einen Blick sieht: die ist zum EINSAMMELN,
+   die anderen Sachen muss man umfahren.
+
+   Leichtes Gelb, nicht knallig - das passt zum Farbkonzept:
+   Flaechen pastell, nichts Grelles. */
+
+.spritze-ring {
+  display: inline-block;
+  width: 42px;
+  height: 42px;
+  line-height: 42px;
+  box-sizing: border-box;
+
+  border: 2px solid #f0d97a;
+  border-radius: 50%;
+  background-color: #fdf8e3;
+}
+
 /* --- Die Tafel über dem Spielfeld --- */
 
 /* Sie liegt über allem und zeigt Start- oder Schlussmeldung.
