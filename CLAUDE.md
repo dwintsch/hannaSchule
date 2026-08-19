@@ -658,15 +658,32 @@ das Rennen **nicht mehr starten** — `rennen.js` sucht das Element, findet
 Hand (`w.eval(...)`) statt die Seite laden zu lassen, und sie riefen
 `takt()` nie auf. Beides zusammen macht so einen Fehler unsichtbar.
 
-**Zwei Prüfungen decken das jetzt ab:**
+**Derselbe Fehler ein zweites Mal, im CSS:** Beim Ersetzen des Farbblocks
+in `rennen.css` wurde alles **bis ans Dateiende** überschrieben. Damit
+waren `.ding` (die Hindernisse hatten keine `position: absolute` mehr und
+blieben oben kleben), `#tafel` (die Starttafel liess sich nicht mehr
+verstecken), `.tafelknopf`, `#steuerung`, `.steuerknopf` und
+`.tastenhinweis` weg. Das Spiel lud fehlerfrei und war trotzdem
+unbrauchbar — die schlimmste Sorte Fehler, weil nichts sich beschwert.
+
+**Die Lehre für beide Fälle:** Beim Ersetzen eines Abschnitts immer
+**beide** Enden festnageln. `indexOf(anfang)` bis Dateiende ist fast
+immer falsch — es gibt fast immer noch etwas danach.
+
+**Drei Prüfungen decken das jetzt ab:**
 
 1. `test-elemente.js` liest für **jede** Seite deren JavaScript, sammelt
    alle `getElementById("...")` ein und schaut nach, ob es das Element in
    der HTML-Datei überhaupt gibt. Elemente, die das Skript selber baut
    (`.id = "..."`), sind ausgenommen. Diese eine Prüfung deckt alle neun
    Seiten ab.
-2. Der Rennen-Test lässt jetzt **30 echte Takte** laufen. Genau dort wäre
-   die fehlende Strasse aufgefallen.
+2. `test-css.js` hat für jede der zehn CSS-Dateien eine Liste der
+   Selektoren, die dasein müssen. Fehlt einer, wird es rot.
+3. Der Rennen-Test lässt jetzt **30 echte Takte** laufen, und mit
+   `spielen.js` lässt sich jede Seite so laden, wie der Browser sie lädt:
+   die `<script src>` werden durch ihren echten Inhalt ersetzt. Damit
+   fallen Fehler beim Seitenaufbau auf, die ein Test mit von Hand
+   geladenen Skripten nie sieht.
 
 Gegenprobe gemacht: Zeile entfernt → Test rot mit «rennen.js sucht
 #strasse», Zeile zurück → grün. Ein Test, den man nicht scheitern gesehen
