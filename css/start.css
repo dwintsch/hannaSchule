@@ -62,6 +62,43 @@
   margin: 0 auto;
 }
 
+/* --- Die Lernspiele in ZWEI Spalten ---
+   Von Daniel am 19.08.2026 gewünscht. Sieben Kacheln
+   untereinander wurden zu lang zum Scrollen.
+
+   grid statt flex: Bei einem Gitter sind alle Kacheln einer
+   Zeile automatisch gleich hoch. Mit flex wäre jede so hoch
+   wie ihr eigener Text, und die Reihe sähe zerrupft aus.
+
+   Die Kacheln bringen ihren eigenen margin-bottom mit - im
+   Gitter macht das den Abstand doppelt. Darum hier auf 0. */
+
+.spiele.lernspiele {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  max-width: 760px;
+}
+
+.spiele.lernspiele .spiel {
+  margin-bottom: 0;
+}
+
+/* Auf einem schmalen Bildschirm wieder EINE Spalte. Zwei
+   Spalten auf einem Handy hiessen Kacheln von 160px Breite -
+   dort passt der Erklärungssatz nicht mehr hinein. */
+
+@media (max-width: 700px) {
+  .spiele.lernspiele {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+  }
+
+  .spiele.lernspiele .spiel {
+    margin-bottom: 16px;
+  }
+}
+
 /* --- Eine einzelne Spiel-Kachel --- */
 
 .spiel {
@@ -295,10 +332,16 @@
   animation: hereinrutschen 0.5s backwards;
 }
 
+/* Gestaffelt hereinrutschen. Die Liste ging frueher nur bis 4 -
+   ab der fuenften Kachel kamen alle gleichzeitig. Jetzt bis 7,
+   so viele Lernspiele gibt es. */
 .spiel:nth-child(1) { animation-delay: 0.10s; }
-.spiel:nth-child(2) { animation-delay: 0.20s; }
-.spiel:nth-child(3) { animation-delay: 0.30s; }
-.spiel:nth-child(4) { animation-delay: 0.40s; }
+.spiel:nth-child(2) { animation-delay: 0.16s; }
+.spiel:nth-child(3) { animation-delay: 0.22s; }
+.spiel:nth-child(4) { animation-delay: 0.28s; }
+.spiel:nth-child(5) { animation-delay: 0.34s; }
+.spiel:nth-child(6) { animation-delay: 0.40s; }
+.spiel:nth-child(7) { animation-delay: 0.46s; }
 
 /* --- Spiele, die noch nicht fertig sind ---
    Im Moment nicht gebraucht - alle drei sind fertig.
