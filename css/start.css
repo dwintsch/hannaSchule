@@ -240,14 +240,20 @@
 /* --- Wenn die Maus über einer Kachel ist --- */
 
 /* Die Kachel hebt sich leicht an und bekommt einen Schatten,
-   der Pfeil rutscht ein Stück nach rechts. */
-.spiel:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 18px rgba(22, 50, 61, 0.13);
-}
+   der Pfeil rutscht ein Stück nach rechts.
 
-.spiel:hover .spiel-pfeil {
-  transform: translateX(5px);
+   Nur wo es eine Maus gibt: auf dem Handy bliebe die Kachel
+   nach dem Antippen angehoben kleben, als haenge sie fest. */
+
+@media (hover: hover) {
+  .spiel:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(22, 50, 61, 0.13);
+  }
+
+  .spiel:hover .spiel-pfeil {
+    transform: translateX(5px);
+  }
 }
 
 /* --- Beim Laden hereinrutschen ---

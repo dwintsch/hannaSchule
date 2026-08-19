@@ -211,6 +211,12 @@ Hintergrund dem Server Bescheid geben.
   Blitzrunde ab `zielPunkte` richtigen **1**,
   Hangman gewonnen **2**, Kreuzworträtsel alle Wörter gefunden **1**.
   Jedes Mal neu, nicht nur beim ersten Mal.
+- **`lernspieleHinweis()`** liefert den Satz «Spiel zuerst ein Lernspiel:
+  …», den alle drei Belohnungsspiele zeigen, wenn die Punkte nicht
+  reichen. Er steht **einmal** in `punkte.js`, weil er vorher dreimal
+  einzeln dastand — und dreimal verschieden veraltet war (mal fehlte die
+  Blitzrunde, mal das Kreuzworträtsel). Ein Test prüft, dass er alle fünf
+  Lernspiele nennt und dass alle drei Spiele ihn benutzen.
 - `punkteDazu(n)` gibt `false` zurück, wenn niemand angemeldet ist — die
   Spiele zeigen dann den Hinweis «Melde dich oben an».
   **Seit 18.08.2026 kommt man aber gar nicht mehr so weit:** ohne Anmeldung
@@ -1068,6 +1074,40 @@ würden so Häuser ausserhalb des Bildes entstehen. Jetzt steht dort
 `feld.clientWidth` — direkt nach dem `getElementById`, vorher gibt es ja
 noch nichts zu fragen. Die **Höhe** bleibt fest bei 320, sie steht im
 JavaScript und im CSS.
+
+**Was am 19.08.2026 dazukam — das eigentliche «geht nicht auf dem Handy»:**
+
+Die Breite stimmte, aber die **Bedienung** nicht. Drei Sachen machen auf
+einem Handy jedes Spiel unbrauchbar, und alle drei sind eine Zeile CSS:
+
+| Problem | Regel |
+|---|---|
+| Zweimal schnell tippen **zoomt die Seite** — beim Steuern tippt man aber dauernd schnell | `touch-action: manipulation` |
+| Draufhalten **markiert den Text** im Knopf und öffnet das Ausschneiden-Menü | `user-select: none` |
+| Jeder Tipp lässt ein **graues Rechteck** aufblitzen | `-webkit-tap-highlight-color: transparent` |
+
+Sie stehen in `grund.css` und gelten für alle Knöpfe und Spielfelder.
+**Eingabefelder sind ausgenommen** (`user-select: auto`) — dort muss man
+markieren können.
+
+Dazu zwei weitere:
+
+- **Hover klebt** auf dem Handy nach dem Antippen fest. Die Regeln für
+  `.spiel:hover` (Kachel hebt sich an) und `.feld:hover` (Kreuzworträtsel)
+  stehen darum in `@media (hover: hover)` — nur wo es eine Maus gibt.
+  Beim Kreuzworträtsel war das mehr als Kosmetik: dort sagt die Farbe
+  «gewählt» oder «gefunden», und ein klebender Hover verwirrt.
+- **Die Höhe ist knapp.** Spielfeld und Steuerknöpfe müssen zusammen auf
+  den Bildschirm passen, sonst tippt man unten und sieht oben nicht mehr,
+  was passiert. Unter 560px werden Anleitung, Überschrift und Abstände
+  kleiner. Die Regeln stehen als `body .anleitung` statt `.anleitung` —
+  `grund.css` wird zuerst geladen, bei gleicher Stärke gewänne sonst das
+  Spiel-CSS.
+
+**Die Anleitungen der drei Belohnungsspiele** nannten zuerst die
+Leertaste — die es auf einem Handy gar nicht gibt. Jetzt stehen die
+Knöpfe vorne und die Tastatur als Zusatz «am Computer». Ein Test prüft
+das für alle drei.
 
 **Ehrlich dazusagen:** Gemessen wurde die Breite **einmal beim Laden**.
 Dreht man das Handy mitten im Spiel, stimmt sie bis zum nächsten

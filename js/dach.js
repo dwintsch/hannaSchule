@@ -117,8 +117,7 @@ function zeigeStarttafel() {
     tafel.innerHTML =
       "<div><strong>Zu wenig Punkte</strong></div>" +
       "<div>Eine Runde kostet " + kosten + punkteWort(kosten) + ". Du hast " +
-      punkteVon(name) + ".<br>Spiel ein Quiz, ein Memory, Hangman " +
-      "oder eine Blitzrunde!</div>" +
+      punkteVon(name) + ".<br>" + lernspieleHinweis() + "</div>" +
       '<button class="tafelknopf" disabled>Springen</button>';
     return;
   }

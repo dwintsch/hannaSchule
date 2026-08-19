@@ -26,6 +26,49 @@ button {
   cursor: pointer;
 }
 
+/* ============================================
+   Damit es auf dem Handy funktioniert
+
+   Auf einem Handy passieren beim schnellen Tippen drei
+   Dinge, die ein Spiel unbrauchbar machen:
+
+   1. Zweimal schnell tippen = die Seite ZOOMT. Beim Steuern
+      tippt man aber dauernd schnell - das Spiel springt dann
+      wild herum. «touch-action: manipulation» schaltet genau
+      dieses Doppeltipp-Zoomen ab, Scrollen bleibt erlaubt.
+
+   2. Draufhalten MARKIERT den Text im Knopf und blendet das
+      Ausschneiden-Menü ein. «user-select: none» verhindert das.
+
+   3. Jeder Fingertipp lässt ein graues Rechteck aufblitzen.
+      Das sieht kaputt aus - «tap-highlight-color: transparent»
+      nimmt es weg.
+
+   Das gilt für ALLE Knöpfe auf allen Seiten, darum steht es
+   hier in grund.css und nicht bei jedem Spiel einzeln.
+   ============================================ */
+
+button,
+.feld,
+.karte,
+.kaestchen,
+#rennen,
+#dachfeld,
+#feld,
+#gitter {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Die Eingabefelder sind ausgenommen - dort MUSS man
+   markieren und den Text bearbeiten können. */
+input {
+  user-select: auto;
+  -webkit-user-select: auto;
+}
+
 /* Der helle Knopf zum Neustarten.
    Braucht jedes Spiel, darum steht er hier. */
 .neustart {
@@ -300,6 +343,47 @@ button {
     margin: 24px auto 0;
     justify-content: center;
     opacity: 1;
+  }
+
+  /* Auf dem Handy ist die HOEHE knapp. Spielfeld und
+     Steuerknoepfe muessen zusammen auf den Bildschirm passen,
+     sonst tippt man unten auf einen Knopf und sieht oben
+     nicht mehr, was passiert. Also wird alles darueber
+     kompakter.
+
+     WARUM «body» davor steht:
+     grund.css wird ZUERST geladen, die Spiel-CSS danach.
+     Bei gleicher Staerke gewinnt das spaetere - also das
+     Spiel. «body .anleitung» ist einen Tick staerker als
+     nur «.anleitung» und gewinnt darum trotzdem. */
+
+  body .anleitung {
+    font-size: 13px;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+
+  body #anzeige {
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    margin: 6px 0 10px;
+  }
+
+  .zurueck-zur-startseite {
+    margin-bottom: 6px;
+  }
+
+  /* Die Steuerknoepfe naeher ans Feld und gross genug zum
+     Treffen - unter 44 Pixel wird es fummelig. */
+  #steuerung {
+    margin-top: 4px;
+  }
+
+  .steuerknopf,
+  .sprungknopf {
+    min-height: 48px;
   }
 }
 

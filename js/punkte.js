@@ -729,7 +729,7 @@ async function codePruefen() {
     return;
   }
 
-  meldung.innerHTML = "Einen Moment ...";
+  meldung.innerHTML = "Einen Moment...";
 
   try {
     const daten = await serverFragen("code", {
@@ -803,6 +803,21 @@ function rekordSpeichern(spiel, wert) {
 /* ============================================
    Die Leiste ganz oben
    ============================================ */
+
+/* --- Wo gibt es Punkte? ---
+
+   Alle drei Belohnungsspiele sagen dasselbe, wenn das Geld
+   nicht reicht. Bis zum 19.08.2026 stand der Satz dreimal
+   einzeln da - und war dreimal verschieden veraltet: mal
+   fehlte die Blitzrunde, mal das Kreuzworträtsel.
+
+   Jetzt steht er hier, einmal. Kommt ein neues Lernspiel
+   dazu, ändert man ihn hier - und alle drei stimmen wieder. */
+
+function lernspieleHinweis() {
+  return "Spiel zuerst ein Lernspiel: Quiz, Memory, Hangman, " +
+    "Blitzrunde oder Kreuzworträtsel!";
+}
 
 /* --- «1 Punkt» oder «2 Punkte»? ---
    Das Wort muss zur Zahl passen. Weil das an vielen Stellen

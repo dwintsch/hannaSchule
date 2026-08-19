@@ -466,7 +466,7 @@ function zeigeStarttafel() {
     tafel.innerHTML =
       "<div><strong>Zu wenig Punkte</strong></div>" +
       "<div>Eine Runde kostet " + kosten + punkteWort(kosten) + ". Du hast " +
-      punkteVon(name) + ".<br>Spiel ein Quiz, ein Memory oder Hangman!</div>" +
+      punkteVon(name) + ".<br>" + lernspieleHinweis() + "</div>" +
       '<button class="tafelknopf" disabled>Losspielen</button>';
     tafel.classList.remove("weg");
     return;
@@ -484,7 +484,7 @@ function zeigeStarttafel() {
     "<div>Sammle die &Auml;pfel &#127822; ein und beiss dich nicht " +
     "selber.<br>" + preis + "</div>" +
     '<button class="tafelknopf" onclick="starten()">Losspielen</button>' +
-    '<div class="tastenhinweis">oder einfach die Leertaste dr&uuml;cken</div>';
+    '<div class="tastenhinweis">am Computer auch mit der Leertaste</div>';
 
   tafel.classList.remove("weg");
 }

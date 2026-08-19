@@ -108,7 +108,7 @@ function zeigeStarttafel() {
     tafel.innerHTML =
       "<div><strong>Zu wenig Punkte</strong></div>" +
       "<div>Ein Rennen kostet " + kosten + punkteWort(kosten) + ". Du hast " +
-      punkteVon(name) + ".<br>Spiel ein Quiz, ein Memory oder Hangman!</div>" +
+      punkteVon(name) + ".<br>" + lernspieleHinweis() + "</div>" +
       '<button class="tafelknopf" disabled>Rennen starten</button>';
     return;
   }
@@ -123,11 +123,11 @@ function zeigeStarttafel() {
   tafel.innerHTML =
     "<div><strong>Bereit?</strong></div>" +
     "<div>Fahr um die Ölflecken und Steine herum." +
-    "<br>Sammle Spritzen &#128137; ein - jede gibt dir einen " +
+    "<br>Sammle Spritzen &#128137; ein &ndash; jede gibt dir einen " +
     "Schutzschild." +
     "<br>" + preis + "</div>" +
     '<button class="tafelknopf" onclick="starten()">Rennen starten</button>' +
-    '<div class="tastenhinweis">oder einfach die Leertaste drücken</div>';
+    '<div class="tastenhinweis">am Computer auch mit der Leertaste</div>';
 }
 
 /* --- Losrennen --- */
