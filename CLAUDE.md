@@ -213,7 +213,8 @@ Hintergrund dem Server Bescheid geben.
 - Punkte: Quiz mit ≥ `anzahlFragen - 2` richtigen **1**, Memory gelöst **1**,
   Blitzrunde ab `zielPunkte` richtigen **1**,
   Hangman gewonnen **2**, Suchsel alle Wörter gefunden **1**,
-  Skelett alle Knochen angeschaut **1**.
+  Skelett alle Knochen angeschaut **1** (oder im Test-Modus
+  8 von 10 richtig **1**).
   Jedes Mal neu, nicht nur beim ersten Mal.
 - **`lernspieleHinweis()`** liefert den Satz «Spiel zuerst ein Lernspiel:
   …», den alle drei Belohnungsspiele zeigen, wenn die Punkte nicht
@@ -870,9 +871,57 @@ einzige, die in der Palette noch frei war.
 - `tabindex="0"` an jedem Knochen macht sie mit der Tabulatortaste
   erreichbar, **Enter** wählt aus. Die Leertaste absichtlich **nicht** —
   die ist auf allen Seiten für «neue Runde» reserviert.
-- **Punkte: 1, wenn man alle angeschaut hat.** Das Spiel hat sonst kein
-  Ende — die Regel ist von mir gewählt, weil jedes Lernspiel eine
-  Bedingung braucht. Leicht zu ändern über `belohnung`.
+#### Lernen und Testen
+
+Von Daniel am 19.08.2026 gewünscht: unter der Tafel stehen zwei Knöpfe.
+Eine einzige Schublade `modus` (`"lernen"` / `"testen"`) entscheidet,
+**was ein Antippen bedeutet** — derselbe Merkzettel-Trick wie
+`leistenModus` in der Spielerleiste.
+
+| | Lernen | Testen |
+|---|---|---|
+| Antippen heisst | «zeig mir den Namen» | «das ist meine Antwort» |
+| Die Tafel zeigt | Deutsch, Latein, Art | «Finde im Bild: …» |
+| Der Zähler zeigt | Angeschaut: 3 von 22 | Frage 3 von 10 · richtig: 2 |
+| Punkt gibt es | wenn alle 22 angeschaut sind | ab 8 von 10 auf Anhieb |
+
+- Die Tafel hat **drei** Zustände (`tafel-hinweis`, `tafel-inhalt`,
+  `tafel-frage`), immer ist genau einer sichtbar. Das schaltet
+  `tafelZeigenTeil()` an einer Stelle um — vorher standen die
+  `display`-Zeilen verstreut.
+- **Falsch heisst nicht «Frage vorbei».** Man darf weitersuchen, und in
+  der Rückmeldung steht, welchen Knochen man stattdessen getroffen hat.
+  So lernt man auch aus einem Fehlgriff etwas. Gezählt wird aber nur,
+  wer **auf Anhieb** trifft (`schonDaneben`).
+- Die Schwelle ist `testFragen - 2`, also 8 von 10 — **dieselbe Regel wie
+  im Quiz**. Zwei Fehler sind erlaubt.
+- **Kein Artikel in den Sätzen.** «Wo ist der Knochen Rippen?» und «Das
+  ist der Rippen» wären falsch: die Liste enthält Einzahl (Schädel) und
+  Mehrzahl (Rippen, Fingerknochen). Mit Artikel müsste der Code das
+  Geschlecht jedes Knochens kennen. Darum «Finde im Bild: …» und «Du hast
+  … getroffen» — das passt für beides.
+- Der zuletzt gefragte Knochen kommt **nicht gleich nochmal**: seine
+  Farbe stünde ja noch im Bild.
+- `clearTimeout(testUhr)` **vor** jedem `setTimeout`. Ohne das würde ein
+  schneller Doppeltipp zwei Uhren starten und eine Frage überspringen.
+- `.richtig` und `.falsch` stehen im CSS **nach** `.gewaehlt` — sonst sähe
+  ein angetippter Knochen «gewählt» aus statt richtig oder falsch.
+  Dieselbe Reihenfolge-Falle wie bei `.gesehen` und `.gewaehlt`.
+  Die Farben sind die projektweiten Pastelltöne aus Quiz und Hangman.
+- **Sieben Testabschnitte** decken das ab (10 bis 16 in `test-skelett.js`):
+  Umschalten, Danebentippen, dass ein Fehlgriff die Frage stehen lässt,
+  dass «erst falsch, dann richtig» nicht zählt, eine ganze Runde mit
+  Punkt, eine Runde mit 7 von 10 ohne Punkt, und dass Zurückschalten
+  alles sauber aufräumt.
+
+**Noch offen:** Gefragt wird nur nach dem **deutschen** Namen. Nach
+Latein oder nach der Knochenart zu fragen wäre je eine Zeile mehr —
+aber das ist Hannas Entscheid, nicht meiner.
+
+- **Punkte: 1 pro geschaffter Runde**, in beiden Betriebsarten. Das Spiel
+  hat sonst kein Ende — die Regel ist von mir gewählt, weil jedes
+  Lernspiel eine Bedingung braucht. Leicht zu ändern über `belohnung`
+  und `testFragen`.
 - Schon angeschaute Knochen bleiben blassgrün. `.gewaehlt` steht im CSS
   **nach** `.gesehen`, sonst sähe ein angeschauter Knochen angeschaut aus
   statt gewählt — dieselbe Falle wie beim Suchsel.

@@ -127,9 +127,12 @@ h1 {
    Sie steht immer da, auch wenn noch nichts gewählt ist:
    sonst würde das Bild springen, sobald man antippt. */
 
-#knochentafel {
+#tafelspalte {
   flex: 1;
   min-width: 200px;
+}
+
+#knochentafel {
 
   background-color: #ffffff;
   border: 2px solid #2b2b2b;
@@ -235,4 +238,113 @@ h1 {
 
 .beiwerk.scheibe {
   fill: #b0b0b0;
+}
+
+/* --- Lernen oder Testen ---
+   Zwei Knöpfe unter der Tafel. Der Knopf, der gerade gilt,
+   trägt die Klasse «an» und ist grün gefüllt. Das Umschalten
+   macht das JavaScript, das Aussehen allein das CSS —
+   dasselbe Muster wie beim Anmelde-Zustand auf der Startseite. */
+
+#modus-wahl {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.modusknopf {
+  flex: 1;
+  padding: 11px 8px;
+
+  background-color: #ffffff;
+  border: 2px solid #3f7d4f;
+  border-radius: 10px;
+
+  font-size: 16px;
+  font-weight: bold;
+  font-family: inherit;
+  color: #3f7d4f;
+  cursor: pointer;
+
+  /* Auf dem Handy: kein Doppeltipp-Zoom, kein Markieren,
+     kein graues Rechteck beim Antippen. */
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.modusknopf.an {
+  background-color: #3f7d4f;
+  color: #ffffff;
+}
+
+@media (hover: hover) {
+  .modusknopf:hover {
+    background-color: #e4f2e8;
+  }
+  .modusknopf.an:hover {
+    background-color: #2d5c39;
+  }
+}
+
+/* --- Die Frage beim Testen --- */
+
+#tafel-frage {
+  display: none;   /* nur im Test-Modus sichtbar */
+}
+
+#frage-zeile {
+  margin: 0 0 10px;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+#frage-zeile .gesucht {
+  font-weight: bold;
+  color: #2d5c39;
+}
+
+/* Die Rückmeldung. Leer heisst weg — sonst stünde eine leere
+   Zeile da und die Tafel würde beim ersten Tipp springen. */
+#frage-rueckmeldung {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.4;
+  min-height: 40px;
+}
+
+#frage-rueckmeldung:empty {
+  min-height: 40px;
+}
+
+/* --- Richtig und falsch beim Testen ---
+   Dieselben Pastelltöne wie im Quiz und beim Hangman: richtig
+   und falsch sollen überall gleich aussehen.
+
+   Sie stehen NACH .gewaehlt, sonst würde ein angetippter
+   Knochen «gewählt» aussehen statt richtig oder falsch —
+   dieselbe Reihenfolge-Falle wie bei .gesehen und .gewaehlt. */
+
+.knochen.richtig {
+  fill: #bfe6cd;
+  stroke: #1e5b3a;
+  stroke-width: 3;
+}
+
+.knochen.falsch {
+  fill: #f7cfc9;
+  stroke: #8c3125;
+  stroke-width: 3;
+}
+
+.knochen.strich.richtig {
+  fill: none;
+  stroke: #1e5b3a;
+  stroke-width: 4;
+}
+
+.knochen.strich.falsch {
+  fill: none;
+  stroke: #8c3125;
+  stroke-width: 4;
 }

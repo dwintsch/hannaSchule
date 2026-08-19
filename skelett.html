@@ -24,10 +24,12 @@
   <h1>Das Skelett</h1>
 
   <p class="anleitung">
-    Tippe einen Knochen an. Dann siehst du seinen Namen auf
-    <strong>Deutsch</strong> und auf <strong>Latein</strong> &ndash; und zu
-    welcher <strong>Art</strong> er geh&ouml;rt.<br>
-    Schau dir alle an, dann gibt es einen Punkt.
+    Bei <strong>Lernen</strong> tippst du einen Knochen an und siehst
+    seinen Namen auf <strong>Deutsch</strong> und auf
+    <strong>Latein</strong> &ndash; und zu welcher <strong>Art</strong>
+    er geh&ouml;rt. Schau dir alle an, dann gibt es einen Punkt.<br>
+    Bei <strong>Testen</strong> wird ein Name genannt und du suchst den
+    passenden Knochen im Bild.
   </p>
 
   <p id="anzeige"></p>
@@ -333,16 +335,40 @@
       </g>
     </svg>
 
-    <!-- Die weisse Tafel mit den Namen. Sie steht immer da, damit
-         das Bild nicht springt, sobald man etwas antippt. -->
-    <div id="knochentafel">
-      <p id="tafel-hinweis">Tippe einen Knochen an.</p>
+    <!-- Rechts neben dem Bild: zuerst die Tafel, darunter die
+         zwei Knoepfe zum Umschalten. -->
+    <div id="tafelspalte">
 
-      <div id="tafel-inhalt">
-        <p id="knochen-deutsch"></p>
-        <p id="knochen-latein"></p>
-        <p id="knochen-art"></p>
+      <!-- Die weisse Tafel. Sie steht immer da, damit das Bild
+           nicht springt, sobald man etwas antippt.
+           Drei Zustaende, immer genau einer sichtbar:
+             tafel-hinweis  noch nichts gewaehlt
+             tafel-inhalt   Lernen: der Name des Knochens
+             tafel-frage    Testen: die Frage und die Rueckmeldung -->
+      <div id="knochentafel">
+        <p id="tafel-hinweis">Tippe einen Knochen an.</p>
+
+        <div id="tafel-inhalt">
+          <p id="knochen-deutsch"></p>
+          <p id="knochen-latein"></p>
+          <p id="knochen-art"></p>
+        </div>
+
+        <div id="tafel-frage">
+          <p id="frage-zeile"></p>
+          <p id="frage-rueckmeldung"></p>
+        </div>
       </div>
+
+      <!-- Lernen oder Testen.
+           Der Knopf, der gerade gilt, traegt die Klasse "an". -->
+      <div id="modus-wahl">
+        <button id="knopf-lernen" class="modusknopf an"
+                onclick="modusSetzen('lernen')">Lernen</button>
+        <button id="knopf-testen" class="modusknopf"
+                onclick="modusSetzen('testen')">Testen</button>
+      </div>
+
     </div>
 
   </div>
