@@ -346,6 +346,9 @@ nach «ich habe jetzt X» aussieht, ist ein Loch.
 | beliebig oft wiederholen | unbegrenzt | **20 Gutschriften pro Minute** |
 | der PIN stand in `punkte.js` | für jeden lesbar | **nur noch auf dem Server** |
 | Code durchprobieren | 10'000 Versuche in Sekunden | **5 Versuche pro Minute** |
+| **Passwort** durchprobieren | unbegrenzt schnell | **10 Versuche pro Minute** |
+| Rekorde schreiben | jede Zahl, beliebig viele | **max. 20 Spiele, Wert ≤ 1'000'000** |
+| Münzen schaufeln | ungebremst | **zählt zur selben Bremse** |
 
 **Die Bremse** (`bremsePruefen()` in `gemeinsam.js`) merkt sich an der
 Zeile der Person, wann die aktuelle Minute angefangen hat und wie viele
@@ -354,8 +357,21 @@ Spaltennamen an — so laufen zwei Bremsen nebeneinander
 (`punkteFenster*` und `codeFenster*`). Ohne das würde fleissiges Spielen
 das Code-Feld blockieren.
 
-Gebremst wird nur, wer Punkte **bekommt**. Bezahlen darf man jederzeit —
-das kostet ja.
+Gebremst wird, wer etwas **bekommt** — Punkte, Münzen oder einen Rekord.
+Bezahlen darf man jederzeit, das kostet ja.
+
+**Die Bremse beim Anmelden ist die wichtigste von allen.** Bei den anderen
+geht es um eigene Punkte; hier geht es um **fremde Konten**. Ein Passwort
+darf 4 Zeichen kurz sein — ohne Bremse wären 10'000 vierstellige Zahlen in
+Sekunden durch, und dann sässe jemand in Hannas Konto. Mit 10 Versuchen
+pro Minute dauert dasselbe rund 17 Stunden.
+Wer sich **richtig** anmeldet, bekommt den Zähler zurückgesetzt — dreimal
+vertippt und dann richtig wird also nicht später bestraft.
+
+**Warum die Rekorde begrenzt sind:** Sie landen als JSON in einer einzigen
+Spalte. Ohne Grenze könnte jemand tausend erfundene Spielnamen
+hineinschreiben, bis die Zeile platzt. Darum: höchstens 20 Spiele, Namen
+bis 30 Zeichen, Werte bis 1'000'000 (die längste Schlange hat 225).
 
 **Ehrlich dazusagen — das ist keine Mauer.** Der Browser gehört dem
 Spieler. Wer seinen Ausweis nimmt und selber `aendern` aufruft, bekommt

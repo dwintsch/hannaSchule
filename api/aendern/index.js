@@ -47,6 +47,13 @@ const HOECHSTE_MUENZEN = 1000;
    Wer schneller ist, spielt nicht mehr selber. */
 const GUTSCHRIFTEN_PRO_MINUTE = 20;
 
+/* Grenzen für die Rekorde. Es gibt acht Spiele - 20 ist also
+   grosszügig. Und kein Rekord dieser Welt ist eine Million:
+   die längste Schlange hat 225, die weiteste Strecke im
+   Rennen ein paar tausend. */
+const HOECHSTENS_REKORDE = 20;
+const HOECHSTER_REKORD = 1000000;
+
 function veraenderungOrdnen(wert, deckel) {
   const zahl = Math.floor(Number(wert));
 
@@ -110,10 +117,13 @@ module.exports = async function (context, req) {
       return;
     }
 
-    /* Die Bremse gilt nur, wenn jemand Punkte BEKOMMT.
-       Bezahlen darf man so oft man will - das kostet ja. */
+    /* Die Bremse gilt, wenn jemand etwas BEKOMMT - Punkte
+       oder Münzen. Bezahlen darf man so oft man will, das
+       kostet ja. Und Rekorde zählen auch dazu, sonst könnte
+       man die Tabelle mit Schreibzugriffen fluten. */
 
-    if (punkteDazu > 0) {
+    if (punkteDazu > 0 || muenzenDazu > 0 ||
+        Object.keys(neueRekorde).length > 0) {
 
       const stand = g.bremsePruefen(zeile, GUTSCHRIFTEN_PRO_MINUTE, "punkteFenster");
 
@@ -145,10 +155,33 @@ module.exports = async function (context, req) {
       rekorde = {};
     }
 
+    /* Auch hier gilt: der Browser darf schicken was er will.
+       Ohne Grenzen könnte jemand tausend erfundene Spielnamen
+       hineinschreiben, bis die Zeile in der Tabelle platzt.
+       Darum drei Regeln: nicht zu viele, keine langen Namen,
+       keine unsinnigen Werte. */
+
     for (const spiel in neueRekorde) {
+
+      // Nicht mehr Spiele als es geben kann.
+      if (rekorde[spiel] === undefined &&
+          Object.keys(rekorde).length >= HOECHSTENS_REKORDE) {
+        continue;
+      }
+
+      // Ein Spielname wie «snake» ist kurz. Alles Längere ist
+      // kein Spielname, sondern ein Versuch.
+      if (spiel.length > 30) {
+        continue;
+      }
+
       const wert = Math.floor(Number(neueRekorde[spiel]));
 
-      if (isNaN(wert) === false && wert > (rekorde[spiel] || 0)) {
+      if (isNaN(wert) || wert < 0 || wert > HOECHSTER_REKORD) {
+        continue;
+      }
+
+      if (wert > (rekorde[spiel] || 0)) {
         rekorde[spiel] = wert;
       }
     }

@@ -5,6 +5,24 @@
 
 const g = require("../gemeinsam");
 
+/* Wie viele Anmeldeversuche pro Minute und Konto.
+
+   WARUM DAS SEIN MUSS:
+   Ein Passwort darf 4 Zeichen kurz sein. Ohne Bremse könnte
+   ein Programm alle 10000 vierstelligen Zahlen in wenigen
+   Sekunden durchprobieren - und dann in einem FREMDEN Konto
+   sitzen. Das wäre schlimmer als jedes Schummeln: da ginge es
+   nicht um eigene Punkte, sondern um Hannas Konto.
+
+   Mit 10 Versuchen pro Minute dauern 10000 Möglichkeiten rund
+   17 Stunden - und in der Zeit fällt es auf.
+
+   Wer sich richtig anmeldet, bekommt den Zähler zurückgesetzt.
+   Wer sich dreimal vertippt und dann richtig liegt, wird also
+   nicht später dafür bestraft. */
+
+const VERSUCHE_PRO_MINUTE = 10;
+
 module.exports = async function (context, req) {
 
   if (req.method === "OPTIONS") {
@@ -41,7 +59,41 @@ module.exports = async function (context, req) {
     return;
   }
 
-  if (g.passwortStimmt(inhalt.passwort, zeile.salz, zeile.fingerabdruck) === false) {
+  /* Erst die Bremse, dann das Passwort. Sonst könnte man
+     beliebig oft raten - genau das soll sie ja verhindern. */
+
+  const stand = g.bremsePruefen(zeile, VERSUCHE_PRO_MINUTE, "anmeldeFenster");
+
+  if (stand === null) {
+    context.res = g.fehlerAntwort(429,
+      "Zu viele Versuche. Warte eine Minute.");
+    return;
+  }
+
+  const stimmt = g.passwortStimmt(inhalt.passwort, zeile.salz, zeile.fingerabdruck);
+
+  if (stimmt === true) {
+
+    // Richtig angemeldet: der Zähler fängt wieder bei null an.
+    zeile.anmeldeFensterStart = 0;
+    zeile.anmeldeFensterZaehler = 0;
+
+  } else {
+    Object.assign(zeile, stand);
+  }
+
+  /* Den Zählerstand festhalten. Klappt das Schreiben nicht
+     (weil ein anderes Gerät schneller war), ist das kein
+     Grund, das Anmelden scheitern zu lassen - dann zählt
+     dieser eine Versuch halt nicht mit. */
+
+  try {
+    await g.tabelleHolen().updateEntity(zeile, "Merge", { etag: zeile.etag });
+  } catch (fehler) {
+    context.log.error(fehler);
+  }
+
+  if (stimmt === false) {
     abweisen();
     return;
   }
