@@ -7,11 +7,11 @@
          980 Pixel breit, und zoomt die Seite winzig heraus.
          width=device-width heisst: nimm die echte Breite. -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Kreuzworträtsel</title>
+    <title>Suchsel</title>
 
-    <!-- grund.css gilt auf allen Seiten, kreuzwort.css nur hier. -->
+    <!-- grund.css gilt auf allen Seiten, suchsel.css nur hier. -->
     <link rel="stylesheet" href="css/grund.css">
-    <link rel="stylesheet" href="css/kreuzwort.css">
+    <link rel="stylesheet" href="css/suchsel.css">
   </head>
 <!-- Die Klasse sagt, ob jemand angemeldet ist. js/punkte.js stellt sie
      richtig; das CSS blendet danach ein und aus. So ist von Anfang an
@@ -20,7 +20,7 @@
 
   <p class="zurueck-zur-startseite"><a href="index.html">&#8592; Zur Startseite</a></p>
 
-  <h1>Kreuzworträtsel</h1>
+  <h1>Suchsel</h1>
 
   <p class="anleitung">
     Finde die versteckten Organe. Sie stehen <strong>waagrecht &rarr;</strong>
@@ -39,15 +39,15 @@
 
   <p id="ergebnis"></p>
 
-  <button class="neustart" onclick="neuesSpiel()">Neues Rätsel</button>
+  <button class="neustart" onclick="neuesSpiel()">Neues Suchsel</button>
 
   <script src="js/punkte.js"></script>
 
   <!-- rangliste.js NACH punkte.js: es braucht serverFragen() und token() von dort. -->
   <script src="js/rangliste.js"></script>
 
-  <!-- konfetti.js VOR kreuzwort.js: kreuzwort.js ruft konfetti(). -->
+  <!-- konfetti.js VOR suchsel.js: suchsel.js ruft konfetti(). -->
   <script src="js/konfetti.js"></script>
-  <script src="js/kreuzwort.js"></script>
+  <script src="js/suchsel.js"></script>
 </body>
 </html>

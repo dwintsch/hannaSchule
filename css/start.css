@@ -161,11 +161,11 @@
 .blitz .marke       { background-color: #fdf3d3; color: #8a6318; }
 .blitz:hover        { border-color: #e8c96b; }
 
-.kreuzwort .symbol      { background-color: #dceaf1; }
-.kreuzwort .spiel-titel { color: #1f6f8b; }
-.kreuzwort .spiel-pfeil { color: #1f6f8b; }
-.kreuzwort .marke       { background-color: #dceaf1; color: #155268; }
-.kreuzwort:hover        { border-color: #9dc4d6; }
+.suchsel .symbol      { background-color: #dceaf1; }
+.suchsel .spiel-titel { color: #1f6f8b; }
+.suchsel .spiel-pfeil { color: #1f6f8b; }
+.suchsel .marke       { background-color: #dceaf1; color: #155268; }
+.suchsel:hover        { border-color: #9dc4d6; }
 
 /* Die Belohnungsspiele in Pastell-Lila - so sieht man sofort,
    dass sie zu einer anderen Gruppe gehören. */
