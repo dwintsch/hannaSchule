@@ -796,14 +796,14 @@ dunkel `#155268`, pastell `#dceaf1`, Rahmen `#9dc4d6`) — die einzige Farbe,
 die in der Palette noch frei war.
 
 **Zweimal umbenannt:** zuerst «Buchstabensalat» (`salat.*`), dann
-«Suchsel» (`kreuzwort.*`), seit 19.08.2026 **«Suchsel»**
+«Kreuzworträtsel» (`kreuzwort.*`), seit 19.08.2026 **«Suchsel»**
 (`suchsel.*`). Beide Male wurden die Dateien mit umbenannt — anders als
 bei Hangman/`galgen.*`. Begründung wie dort im Rennen: ein Name, der lügt,
 ist schlimmer als eine grosse Umbenennung.
 
 «Suchsel» ist übrigens der **richtige Fachbegriff** für genau das: ein
-Gitter voller Buchstaben mit versteckten Wörtern. «Suchsel» war
-sachlich falsch, dort gibt es Fragen statt eines Buchstabengitters.
+Gitter voller Buchstaben mit versteckten Wörtern. «Kreuzworträtsel» war
+sachlich falsch: dort gibt es Fragen statt eines Buchstabengitters.
 
 **Achtung:** Die Adresse hat sich mit umbenannt. Alte Lesezeichen auf
 `suchsel.html` gehen ins Leere.
