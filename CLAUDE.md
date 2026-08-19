@@ -647,6 +647,31 @@ gleichnamigen Befehl in `memory.js`.
   und in `index.html` das `<div class="spiel bald">` in ein `<a class="spiel">`
   umwandeln.
 
+### Die Falle beim Umbauen einer HTML-Datei
+
+Beim Umbau des Rennens am 19.08.2026 ist beim Ersetzen des Fahrzeugs eine
+Zeile zu viel verschwunden: `<div id="strasse"></div>`. Danach liess sich
+das Rennen **nicht mehr starten** — `rennen.js` sucht das Element, findet
+`null`, und `takt()` stürzt bei der ersten Bewegung ab.
+
+**Warum die Tests das nicht gemerkt haben:** Sie luden die Skripte von
+Hand (`w.eval(...)`) statt die Seite laden zu lassen, und sie riefen
+`takt()` nie auf. Beides zusammen macht so einen Fehler unsichtbar.
+
+**Zwei Prüfungen decken das jetzt ab:**
+
+1. `test-elemente.js` liest für **jede** Seite deren JavaScript, sammelt
+   alle `getElementById("...")` ein und schaut nach, ob es das Element in
+   der HTML-Datei überhaupt gibt. Elemente, die das Skript selber baut
+   (`.id = "..."`), sind ausgenommen. Diese eine Prüfung deckt alle neun
+   Seiten ab.
+2. Der Rennen-Test lässt jetzt **30 echte Takte** laufen. Genau dort wäre
+   die fehlende Strasse aufgefallen.
+
+Gegenprobe gemacht: Zeile entfernt → Test rot mit «rennen.js sucht
+#strasse», Zeile zurück → grün. Ein Test, den man nicht scheitern gesehen
+hat, ist keiner.
+
 ### Das Code-Feld (index.html unten rechts, `#geheimfeld`)
 
 Ein kleines Feld unten in der Ecke der Startseite. Wer den PIN kennt,
