@@ -972,13 +972,21 @@ aber das ist Hannas Entscheid, nicht meiner.
 Zwei Spalten: links die **lateinischen** Fachwörter, rechts die
 **deutschen** Knochennamen — beide durcheinander. Wer ein Paar
 zusammenbringt, wird es los. Von Daniel am 19.08.2026 gewünscht.
-Farbe: **Braun** (`#7a5230`).
+Farbe: **Königsblau** (`#33509e`).
 
-- **Warum Braun?** Rot und Grün waren tabu: in diesem Spiel bedeuten sie
-  «falsch» und «richtig». Wäre eines davon auch die Spielfarbe, könnte
-  man die Rückmeldung nicht mehr davon unterscheiden. Das ist der Grund,
-  warum hier nicht wie sonst einfach die nächste freie Farbe genommen
-  wurde.
+- **Rot und Grün waren bei der Farbwahl tabu:** in diesem Spiel bedeuten
+  sie «falsch» und «richtig». Wäre eines davon auch die Spielfarbe,
+  könnte man die Rückmeldung nicht mehr davon unterscheiden. Das ist der
+  Grund, warum hier nicht einfach die nächste freie Farbe genommen wurde.
+- **Zuerst war es Braun**, dann von Daniel auf Königsblau geändert. Braun
+  war die einzige unbunte Farbe zwischen lauter kräftigen — es sah aus,
+  als gehörte es nicht dazu.
+- **Achtung beim Nachfärben:** das Suchsel (Petrolblau `#1f6f8b`) steht in
+  der zweispaltigen Ansicht **direkt darüber**. Die zwei sind die einzigen
+  Blautöne und absichtlich unterschiedlich hell. Wer mehr Abstand will,
+  tauscht in `index.html` die Kacheln Suchsel und Skelett — dann liegt
+  Grün dazwischen, und Skelett und Latein-Paare stehen erst noch
+  beieinander (beide über Knochen).
 - **Die Wörter kommen aus `js/knochenliste.js`** — derselben Liste, aus
   der auch das Skelett lebt. Siehe «Die gemeinsame Knochenliste».
 - **8 Paare pro Runde** (`anzahlPaare`), zufällig aus den 22 Knochen
@@ -1674,7 +1682,7 @@ Kontrast braucht (Überschriften, Zähler), und beim Konfetti.
 | Petrolblau | `#1f6f8b` / `#155268`, pastell `#dceaf1`, Rahmen `#9dc4d6` | Suchsel |
 | Grün | `#3f7d4f` / `#2d5c39`, pastell `#e4f2e8`, Rahmen `#8fcfa3` | Skelett |
 | Pastell-Mauve | `#9a5f90` / `#7c4a74`, pastell `#f7edf6` / `#ecd9e9`, Rahmen `#dcbcd6` | Snake |
-| Braun | `#7a5230` / `#5a3b21`, pastell `#f7efe4` / `#e7d3b8`, Rahmen `#c9a97e` | Latein-Paare |
+| Königsblau | `#33509e` / `#24397a`, pastell `#eff3fc` / `#c3d0ef`, Rahmen `#a3b3e0` | Latein-Paare |
 | Münz-Bronze | `#f7e0cd` + Schrift `#8f5228` | `.muenzen-marke` in der Leiste |
 
 Jedes Spiel hat **eine** eigene Farbe, die es überall durchzieht: Überschrift,

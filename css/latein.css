@@ -2,15 +2,20 @@
    Latein-Paare
    Gilt NUR auf latein.html.
 
-   Die Farbe des Spiels ist Braun (#7a5230). Warum ausgerechnet
-   Braun? Rot und Grün waren tabu: in diesem Spiel bedeuten sie
+   Die Farbe des Spiels ist Königsblau (#33509e).
+
+   Rot und Grün waren dabei tabu: in diesem Spiel bedeuten sie
    «falsch» und «richtig». Wäre eines davon auch die Spielfarbe,
    könnte man die Rückmeldung nicht mehr davon unterscheiden.
+
+   Zuerst war es Braun. Braun war aber die einzige unbunte Farbe
+   zwischen lauter kräftigen - es sah aus, als gehörte es nicht
+   dazu. Von Daniel am 19.08.2026 auf Königsblau geändert.
    Siehe Farbtabelle in CLAUDE.md.
    ============================================ */
 
 h1 {
-  color: #7a5230;
+  color: #33509e;
 }
 
 .anleitung {
@@ -24,7 +29,7 @@ h1 {
 #anzeige {
   font-size: 17px;
   font-weight: bold;
-  color: #7a5230;
+  color: #33509e;
   margin-bottom: 14px;
 }
 
@@ -59,10 +64,8 @@ h1 {
   padding: 12px 8px;
   box-sizing: border-box;
 
-  /* Etwas kühler als Hangman-Pfirsich (#fde8d7): die zwei
-     Kacheln liegen auf der Startseite nebeneinander. */
-  background-color: #f7efe4;
-  border: 2px solid #c9a97e;
+  background-color: #eff3fc;
+  border: 2px solid #a3b3e0;
   border-radius: 10px;
 
   font-size: 16px;
@@ -88,7 +91,7 @@ h1 {
 
 @media (hover: hover) {
   .wort:hover {
-    background-color: #f0e4d2;
+    background-color: #e0e7f8;
   }
 }
 
@@ -102,9 +105,9 @@ h1 {
    CLAUDE.md. Von Daniel am 19.08.2026 eingefordert. */
 
 .wort.gewaehlt {
-  background-color: #e7d3b8;
-  border-color: #7a5230;
-  color: #5a3b21;
+  background-color: #c3d0ef;
+  border-color: #33509e;
+  color: #24397a;
   font-weight: bold;
 }
 
@@ -152,16 +155,16 @@ h1 {
 .ergebnis-karte {
   max-width: 460px;
   padding: 16px 20px;
-  background-color: #f7efe4;
-  border: 2px solid #c9a97e;
+  background-color: #eff3fc;
+  border: 2px solid #a3b3e0;
   border-radius: 14px;
-  color: #5a3b21;
+  color: #24397a;
   font-weight: bold;
 }
 
 .neustart {
-  color: #7a5230;
-  border-color: #7a5230;
+  color: #33509e;
+  border-color: #33509e;
 }
 
 /* --- Auf dem Handy ---

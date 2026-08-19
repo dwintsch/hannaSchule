@@ -210,13 +210,16 @@
 .skelett .marke       { background-color: #e4f2e8; color: #2d5c39; }
 .skelett:hover        { border-color: #8fcfa3; }
 
-/* Latein-Paare: Braun. Rot und Gruen waren tabu - die bedeuten
-   in diesem Spiel "falsch" und "richtig". */
-.latein .symbol       { background-color: #f0e4d2; }
-.latein .spiel-titel  { color: #7a5230; }
-.latein .spiel-pfeil  { color: #7a5230; }
-.latein .marke        { background-color: #f0e4d2; color: #5a3b21; }
-.latein:hover         { border-color: #c9a97e; }
+/* Latein-Paare: Koenigsblau. Rot und Gruen waren tabu - die
+   bedeuten in diesem Spiel "falsch" und "richtig".
+   ACHTUNG: Das Suchsel (Petrolblau) steht in der zweispaltigen
+   Ansicht direkt darueber. Die zwei sind absichtlich
+   unterschiedlich hell - beim Nachfaerben daran denken. */
+.latein .symbol       { background-color: #dde5f7; }
+.latein .spiel-titel  { color: #33509e; }
+.latein .spiel-pfeil  { color: #33509e; }
+.latein .marke        { background-color: #dde5f7; color: #24397a; }
+.latein:hover         { border-color: #a3b3e0; }
 
 /* Die Belohnungsspiele in Pastell-Lila - so sieht man sofort,
    dass sie zu einer anderen Gruppe gehören. */
