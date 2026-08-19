@@ -799,8 +799,56 @@ seinen Namen auf **Deutsch**, auf **Latein** und die **Knochenart**.
 Von Daniel am 19.08.2026 gewünscht. Farbe: **Grün** (`#3f7d4f`) — die
 einzige, die in der Palette noch frei war.
 
-- **17 Knochen**, alle in der Liste `knochen` zuoberst in `js/skelett.js`,
+- **22 Knochen**, alle in der Liste `knochen` zuoberst in `js/skelett.js`,
   jeder mit `schluessel`, `deutsch`, `latein` und `art`.
+- **Nachgezeichnet nach einem Vorlagenbild.** Daniel hat am 19.08.2026 ein
+  Skelettbild in `images/Skelet Bild.jpg` abgelegt und gesagt: mach es
+  gleich wie auf dem Bild.
+
+  **Das Bild liegt bewusst NICHT im Repository** (`.gitignore`). Es ist
+  eine fremde Zeichnung, und das Repository ist auf GitHub öffentlich.
+  Abgepaust wurde auch nichts — übernommen sind nur die **Verhältnisse**,
+  und die sind Anatomie, nicht das Werk der Zeichnerin.
+- **Die Masse sind gemessen, nicht geschätzt.** Das Bild wurde in ein BMP
+  umgewandelt und zeilenweise nach Knochenpixeln abgesucht. Aus dem
+  Breitenverlauf und den Dickenmaxima (an einem Gelenk ist der Knochen
+  dick, dazwischen dünn) kamen diese Marken — alles Anteile der
+  Körperhöhe:
+
+  | Marke | gemessen | in der Zeichnung |
+  |---|---|---|
+  | Kopf am breitesten | 0.050 | 0.050 |
+  | Kinn | 0.140 | 0.142 |
+  | Schlüsselbein | 0.195 | 0.195 |
+  | Rippen von–bis | 0.203–0.395 | 0.203–0.387 |
+  | Ellbogen | 0.367 | 0.376 |
+  | Becken oben | 0.415 | 0.405 |
+  | Hüftgelenk | 0.500 | 0.500 |
+  | Fingerspitzen | 0.590 | 0.599 |
+  | Knie | 0.720 | 0.737 |
+  | Knöchel | 0.950 | 0.955 |
+
+  Ein Test rechnet Knie, Knöchel, Ellbogen und Beckenoberkante direkt aus
+  den Zahlen im SVG nach. Er braucht dafür keinen Bildbetrachter: in einem
+  Pfad `d="M86 306 C80 306 …"` ist jede zweite Zahl ein y-Wert.
+- **Der Aufbau:** `viewBox="0 0 240 640"`. Der Körper ist 620 hoch und
+  beginnt bei y=8; jede Marke oben ist mal 620 gerechnet. Breit muss es
+  240 sein, weil die breiteste Stelle (die Hände) 0.349 der Höhe misst —
+  bei 200 Breite hätten die Finger nicht mehr Platz gehabt.
+- **Nur die linke Hälfte ist gezeichnet.** Die rechte ist dieselbe Gruppe
+  mit `transform="translate(240,0) scale(-1,1)"` — an der Mittellinie
+  umgeklappt. So können die zwei Seiten nie auseinanderlaufen.
+- **Zwölf Rippenpaare**, nicht fünf wie im ersten Anlauf: 1–7 reichen ans
+  Brustbein (echte), 8–10 enden davor und bilden den Rippenbogen
+  (falsche), 11–12 hängen frei. Ein Test zählt die 24 Rippen.
+- **Knochenfarben, nicht weiss** (`fill: #ece0c2`, Rand `#3f3729`). Weiss
+  sah nach Papier aus. Das ist der Punkt, der die Zeichnung am meisten
+  wie die Vorlage aussehen liess — mehr als jede Formkorrektur.
+- **`class="beiwerk"`** tragen Augenhöhlen, Nase, Zähne und Bandscheiben.
+  Das sind keine Knochen zum Antippen, sondern nur Zeichnung. Wichtig ist
+  dabei `pointer-events: none`: ohne das könnte man den Schädel nicht mehr
+  treffen, wenn man auf ein Auge tippt. Ein Test prüft, dass kein Beiwerk
+  ein `data-knochen` trägt.
 - **Alle fünf Knochenarten kommen vor** — Röhrenknochen, Plattknochen,
   kurze Knochen, unregelmässige Knochen und das Sesambein. Das ist
   Absicht: so sieht man an einem Skelett, was die Einteilung bedeutet.
@@ -828,11 +876,39 @@ einzige, die in der Palette noch frei war.
 - Schon angeschaute Knochen bleiben blassgrün. `.gewaehlt` steht im CSS
   **nach** `.gesehen`, sonst sähe ein angeschauter Knochen angeschaut aus
   statt gewählt — dieselbe Falle wie beim Suchsel.
-- **Woher die Masse kommen:** Ich kann keine Bilder anschauen, also auch
-  keine Zeichnung abpausen. Stattdessen habe ich die Proportionen
-  nachgeschlagen (Kopfhöhen-Regel, Knochenlängen in Prozent der
-  Körpergrösse, Femur-Tibia-Verhältnis, Rippenzahl) und danach gezeichnet.
-  Kein fremdes Bild kopiert — das wäre auch urheberrechtlich heikel.
+- **Ich hatte behauptet, ich könne keine Bilder anschauen. Das stimmt
+  nicht.** Darum stand hier zuerst, die Masse seien nur nachgeschlagen.
+  Daniel hat daraufhin extra ein Bild gesucht und gespeichert. Seither
+  ist die Zeichnung danach gebaut. Falls die Frage nochmal aufkommt:
+  Bilder anschauen geht, Bilder *malen* geht nicht — darum ist es ein
+  von Hand gerechnetes SVG und kein gemaltes Bild.
+- **Wie beim Zeichnen geprüft wurde — das ist der eigentliche Trick:**
+  Ich habe das SVG nicht blind geschrieben, sondern jedes Mal mit
+  `msedge --headless --screenshot` fotografiert und angeschaut. Ohne das
+  wäre nichts davon aufgefallen:
+
+  | was falsch aussah | Ursache |
+  |---|---|
+  | Brustkorb war ein schwarzes Knäuel | Der tiefste Punkt einer Rippe lag **höher** als ihr Ende. Dann macht die Kurve dort einen Haken und kreuzt die Nachbarrippe. Der tiefste Punkt muss unter **beiden** Enden liegen. |
+  | Becken hatte kein Loch | Das Foramen war so hoch wie der Knochenstreifen drumherum — es frass ihn ganz weg. Jetzt Streifen 27, Loch 14. |
+  | Darmbeinschaufeln wie Ballone | Die Innenkante war rund. Sie muss **eingebuchtet** sein, dann wird aus dem Ballon eine Schaufel. |
+  | Finger wie Perlenketten | Die Glieder waren fast so dick wie lang. Hand von 43 auf 52 verlängert, Glieder auf 2.7 verdünnt. |
+  | Hände und Füsse wie schwarze Besen | Sie waren dicke Striche. Jetzt gedrehte Rechtecke mit runden Ecken (`stab()` im Erzeuger). |
+
+  **Lehre:** Eine Zeichnung, die man nicht angeschaut hat, ist keine
+  Zeichnung. Dasselbe wie beim Rennen — ein Test, den man nicht scheitern
+  gesehen hat, ist keiner.
+- **Das SVG wird von einem Skript erzeugt**, nicht von Hand getippt: 122
+  Teile mit gerechneten Koordinaten. Es liegt bei den Tests unter
+  `C:\Users\danie\hannaSchule-tests\skelett-zeichnen.js` (dazu
+  `skelett-messen.js` fürs Ausmessen der Vorlage und
+  `skelett-einsetzen.js` fürs Einsetzen ins HTML).
+
+  **Achtung:** In `skelett.html` steht ganz normales SVG — die Website hat
+  weiterhin **keinen Bauschritt**. Wer die Zeichnung ändern will, ändert
+  den Erzeuger und lässt ihn neu laufen; wer nur eine Zahl anpassen will,
+  darf auch direkt ins HTML. Dann aber den Erzeuger nachziehen, sonst
+  überschreibt der nächste Lauf die Änderung.
 - **Die Anatomie ist noch nicht von Hanna durchgesehen.** Die Einteilung
   der Knochenarten ist Lehrbuchstoff, aber sie kennt ihn besser als ich.
   Besonders anschauen: Schlüsselbein und Becken werden je nach Buch

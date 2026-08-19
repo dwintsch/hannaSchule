@@ -71,169 +71,266 @@
          erreichbar.
          ============================================ -->
 
-    <svg id="skelett" viewBox="0 0 200 624" role="img"
-         aria-label="Skelett von vorne, Knochen zum Antippen">
+    <svg id="skelett" viewBox="0 0 240 640" role="img"
+         aria-label="Ein Skelett von vorne. Jeder Knochen ist anklickbar.">
 
-      <!-- ===== Kopf ===== -->
-      <path class="knochen" data-knochen="schaedel" tabindex="0"
-            d="M100 6 C126 6 140 24 140 44 C140 56 134 62 128 64
-               L72 64 C66 62 60 56 60 44 C60 24 74 6 100 6 Z" />
-      <path class="knochen" data-knochen="unterkiefer" tabindex="0"
-            d="M72 62 L128 62 L125 74 Q100 88 75 74 Z" />
+      <!-- DER SCHAEDEL
+           Breiteste Stelle bei 5 % der Koerperhoehe, Kinn bei 14 %.
+           Beides am Vorlagenbild gemessen. -->
+      <path class="knochen" data-knochen="schaedel" tabindex="0" d="M120 8 C103 8 89 20 88 38 C87 51 89 59 92 64 C94 71 97 76 101 80 L103 87 L137 87 L139 80 C143 76 146 71 148 64 C151 59 153 51 152 38 C151 20 137 8 120 8 Z" />
+      <!-- Der Unterkiefer ist ein eigener Knochen - eigene Form, eigener Name. -->
+      <path class="knochen" data-knochen="unterkiefer" tabindex="0" d="M101 80 C101 91 109 96 120 96 C131 96 139 91 139 80 L133 80 C133 88 128 91 120 91 C112 91 107 88 107 80 Z" />
+      <!-- Augenhoehlen, Nase und Zaehne sind nur Zeichnung.
+           class="beiwerk" heisst: nicht anklickbar, faerbt sich nicht mit. -->
+      <ellipse class="beiwerk" cx="106" cy="60" rx="10.5" ry="9" />
+      <ellipse class="beiwerk" cx="134" cy="60" rx="10.5" ry="9" />
+      <path class="beiwerk" d="M120 65 L115.5 77 Q120 79.5 124.5 77 Z" />
+      <path class="beiwerk haarstrich" d="M105 80 L105 86" />
+      <path class="beiwerk haarstrich" d="M105 86 L105 91" />
+      <path class="beiwerk haarstrich" d="M109.3 80 L109.3 86" />
+      <path class="beiwerk haarstrich" d="M109.3 86 L109.3 91" />
+      <path class="beiwerk haarstrich" d="M113.6 80 L113.6 86" />
+      <path class="beiwerk haarstrich" d="M113.6 86 L113.6 91" />
+      <path class="beiwerk haarstrich" d="M117.9 80 L117.9 86" />
+      <path class="beiwerk haarstrich" d="M117.9 86 L117.9 91" />
+      <path class="beiwerk haarstrich" d="M122.2 80 L122.2 86" />
+      <path class="beiwerk haarstrich" d="M122.2 86 L122.2 91" />
+      <path class="beiwerk haarstrich" d="M126.5 80 L126.5 86" />
+      <path class="beiwerk haarstrich" d="M126.5 86 L126.5 91" />
+      <path class="beiwerk haarstrich" d="M130.8 80 L130.8 86" />
+      <path class="beiwerk haarstrich" d="M130.8 86 L130.8 91" />
+      <path class="beiwerk haarstrich" d="M135.1 80 L135.1 86" />
+      <path class="beiwerk haarstrich" d="M135.1 86 L135.1 91" />
+      <!-- HALSWIRBEL: sieben Stueck, wie beim Menschen. -->
+      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0" x="112" y="96" width="16" height="4.2" rx="1.6" />
+      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0" x="112" y="101.4" width="16" height="4.2" rx="1.6" />
+      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0" x="112" y="106.8" width="16" height="4.2" rx="1.6" />
+      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0" x="112" y="112.2" width="16" height="4.2" rx="1.6" />
+      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0" x="112" y="117.6" width="16" height="4.2" rx="1.6" />
+      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0" x="112" y="123" width="16" height="4.2" rx="1.6" />
+      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0" x="112" y="128.4" width="16" height="4.2" rx="1.6" />
+      <!-- LENDENWIRBEL: fuenf Stueck, deutlich groesser als die Halswirbel.
+           Dazwischen die Bandscheiben - graue Streifen, nur Zeichnung. -->
+      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0" x="109" y="230" width="22" height="6.4" rx="2" />
+      <rect class="beiwerk scheibe" x="110.5" y="236.6" width="19" height="1.7" rx="0.8" />
+      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0" x="109" y="238.4" width="22" height="6.4" rx="2" />
+      <rect class="beiwerk scheibe" x="110.5" y="245" width="19" height="1.7" rx="0.8" />
+      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0" x="109" y="246.8" width="22" height="6.4" rx="2" />
+      <rect class="beiwerk scheibe" x="110.5" y="253.4" width="19" height="1.7" rx="0.8" />
+      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0" x="109" y="255.2" width="22" height="6.4" rx="2" />
+      <rect class="beiwerk scheibe" x="110.5" y="261.8" width="19" height="1.7" rx="0.8" />
+      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0" x="109" y="263.6" width="22" height="6.4" rx="2" />
+      <!-- DAS BRUSTBEIN: oben breit (der Handgriff), dann der Koerper,
+           unten laeuft es spitz aus. -->
+      <path class="knochen" data-knochen="brustbein" tabindex="0" d="M110 133 L130 133 L131 146 L128 151 L128 196 L125 214 L120 223 L115 214 L112 196 L112 151 L109 146 Z" />
+      <!-- DAS KREUZBEIN: dreieckig, laeuft nach unten spitz zu.
+           Die Loecher darin heissen Kreuzbeinloecher. -->
+      <path class="knochen" data-knochen="kreuzbein" tabindex="0" d="M106 266 L134 266 C133 277 130 288 126 296 C123 302 121 307 120 311 C119 307 117 302 114 296 C110 288 107 277 106 266 Z" />
+      <ellipse class="beiwerk" cx="113" cy="274" rx="1.6" ry="2.1" />
+      <ellipse class="beiwerk" cx="127" cy="274" rx="1.6" ry="2.1" />
+      <ellipse class="beiwerk" cx="114.3" cy="284" rx="1.6" ry="2.1" />
+      <ellipse class="beiwerk" cx="125.7" cy="284" rx="1.6" ry="2.1" />
+      <ellipse class="beiwerk" cx="115.6" cy="294" rx="1.6" ry="2.1" />
+      <ellipse class="beiwerk" cx="124.4" cy="294" rx="1.6" ry="2.1" />
 
-      <!-- ===== Wirbelsäule: zehn Wirbel ===== -->
-      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0"
-            x="93" y="82" width="14" height="15" rx="3" />
-      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0"
-            x="93" y="100" width="14" height="15" rx="3" />
-      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0"
-            x="93" y="118" width="14" height="15" rx="3" />
-      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0"
-            x="93" y="136" width="14" height="15" rx="3" />
-      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0"
-            x="93" y="154" width="14" height="15" rx="3" />
-      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0"
-            x="93" y="172" width="14" height="15" rx="3" />
-      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0"
-            x="93" y="190" width="14" height="15" rx="3" />
-      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0"
-            x="93" y="208" width="14" height="15" rx="3" />
-      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0"
-            x="93" y="226" width="14" height="15" rx="3" />
-      <rect class="knochen" data-knochen="wirbelsaeule" tabindex="0"
-            x="93" y="244" width="14" height="15" rx="3" />
+      <!-- Die LINKE Koerperhaelfte. -->
+      <g>
+        <!-- SCHLUESSELBEIN: leichte S-Form vom Brustbein zur Schulter.
+             Ein Strich statt einer Flaeche - darum class="strich". -->
+        <path class="knochen strich" data-knochen="schluesselbein" tabindex="0" d="M108 137 C92 129 74 132 56 140" />
+        <!-- SCHULTERBLATT: dreieckige Platte, liegt HINTER dem Brustkorb. -->
+        <path class="knochen" data-knochen="schulterblatt" tabindex="0" d="M60 146 C66 143 72 146 76 151 C82 152 88 155 93 159 C94 170 91 183 88 195 C83 187 76 173 71 160 C68 154 64 149 60 146 Z" />
+        <!-- ZWOELF RIPPEN je Seite.
+             1 bis 7 reichen ans Brustbein  = echte Rippen
+             8 bis 10 enden davor           = falsche Rippen
+             11 und 12 sind kurz und frei   = freie Rippen
+             yStart, Weite, Fallhoehe und Endpunkt stehen in der Liste. -->
+        <!-- Rippe 1 (echte) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 134 C106.5 134.8 93 141.7 93 148 C94.6 152 101.2 146.6 110 143" />
+        <!-- Rippe 2 (echte) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 142 C102.5 143.1 85 151.9 85 160 C87.1 164 97 158.3 110 154" />
+        <!-- Rippe 3 (echte) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 150 C99 151.3 78 162.1 78 172 C80.5 176 93.4 170 110 165" />
+        <!-- Rippe 4 (echte) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 158 C96.5 159.6 73 172.3 73 184 C75.8 188 90.8 181.8 110 176" />
+        <!-- Rippe 5 (echte) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 166 C94.5 167.7 69 181.9 69 195 C72.1 199 88.7 192.8 110 187" />
+        <!-- Rippe 6 (echte) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 174 C93 175.9 66 191.6 66 206 C69.2 210 86.6 203.8 109 198" />
+        <!-- Rippe 7 (echte) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 182 C92 184.1 64 201.3 64 217 C67.4 221 84.6 214.8 107 209" />
+        <!-- Rippe 8 (falsche) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 190 C92.5 192.3 65 211.4 65 229 C68.3 233 81.8 228.2 100 226" />
+        <!-- Rippe 9 (falsche) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 198 C94 200.4 68 220 68 238 C71.1 242 78.6 238 90 238" />
+        <!-- Rippe 10 (falsche) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 206 C96 208.3 72 227.4 72 245 C74.9 249 76.3 245.8 81 248" />
+        <!-- Rippe 11 (freie) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 214 C99 215.7 78 229.9 78 243 C80.5 247 78.5 243 79 243" />
+        <!-- Rippe 12 (freie) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 222 C103.5 223.5 87 235.8 87 247 C89 251 87.5 247 88 247" />
+        <!-- OBERARMKNOCHEN: oben die Kugel im Schultergelenk,
+             dann der Schaft, unten das Ellbogengelenk (gemessen bei 36,7 %). -->
+        <path class="knochen" data-knochen="oberarmknochen" tabindex="0" d="M48 140 C41 140 37 146 38 153 C39 159 42 162 45 164 L38 228 C36 235 40 241 47 241 C54 241 58 236 56 229 L54 164 C57 161 58 152 56 146 C54 141 51 140 48 140 Z" />
+        <!-- ELLE: der dickere der zwei Unterarmknochen, aussen. -->
+        <path class="knochen" data-knochen="elle" tabindex="0" d="M40 232 C35 235 34 242 35 249 L29 320 C28 326 31 331 36 331 C40 331 43 328 43 322 L45 249 C46 240 45 234 40 232 Z" />
+        <!-- SPEICHE: der duennere, innen. -->
+        <path class="knochen" data-knochen="speiche" tabindex="0" d="M53 236 C50 238 48 243 48 250 L44 322 C44 328 46 331 50 331 C54 331 56 327 55 320 L57 250 C57 243 56 238 53 236 Z" />
+        <!-- HANDWURZEL: acht kleine Knochen, hier als ein Block angedeutet. -->
+        <path class="knochen" data-knochen="handwurzelknochen" tabindex="0" d="M28 331 C22 331 19 335 20 340 C21 345 26 348 33 348 C40 348 45 345 45 339 C45 334 41 331 34 331 Z" />
+        <!-- FUENF MITTELHANDKNOCHEN, faecherfoermig. -->
+        <rect class="knochen klein" data-knochen="mittelhandknochen" tabindex="0" x="24" y="347.3" width="14.4" height="3.4" rx="1.7" transform="rotate(123.7 24 349)" />
+        <rect class="knochen klein" data-knochen="mittelhandknochen" tabindex="0" x="29" y="348.3" width="14.3" height="3.4" rx="1.7" transform="rotate(114.8 29 350)" />
+        <rect class="knochen klein" data-knochen="mittelhandknochen" tabindex="0" x="34" y="348.3" width="13.6" height="3.4" rx="1.7" transform="rotate(107.1 34 350)" />
+        <rect class="knochen klein" data-knochen="mittelhandknochen" tabindex="0" x="39" y="347.3" width="12.2" height="3.4" rx="1.7" transform="rotate(99.5 39 349)" />
+        <rect class="knochen klein" data-knochen="mittelhandknochen" tabindex="0" x="43" y="345.3" width="10.6" height="3.4" rx="1.7" transform="rotate(41.2 43 347)" />
+        <!-- FINGERKNOCHEN: drei Glieder je Finger, beim Daumen nur zwei.
+             Der Daumen steht zur Koerpermitte hin - so wie im Vorlagenbild. -->
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="16" y="359.6" width="5" height="2.7" rx="1.4" transform="rotate(105.2 16 361)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="14.3" y="365.6" width="5" height="2.7" rx="1.4" transform="rotate(105.2 14.3 367)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="12.7" y="371.6" width="5" height="2.7" rx="1.4" transform="rotate(106.3 12.7 373)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="23" y="361.6" width="5.2" height="2.7" rx="1.4" transform="rotate(102.2 23 363)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="21.7" y="367.9" width="5.2" height="2.7" rx="1.4" transform="rotate(102.2 21.7 369.3)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="20.3" y="374.3" width="5.1" height="2.7" rx="1.4" transform="rotate(101.3 20.3 375.7)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="30" y="361.6" width="5.2" height="2.7" rx="1.4" transform="rotate(98.9 30 363)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="29" y="367.9" width="5.2" height="2.7" rx="1.4" transform="rotate(98.9 29 369.3)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="28" y="374.3" width="5.1" height="2.7" rx="1.4" transform="rotate(99.1 28 375.7)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="37" y="359.6" width="4.8" height="2.7" rx="1.4" transform="rotate(95.9 37 361)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="36.3" y="365.6" width="4.8" height="2.7" rx="1.4" transform="rotate(95.9 36.3 367)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="35.7" y="371.6" width="4.8" height="2.7" rx="1.4" transform="rotate(97.1 35.7 373)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="51" y="352.6" width="4" height="2.7" rx="1.4" transform="rotate(36.9 51 354)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="55" y="355.6" width="4" height="2.7" rx="1.4" transform="rotate(36.9 55 357)" />
+        <!-- HUEFTBEIN: oben die Schaufel, in der Mitte die Pfanne fuers Bein,
+             unten das grosse Loch (Foramen obturatum).
+             Das Loch entsteht durch fill-rule="evenodd": zwei Formen in EINEM
+             Pfad, die innere wird ausgestanzt. So bleibt es ein Knochen zum Antippen. -->
+        <path class="knochen" data-knochen="becken" tabindex="0" fill-rule="evenodd" d="M105 272 C99 264 90 259 82 259 C74 260 68 267 68 277 C68 287 70 295 74 301 C78 305 82 310 83 317 C82 327 83 336 88 341 C95 345 107 343 115 338 C119 336 120 333 118 330 C112 325 100 318 92 311 C87 306 85 295 88 285 C91 277 97 274 105 272 Z M100 321 C94 322 90 326 91 331 C93 336 100 338 106 335 C111 333 112 326 109 323 C106 320 103 320 100 321 Z" />
+        <!-- OBERSCHENKELKNOCHEN: Kopf, Hals, Rollhuegel, Schaft und unten
+             die zwei Gelenkrollen. Hueftgelenk 50 %, Knie 72 % - gemessen. -->
+        <path class="knochen" data-knochen="oberschenkelknochen" tabindex="0" d="M86 306 C80 306 76 311 77 317 C78 322 81 325 85 326 L73 333 C68 337 69 344 74 347 L86 440 C87 447 83 452 83 457 C83 462 87 465 93 465 C99 465 103 462 103 457 C103 452 100 447 100 440 L96 347 C96 339 93 331 92 325 C95 322 96 312 93 308 C92 307 88 306 86 306 Z" />
+        <!-- KNIESCHEIBE: das Sesambein. Sitzt VOR dem Gelenk. -->
+        <ellipse class="knochen" data-knochen="kniescheibe" tabindex="0" cx="92" cy="453" rx="7" ry="7.5" />
+        <!-- SCHIENBEIN: der dicke, innen. Oben die breite Platte,
+             unten der Innenknoechel (gemessen bei 95 %). -->
+        <path class="knochen" data-knochen="schienbein" tabindex="0" d="M84 467 C79 467 77 472 78 478 L82 560 C82 576 85 589 88 595 C92 600 99 599 100 592 L98 478 C98 471 95 467 90 467 Z" />
+        <!-- WADENBEIN: der duenne, aussen. -->
+        <path class="knochen" data-knochen="wadenbein" tabindex="0" d="M74 475 C70 475 68 479 69 484 L70 570 C70 580 72 590 75 595 C79 599 84 596 83 590 L80 484 C80 478 78 475 74 475 Z" />
+        <!-- FUSSWURZEL: sieben kurze Knochen, hier als Block. -->
+        <path class="knochen" data-knochen="fusswurzelknochen" tabindex="0" d="M76 595 C69 596 66 602 68 608 C71 614 79 617 89 617 C99 617 106 613 105 606 C104 599 98 595 90 595 Z" />
+        <!-- FUENF MITTELFUSSKNOCHEN, faecherfoermig nach vorne. -->
+        <rect class="knochen klein" data-knochen="mittelfussknochen" tabindex="0" x="75" y="611.2" width="10.6" height="3.6" rx="1.8" transform="rotate(131.2 75 613)" />
+        <rect class="knochen klein" data-knochen="mittelfussknochen" tabindex="0" x="81" y="613.2" width="9.8" height="3.6" rx="1.8" transform="rotate(114 81 615)" />
+        <rect class="knochen klein" data-knochen="mittelfussknochen" tabindex="0" x="88" y="614.2" width="9.2" height="3.6" rx="1.8" transform="rotate(102.5 88 616)" />
+        <rect class="knochen klein" data-knochen="mittelfussknochen" tabindex="0" x="94" y="613.2" width="8" height="3.6" rx="1.8" transform="rotate(90 94 615)" />
+        <rect class="knochen klein" data-knochen="mittelfussknochen" tabindex="0" x="100" y="610.2" width="8.5" height="3.6" rx="1.8" transform="rotate(45 100 612)" />
+        <!-- ZEHENKNOCHEN -->
+        <rect class="knochen klein" data-knochen="zehenknochen" tabindex="0" x="68" y="619.4" width="7.8" height="3.2" rx="1.6" transform="rotate(129.8 68 621)" />
+        <rect class="knochen klein" data-knochen="zehenknochen" tabindex="0" x="77" y="622.4" width="7.2" height="3.2" rx="1.6" transform="rotate(123.7 77 624)" />
+        <rect class="knochen klein" data-knochen="zehenknochen" tabindex="0" x="86" y="623.4" width="6.7" height="3.2" rx="1.6" transform="rotate(116.6 86 625)" />
+        <rect class="knochen klein" data-knochen="zehenknochen" tabindex="0" x="94" y="621.4" width="6.3" height="3.2" rx="1.6" transform="rotate(108.4 94 623)" />
+        <rect class="knochen klein" data-knochen="zehenknochen" tabindex="0" x="106" y="616.4" width="6.4" height="3.2" rx="1.6" transform="rotate(51.3 106 618)" />
+      </g>
 
-      <!-- ===== Kreuzbein ===== -->
-      <path class="knochen" data-knochen="kreuzbein" tabindex="0"
-            d="M91 262 L109 262 L105 302 L95 302 Z" />
-
-      <!-- ===== Schultergürtel ===== -->
-      <path class="knochen strich" data-knochen="schluesselbein" tabindex="0"
-            d="M96 110 Q72 100 50 108" />
-      <path class="knochen strich" data-knochen="schluesselbein" tabindex="0"
-            d="M104 110 Q128 100 150 108" />
-
-      <path class="knochen" data-knochen="schulterblatt" tabindex="0"
-            d="M40 116 L70 122 L62 172 L46 156 Z" />
-      <path class="knochen" data-knochen="schulterblatt" tabindex="0"
-            d="M160 116 L130 122 L138 172 L154 156 Z" />
-
-      <!-- ===== Brustbein ===== -->
-      <path class="knochen" data-knochen="brustbein" tabindex="0"
-            d="M91 114 L109 114 L107 142 L105 200 Q100 212 95 200 L93 142 Z" />
-
-      <!-- ===== Zwölf Rippenpaare ===== -->
-      <!-- 1 bis 7: echte Rippen, sie reichen ans Brustbein -->
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M94 118 Q58 122 84 146" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M94 129 Q52 134 84 160" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M94 140 Q47 146 84 174" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M94 151 Q44 158 85 188" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M94 162 Q42 170 86 202" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M94 173 Q42 182 87 215" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M94 184 Q43 194 88 227" />
-      <!-- 8 bis 10: falsche Rippen, sie enden vor dem Brustbein -->
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M94 195 Q46 206 76 238" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M94 206 Q50 218 72 248" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M94 217 Q55 229 70 255" />
-      <!-- 11 und 12: freie Rippen, kurz -->
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M94 228 Q68 236 62 250" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M94 238 Q72 246 68 258" />
-
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M106 118 Q142 122 116 146" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M106 129 Q148 134 116 160" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M106 140 Q153 146 116 174" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M106 151 Q156 158 115 188" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M106 162 Q158 170 114 202" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M106 173 Q158 182 113 215" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M106 184 Q157 194 112 227" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M106 195 Q154 206 124 238" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M106 206 Q150 218 128 248" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M106 217 Q145 229 130 255" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M106 228 Q132 236 138 250" />
-      <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M106 238 Q128 246 132 258" />
-
-      <!-- ===== Arme ===== -->
-      <circle class="knochen" data-knochen="oberarmknochen" tabindex="0"
-              cx="48" cy="116" r="9" />
-      <rect class="knochen" data-knochen="oberarmknochen" tabindex="0"
-            x="38" y="120" width="14" height="94" rx="7" />
-      <circle class="knochen" data-knochen="oberarmknochen" tabindex="0"
-              cx="152" cy="116" r="9" />
-      <rect class="knochen" data-knochen="oberarmknochen" tabindex="0"
-            x="148" y="120" width="14" height="94" rx="7" />
-
-      <rect class="knochen" data-knochen="speiche" tabindex="0"
-            x="30" y="218" width="9" height="82" rx="4" />
-      <rect class="knochen" data-knochen="speiche" tabindex="0"
-            x="161" y="218" width="9" height="82" rx="4" />
-
-      <rect class="knochen" data-knochen="elle" tabindex="0"
-            x="42" y="218" width="9" height="84" rx="4" />
-      <rect class="knochen" data-knochen="elle" tabindex="0"
-            x="149" y="218" width="9" height="84" rx="4" />
-
-      <rect class="knochen" data-knochen="handwurzelknochen" tabindex="0"
-            x="31" y="304" width="22" height="13" rx="5" />
-      <rect class="knochen" data-knochen="handwurzelknochen" tabindex="0"
-            x="147" y="304" width="22" height="13" rx="5" />
-
-      <rect class="knochen" data-knochen="mittelhandknochen" tabindex="0"
-            x="30" y="319" width="24" height="17" rx="4" />
-      <rect class="knochen" data-knochen="mittelhandknochen" tabindex="0"
-            x="146" y="319" width="24" height="17" rx="4" />
-
-      <rect class="knochen" data-knochen="fingerknochen" tabindex="0"
-            x="29" y="338" width="26" height="21" rx="5" />
-      <rect class="knochen" data-knochen="fingerknochen" tabindex="0"
-            x="145" y="338" width="26" height="21" rx="5" />
-
-      <!-- ===== Becken ===== -->
-      <path class="knochen" data-knochen="becken" tabindex="0"
-            d="M60 266 Q48 292 60 312 Q72 330 95 334 L95 306 Q76 300 74 274 Z" />
-      <path class="knochen" data-knochen="becken" tabindex="0"
-            d="M140 266 Q152 292 140 312 Q128 330 105 334 L105 306 Q124 300 126 274 Z" />
-
-      <!-- ===== Beine ===== -->
-      <circle class="knochen" data-knochen="oberschenkelknochen" tabindex="0"
-              cx="78" cy="312" r="9" />
-      <rect class="knochen" data-knochen="oberschenkelknochen" tabindex="0"
-            x="80" y="316" width="14" height="136" rx="7" />
-      <circle class="knochen" data-knochen="oberschenkelknochen" tabindex="0"
-              cx="122" cy="312" r="9" />
-      <rect class="knochen" data-knochen="oberschenkelknochen" tabindex="0"
-            x="106" y="316" width="14" height="136" rx="7" />
-
-      <circle class="knochen" data-knochen="kniescheibe" tabindex="0"
-              cx="87" cy="460" r="9" />
-      <circle class="knochen" data-knochen="kniescheibe" tabindex="0"
-              cx="113" cy="460" r="9" />
-
-      <rect class="knochen" data-knochen="schienbein" tabindex="0"
-            x="81" y="470" width="14" height="112" rx="5" />
-      <rect class="knochen" data-knochen="schienbein" tabindex="0"
-            x="105" y="470" width="14" height="112" rx="5" />
-
-      <rect class="knochen" data-knochen="wadenbein" tabindex="0"
-            x="71" y="474" width="8" height="106" rx="4" />
-      <rect class="knochen" data-knochen="wadenbein" tabindex="0"
-            x="121" y="474" width="8" height="106" rx="4" />
-
-      <!-- ===== Füsse ===== -->
-      <rect class="knochen" data-knochen="fusswurzelknochen" tabindex="0"
-            x="72" y="584" width="26" height="15" rx="5" />
-      <rect class="knochen" data-knochen="fusswurzelknochen" tabindex="0"
-            x="102" y="584" width="26" height="15" rx="5" />
-
-      <rect class="knochen" data-knochen="mittelfussknochen" tabindex="0"
-            x="68" y="601" width="28" height="10" rx="4" />
-      <rect class="knochen" data-knochen="mittelfussknochen" tabindex="0"
-            x="104" y="601" width="28" height="10" rx="4" />
-
-      <rect class="knochen" data-knochen="zehenknochen" tabindex="0"
-            x="64" y="613" width="30" height="8" rx="4" />
-      <rect class="knochen" data-knochen="zehenknochen" tabindex="0"
-            x="106" y="613" width="30" height="8" rx="4" />
-
+      <!-- Die RECHTE Haelfte ist genau dieselbe Zeichnung, gespiegelt.
+           translate(240,0) scale(-1,1) klappt sie an der Mittellinie um.
+           So muss jeder Knochen nur EINMAL gezeichnet werden - und beide
+           Seiten koennen nie auseinanderlaufen. -->
+      <g transform="translate(240,0) scale(-1,1)">
+        <!-- SCHLUESSELBEIN: leichte S-Form vom Brustbein zur Schulter.
+             Ein Strich statt einer Flaeche - darum class="strich". -->
+        <path class="knochen strich" data-knochen="schluesselbein" tabindex="0" d="M108 137 C92 129 74 132 56 140" />
+        <!-- SCHULTERBLATT: dreieckige Platte, liegt HINTER dem Brustkorb. -->
+        <path class="knochen" data-knochen="schulterblatt" tabindex="0" d="M60 146 C66 143 72 146 76 151 C82 152 88 155 93 159 C94 170 91 183 88 195 C83 187 76 173 71 160 C68 154 64 149 60 146 Z" />
+        <!-- ZWOELF RIPPEN je Seite.
+             1 bis 7 reichen ans Brustbein  = echte Rippen
+             8 bis 10 enden davor           = falsche Rippen
+             11 und 12 sind kurz und frei   = freie Rippen
+             yStart, Weite, Fallhoehe und Endpunkt stehen in der Liste. -->
+        <!-- Rippe 1 (echte) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 134 C106.5 134.8 93 141.7 93 148 C94.6 152 101.2 146.6 110 143" />
+        <!-- Rippe 2 (echte) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 142 C102.5 143.1 85 151.9 85 160 C87.1 164 97 158.3 110 154" />
+        <!-- Rippe 3 (echte) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 150 C99 151.3 78 162.1 78 172 C80.5 176 93.4 170 110 165" />
+        <!-- Rippe 4 (echte) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 158 C96.5 159.6 73 172.3 73 184 C75.8 188 90.8 181.8 110 176" />
+        <!-- Rippe 5 (echte) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 166 C94.5 167.7 69 181.9 69 195 C72.1 199 88.7 192.8 110 187" />
+        <!-- Rippe 6 (echte) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 174 C93 175.9 66 191.6 66 206 C69.2 210 86.6 203.8 109 198" />
+        <!-- Rippe 7 (echte) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 182 C92 184.1 64 201.3 64 217 C67.4 221 84.6 214.8 107 209" />
+        <!-- Rippe 8 (falsche) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 190 C92.5 192.3 65 211.4 65 229 C68.3 233 81.8 228.2 100 226" />
+        <!-- Rippe 9 (falsche) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 198 C94 200.4 68 220 68 238 C71.1 242 78.6 238 90 238" />
+        <!-- Rippe 10 (falsche) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 206 C96 208.3 72 227.4 72 245 C74.9 249 76.3 245.8 81 248" />
+        <!-- Rippe 11 (freie) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 214 C99 215.7 78 229.9 78 243 C80.5 247 78.5 243 79 243" />
+        <!-- Rippe 12 (freie) -->
+        <path class="knochen strich" data-knochen="rippen" tabindex="0" d="M113 222 C103.5 223.5 87 235.8 87 247 C89 251 87.5 247 88 247" />
+        <!-- OBERARMKNOCHEN: oben die Kugel im Schultergelenk,
+             dann der Schaft, unten das Ellbogengelenk (gemessen bei 36,7 %). -->
+        <path class="knochen" data-knochen="oberarmknochen" tabindex="0" d="M48 140 C41 140 37 146 38 153 C39 159 42 162 45 164 L38 228 C36 235 40 241 47 241 C54 241 58 236 56 229 L54 164 C57 161 58 152 56 146 C54 141 51 140 48 140 Z" />
+        <!-- ELLE: der dickere der zwei Unterarmknochen, aussen. -->
+        <path class="knochen" data-knochen="elle" tabindex="0" d="M40 232 C35 235 34 242 35 249 L29 320 C28 326 31 331 36 331 C40 331 43 328 43 322 L45 249 C46 240 45 234 40 232 Z" />
+        <!-- SPEICHE: der duennere, innen. -->
+        <path class="knochen" data-knochen="speiche" tabindex="0" d="M53 236 C50 238 48 243 48 250 L44 322 C44 328 46 331 50 331 C54 331 56 327 55 320 L57 250 C57 243 56 238 53 236 Z" />
+        <!-- HANDWURZEL: acht kleine Knochen, hier als ein Block angedeutet. -->
+        <path class="knochen" data-knochen="handwurzelknochen" tabindex="0" d="M28 331 C22 331 19 335 20 340 C21 345 26 348 33 348 C40 348 45 345 45 339 C45 334 41 331 34 331 Z" />
+        <!-- FUENF MITTELHANDKNOCHEN, faecherfoermig. -->
+        <rect class="knochen klein" data-knochen="mittelhandknochen" tabindex="0" x="24" y="347.3" width="14.4" height="3.4" rx="1.7" transform="rotate(123.7 24 349)" />
+        <rect class="knochen klein" data-knochen="mittelhandknochen" tabindex="0" x="29" y="348.3" width="14.3" height="3.4" rx="1.7" transform="rotate(114.8 29 350)" />
+        <rect class="knochen klein" data-knochen="mittelhandknochen" tabindex="0" x="34" y="348.3" width="13.6" height="3.4" rx="1.7" transform="rotate(107.1 34 350)" />
+        <rect class="knochen klein" data-knochen="mittelhandknochen" tabindex="0" x="39" y="347.3" width="12.2" height="3.4" rx="1.7" transform="rotate(99.5 39 349)" />
+        <rect class="knochen klein" data-knochen="mittelhandknochen" tabindex="0" x="43" y="345.3" width="10.6" height="3.4" rx="1.7" transform="rotate(41.2 43 347)" />
+        <!-- FINGERKNOCHEN: drei Glieder je Finger, beim Daumen nur zwei.
+             Der Daumen steht zur Koerpermitte hin - so wie im Vorlagenbild. -->
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="16" y="359.6" width="5" height="2.7" rx="1.4" transform="rotate(105.2 16 361)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="14.3" y="365.6" width="5" height="2.7" rx="1.4" transform="rotate(105.2 14.3 367)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="12.7" y="371.6" width="5" height="2.7" rx="1.4" transform="rotate(106.3 12.7 373)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="23" y="361.6" width="5.2" height="2.7" rx="1.4" transform="rotate(102.2 23 363)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="21.7" y="367.9" width="5.2" height="2.7" rx="1.4" transform="rotate(102.2 21.7 369.3)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="20.3" y="374.3" width="5.1" height="2.7" rx="1.4" transform="rotate(101.3 20.3 375.7)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="30" y="361.6" width="5.2" height="2.7" rx="1.4" transform="rotate(98.9 30 363)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="29" y="367.9" width="5.2" height="2.7" rx="1.4" transform="rotate(98.9 29 369.3)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="28" y="374.3" width="5.1" height="2.7" rx="1.4" transform="rotate(99.1 28 375.7)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="37" y="359.6" width="4.8" height="2.7" rx="1.4" transform="rotate(95.9 37 361)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="36.3" y="365.6" width="4.8" height="2.7" rx="1.4" transform="rotate(95.9 36.3 367)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="35.7" y="371.6" width="4.8" height="2.7" rx="1.4" transform="rotate(97.1 35.7 373)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="51" y="352.6" width="4" height="2.7" rx="1.4" transform="rotate(36.9 51 354)" />
+        <rect class="knochen klein" data-knochen="fingerknochen" tabindex="0" x="55" y="355.6" width="4" height="2.7" rx="1.4" transform="rotate(36.9 55 357)" />
+        <!-- HUEFTBEIN: oben die Schaufel, in der Mitte die Pfanne fuers Bein,
+             unten das grosse Loch (Foramen obturatum).
+             Das Loch entsteht durch fill-rule="evenodd": zwei Formen in EINEM
+             Pfad, die innere wird ausgestanzt. So bleibt es ein Knochen zum Antippen. -->
+        <path class="knochen" data-knochen="becken" tabindex="0" fill-rule="evenodd" d="M105 272 C99 264 90 259 82 259 C74 260 68 267 68 277 C68 287 70 295 74 301 C78 305 82 310 83 317 C82 327 83 336 88 341 C95 345 107 343 115 338 C119 336 120 333 118 330 C112 325 100 318 92 311 C87 306 85 295 88 285 C91 277 97 274 105 272 Z M100 321 C94 322 90 326 91 331 C93 336 100 338 106 335 C111 333 112 326 109 323 C106 320 103 320 100 321 Z" />
+        <!-- OBERSCHENKELKNOCHEN: Kopf, Hals, Rollhuegel, Schaft und unten
+             die zwei Gelenkrollen. Hueftgelenk 50 %, Knie 72 % - gemessen. -->
+        <path class="knochen" data-knochen="oberschenkelknochen" tabindex="0" d="M86 306 C80 306 76 311 77 317 C78 322 81 325 85 326 L73 333 C68 337 69 344 74 347 L86 440 C87 447 83 452 83 457 C83 462 87 465 93 465 C99 465 103 462 103 457 C103 452 100 447 100 440 L96 347 C96 339 93 331 92 325 C95 322 96 312 93 308 C92 307 88 306 86 306 Z" />
+        <!-- KNIESCHEIBE: das Sesambein. Sitzt VOR dem Gelenk. -->
+        <ellipse class="knochen" data-knochen="kniescheibe" tabindex="0" cx="92" cy="453" rx="7" ry="7.5" />
+        <!-- SCHIENBEIN: der dicke, innen. Oben die breite Platte,
+             unten der Innenknoechel (gemessen bei 95 %). -->
+        <path class="knochen" data-knochen="schienbein" tabindex="0" d="M84 467 C79 467 77 472 78 478 L82 560 C82 576 85 589 88 595 C92 600 99 599 100 592 L98 478 C98 471 95 467 90 467 Z" />
+        <!-- WADENBEIN: der duenne, aussen. -->
+        <path class="knochen" data-knochen="wadenbein" tabindex="0" d="M74 475 C70 475 68 479 69 484 L70 570 C70 580 72 590 75 595 C79 599 84 596 83 590 L80 484 C80 478 78 475 74 475 Z" />
+        <!-- FUSSWURZEL: sieben kurze Knochen, hier als Block. -->
+        <path class="knochen" data-knochen="fusswurzelknochen" tabindex="0" d="M76 595 C69 596 66 602 68 608 C71 614 79 617 89 617 C99 617 106 613 105 606 C104 599 98 595 90 595 Z" />
+        <!-- FUENF MITTELFUSSKNOCHEN, faecherfoermig nach vorne. -->
+        <rect class="knochen klein" data-knochen="mittelfussknochen" tabindex="0" x="75" y="611.2" width="10.6" height="3.6" rx="1.8" transform="rotate(131.2 75 613)" />
+        <rect class="knochen klein" data-knochen="mittelfussknochen" tabindex="0" x="81" y="613.2" width="9.8" height="3.6" rx="1.8" transform="rotate(114 81 615)" />
+        <rect class="knochen klein" data-knochen="mittelfussknochen" tabindex="0" x="88" y="614.2" width="9.2" height="3.6" rx="1.8" transform="rotate(102.5 88 616)" />
+        <rect class="knochen klein" data-knochen="mittelfussknochen" tabindex="0" x="94" y="613.2" width="8" height="3.6" rx="1.8" transform="rotate(90 94 615)" />
+        <rect class="knochen klein" data-knochen="mittelfussknochen" tabindex="0" x="100" y="610.2" width="8.5" height="3.6" rx="1.8" transform="rotate(45 100 612)" />
+        <!-- ZEHENKNOCHEN -->
+        <rect class="knochen klein" data-knochen="zehenknochen" tabindex="0" x="68" y="619.4" width="7.8" height="3.2" rx="1.6" transform="rotate(129.8 68 621)" />
+        <rect class="knochen klein" data-knochen="zehenknochen" tabindex="0" x="77" y="622.4" width="7.2" height="3.2" rx="1.6" transform="rotate(123.7 77 624)" />
+        <rect class="knochen klein" data-knochen="zehenknochen" tabindex="0" x="86" y="623.4" width="6.7" height="3.2" rx="1.6" transform="rotate(116.6 86 625)" />
+        <rect class="knochen klein" data-knochen="zehenknochen" tabindex="0" x="94" y="621.4" width="6.3" height="3.2" rx="1.6" transform="rotate(108.4 94 623)" />
+        <rect class="knochen klein" data-knochen="zehenknochen" tabindex="0" x="106" y="616.4" width="6.4" height="3.2" rx="1.6" transform="rotate(51.3 106 618)" />
+      </g>
     </svg>
 
     <!-- Die weisse Tafel mit den Namen. Sie steht immer da, damit

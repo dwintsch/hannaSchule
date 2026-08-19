@@ -4,3 +4,10 @@ node_modules/
 
 # Örtliche Einstellungen mit Passwörtern - NIE hochladen!
 api/local.settings.json
+
+# Das Vorlagenbild fuers Skelett bleibt lokal.
+# Es ist eine fremde Zeichnung, die jemand anders gemacht hat.
+# Das Repository ist auf GitHub oeffentlich - fremde Bilder
+# gehoeren dort nicht hinein. Nachgezeichnet wurde nur nach
+# den gemessenen VERHAELTNISSEN, nicht abgepaust.
+images/Skelet Bild.jpg

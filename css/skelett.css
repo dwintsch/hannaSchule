@@ -47,11 +47,11 @@ h1 {
    von selbst. */
 
 #skelett {
-  width: 200px;
+  width: 240px;
   max-width: 100%;
   height: auto;
 
-  background-color: #f3f8f4;
+  background-color: #fbfdfb;
   border: 2px solid #cbe0d1;
   border-radius: 14px;
   padding: 8px;
@@ -59,13 +59,15 @@ h1 {
 }
 
 /* --- Ein Knochen ---
-   Weiss mit schwarzem Rand, wie ein Knochen eben aussieht.
+   Knochenfarben mit dunklem Rand - so wie auf dem Vorlagenbild
+   in images/. Vorher war es reines Weiss, das sah nach Papier
+   aus statt nach Knochen.
    cursor: pointer zeigt: da kann man draufdrücken. */
 
 .knochen {
-  fill: #ffffff;
-  stroke: #2b2b2b;
-  stroke-width: 2;
+  fill: #ece0c2;
+  stroke: #3f3729;
+  stroke-width: 1.6;
   cursor: pointer;
 }
 
@@ -74,7 +76,7 @@ h1 {
 
 .knochen.strich {
   fill: none;
-  stroke-width: 3;
+  stroke-width: 2.2;
   stroke-linecap: round;
 }
 
@@ -201,4 +203,36 @@ h1 {
 .neustart {
   color: #3f7d4f;
   border-color: #3f7d4f;
+}
+
+/* --- Die kleinen Knochen ---
+   Finger, Zehen, Mittelhand und Mittelfuss sind nur wenige
+   Einheiten dick. Mit dem normalen Rand wären sie fast ganz
+   schwarz - darum hier ein feinerer Strich. */
+
+.knochen.klein {
+  stroke-width: 1;
+}
+
+/* --- Beiwerk: Augenhöhlen, Nase, Zähne, Bandscheiben ---
+   Das sind KEINE anklickbaren Knochen, sondern nur Zeichnung.
+   pointer-events: none ist der wichtige Teil: ein Klick geht
+   dadurch hindurch auf den Knochen darunter. Ohne das könnte
+   man den Schädel nicht mehr treffen, wenn man auf ein Auge
+   tippt. Sie färben sich auch nicht mit ein. */
+
+.beiwerk {
+  fill: #4a4a4a;
+  stroke: none;
+  pointer-events: none;
+}
+
+.beiwerk.haarstrich {
+  fill: none;
+  stroke: #4a4a4a;
+  stroke-width: 1;
+}
+
+.beiwerk.scheibe {
+  fill: #b0b0b0;
 }
