@@ -612,11 +612,15 @@ Belohnungsspiel im Stil von Subway Surfers, **kostet 1 Punkt pro Runde**
   Die Spritze **ist** ein Emoji: sie muss weder gedreht noch umgefärbt
   werden. Bis 19.08.2026 war das ein Stern ⭐ — und die Spritze war
   umgekehrt ein Hindernis.
-- Die Spritze steckt in einem `<span class="spritze-ring">` mit **leichtem
-  gelbem Rand** und blassem Grund. So sieht man auf einen Blick: die ist
-  zum Einsammeln, alles andere muss man umfahren. Der Rand muss an diesem
-  Span hängen und nicht an `.ding` — das ist 100px breit (eine ganze Spur),
-  ein Rahmen daran wäre riesig.
+- Die Spritze steckt in einem `<span class="spritze-ring">` und **leuchtet
+  golden** — mit genau derselben Animation `leuchten` wie der
+  Schutzschild am Wagen (`#wagen.geschuetzt`). Das ist Absicht: die
+  Spritze gibt ja genau diesen Schutz, wer sie einsammelt sieht denselben
+  Schein gleich am eigenen Wagen wieder. Ändert man die Farbe in
+  `@keyframes leuchten`, ändern sich beide zusammen — so soll es sein.
+  Der Schein muss am **Span** hängen und nicht an `.ding` — das ist 100px
+  breit (eine ganze Spur), ein Rahmen daran wäre riesig. Ein Test prüft,
+  dass beide dieselbe Animation benutzen.
 - Spritzen: 25 % Zufall **plus Garantie** — nach 4 Hindernissen ohne
   Spritze kommt sicher eine (`dingeOhneSpritze >= 4`). Ohne Garantie kam
   beim Testen ein ganzes Rennen ohne eine einzige.

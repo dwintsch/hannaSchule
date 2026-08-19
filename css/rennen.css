@@ -222,23 +222,22 @@ h1 {
   font-size: 34px;
 }
 
-/* --- Der Rand um die Spritze ---
+/* --- Der Schein um die Spritze ---
    Damit man auf einen Blick sieht: die ist zum EINSAMMELN,
    die anderen Sachen muss man umfahren.
 
-   Leichtes Gelb, nicht knallig - das passt zum Farbkonzept:
-   Flaechen pastell, nichts Grelles. */
+   Es ist GENAU derselbe Schein wie der Schutzschild am
+   Krankenwagen: dieselbe Animation «leuchten», dasselbe Gold.
+   Das ist Absicht und keine Sparerei - die Spritze GIBT ja
+   genau diesen Schutz. Wer sie einsammelt, sieht denselben
+   Schein gleich am eigenen Wagen wieder.
+
+   Aenderst du die Farbe in @keyframes leuchten, aendern sich
+   darum beide zusammen - und das soll auch so sein. */
 
 .spritze-ring {
   display: inline-block;
-  width: 42px;
-  height: 42px;
-  line-height: 42px;
-  box-sizing: border-box;
-
-  border: 2px solid #f0d97a;
-  border-radius: 50%;
-  background-color: #fdf8e3;
+  animation: leuchten 0.6s alternate infinite;
 }
 
 /* --- Die Tafel über dem Spielfeld --- */
